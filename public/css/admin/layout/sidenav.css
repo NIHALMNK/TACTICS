@@ -1,0 +1,122 @@
+:root {
+    --sidebar-width: 90px;
+    --sidebar-collapsed-width: 80px;
+    --sidebar-bg: #2c3e50;
+    --sidebar-text: #ecf0f1;
+    --sidebar-hover: #34495e;
+}
+
+body {
+    
+    font-family: 'Poppins', sans-serif;
+    transition: background-color 0.3s;
+    background-color: var(--sidebar-hover);
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-bg);
+    transition: width 0.3s ease;
+    overflow-x: hidden;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+    background-color: rgba(0,0,0,0.1);
+}
+
+.sidebar-logo img {
+    max-width: 100px;
+    transition: transform 0.3s ease;
+}
+
+.sidebar.collapsed .sidebar-logo img {
+    transform: scale(0.7);
+}
+
+.sidebar-menu {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    color: var(--sidebar-text);
+    padding: 15px 20px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar a:hover {
+    background-color: var(--sidebar-hover);
+}
+
+.sidebar a i {
+    margin-right: 15px;
+    font-size: 1.2em;
+}
+
+.sidebar.collapsed .menu-text {
+    display: none;
+}
+
+.sidebar-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: var(--sidebar-text);
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.content {
+    margin-left: var(--sidebar-width);
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+}
+
+.content.sidebar-collapsed {
+    margin-left: var(--sidebar-collapsed-width);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 0;
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+
+    .sidebar.open {
+        width: 250px;
+    }
+
+    .content {
+        margin-left: 0;
+    }
+
+    .content.sidebar-collapsed {
+        margin-left: 0;
+    }
+}
+.logo-admin{
+    width: 47px;
+}
+/*-------------------------------------*/

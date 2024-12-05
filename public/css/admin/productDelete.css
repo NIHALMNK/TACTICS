@@ -1,0 +1,119 @@
+:root {
+    --dark-blue-gray: #2c3e50;
+    --light-gray: #ecf0f1;
+    --slightly-lighter-blue-gray: #34495e;
+    --teal-green: #1abc9c;
+    --darker-teal-green: #16a085;
+    --red: #e74c3c;
+    --darker-red: #c0392b;
+    --muted-gray: #bdc3c7;
+    --lighter-muted-gray: #95a5a6;
+}
+
+body {
+    background-color: var(--dark-blue-gray);
+    font-family: 'Roboto', sans-serif;
+    color: var(--light-gray);
+}
+
+.container-custom {
+    background: var(--slightly-lighter-blue-gray);
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-top: 50px;
+}
+
+h2 {
+    color: var(--light-gray);
+    font-weight: bold;
+}
+
+.table-hover tbody tr:hover {
+    background-color: var(--teal-green);
+    transition: background-color 0.3s ease;
+}
+
+.btn-recover {
+    background-color: var(--teal-green);
+    color: var(--light-gray);
+}
+
+.btn-recover:hover {
+    background-color: var(--darker-teal-green);
+}
+
+.btn-delete {
+    background-color: var(--red);
+    color: var(--light-gray);
+}
+
+.btn-delete:hover {
+    background-color: var(--darker-red);
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 250px;
+    text-align: center;
+    color: var(--muted-gray);
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: var(--muted-gray);
+    margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+    .container-custom {
+        padding: 15px;
+        margin-top: 20px;
+    }
+
+    .table thead {
+        display: none;
+    }
+
+    .table, .table tbody, .table tr, .table td {
+        display: block;
+        width: 100%;
+    }
+
+    .table tr {
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: white;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .table td {
+        text-align: right;
+        border-bottom: 1px solid #eee;
+        padding: 10px;
+        position: relative;
+    }
+
+    .table td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        color: var(--muted-gray);
+    }
+
+    .table td:last-child {
+        border-bottom: none;
+    }
+
+    .btn {
+        width: 100%;
+        margin-top: 5px;
+    }
+}

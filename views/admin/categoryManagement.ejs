@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Category Management Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin/categoryManagement.css">
+</head>
+<body>
+
+       <!--------------------------------------------------->
+
+
+       <%- include('./layout/sidenav.ejs') %>
+
+       <!--------------------------------------------------->
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Category Management</h4>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="form-control" placeholder="Search categories...">
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Index</th>
+                                    <th>Name</th>
+                                    <th>Product Count</th>
+                                    <th>Created Date</th>
+                                    <th>Updated Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (categoriesWithCounts.length === 0) { %>
+                                    <tr>
+                                        <td colspan="6" class="text-center">No categories found</td>
+                                    </tr>
+                                <% } else { %>
+                                    <% categoriesWithCounts.forEach((category, index) => { %>
+                                    <tr>
+                                        <td><%= index + 1 %></td>
+                                        <td><%= category.name %></td>
+                                        <td>
+                                            <span class="badge bg-info rounded-pill"><%= category.productCount %></span>
+                                        </td>
+                                        <td><%= new Date(category.createdAt).toLocaleDateString() %></td>
+                                        <td><%= new Date(category.updatedAt).toLocaleDateString() %></td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="btn btn-custom btn-create" onclick="location.href='/admin/category/update/<%= category._id %>'">
+                                                    <i class="fas fa-edit me-1"></i> Update
+                                                </button>
+                                                <button class="btn btn-custom btn-unlist unlist" data-id="<%= category._id %>">
+                                                    <i class="fas fa-unlink me-1"></i> del
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                                <% } %>
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-panel mt-4">
+              <button class="btn btn-custom btn-create me-2" id="btn-add-cat">
+                    <i class="fas fa-plus me-1"></i> Create New Category
+                </button>
+                <button class="btn btn-custom btn-unlist" id="btn-del-cat">
+                    <i class="fas fa-archive me-1"></i> Unlisted Categories
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/admin/categoryManagement.js"></script>
+    
+</body>
+</html>

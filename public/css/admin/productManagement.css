@@ -1,0 +1,143 @@
+        :root {
+            --sidebar-width: 250px;
+            --sidebar-collapsed-width: 80px;
+            --primary-bg: #f4f6f9;
+            --secondary-bg: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #6c757d;
+            --accent-color: #3498db;
+            --accent-hover: #2980b9;
+            --danger-color: #e74c3c;
+            --danger-hover: #c0392b;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+            color: var(--text-primary);
+        }
+
+        #content {
+            transition: margin-left 0.3s ease;
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+        }
+
+        #content.sidebar-collapsed {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .search-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-container input {
+            flex-grow: 1;
+            min-width: 200px;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table thead {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        .btn-action {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            font-size: 0.85rem;
+        }
+
+        .btn-create {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-create:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-delete {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: var(--danger-hover);
+        }
+
+        @media (max-width: 768px) {
+            #content {
+                margin-left: 0 !important;
+                padding: 10px;
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            .search-container input,
+            .search-container .btn,
+            .action-buttons .btn {
+                width: 100%;
+            }
+
+            .table-responsive {
+                font-size: 0.9rem;
+            }
+
+            .btn-action {
+                justify-content: center;
+                width: 100%;
+            }
+        }
+
+/*-------------------------------*/
+.pagination {
+    margin-top: 20px;
+}
+
+.page-item .page-link {
+    border-radius: 50%;
+    font-weight: bold;
+    padding: 8px 15px;
+}
+
+.page-item.active .page-link {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.page-item .page-link:hover {
+    background-color: var(--accent-hover);
+}

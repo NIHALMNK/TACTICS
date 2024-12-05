@@ -1,0 +1,121 @@
+/* Define the color palette as CSS variables */
+:root {
+    --dark-blue-gray: #2c3e50;
+    --light-gray: #ecf0f1;
+    --slightly-lighter-blue-gray: #34495e;
+    --teal-green: #1abc9c;
+    --darker-teal-green: #16a085;
+    --red: #e74c3c;
+    --darker-red: #c0392b;
+    --muted-gray: #bdc3c7;
+    --lighter-muted-gray: #95a5a6;
+}
+
+body {
+    background-color: var(--dark-blue-gray);
+    font-family: 'Arial', sans-serif;
+    color: var(--light-gray);
+    margin: 0;
+    padding: 0;
+}
+
+/* General Card Styles */
+.card {
+    background-color: var(--slightly-lighter-blue-gray);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: var(--slightly-lighter-blue-gray);
+    color: var(--light-gray);
+    padding: 15px;
+    border-bottom: 2px solid var(--light-gray);
+    font-size: 1.25rem;
+    text-align: center;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.divider {
+    border-top: 1px solid var(--muted-gray);
+    margin: 20px 0;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--teal-green);
+    border-color: var(--teal-green);
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--darker-teal-green);
+    border-color: var(--darker-teal-green);
+}
+
+.btn-danger {
+    background-color: var(--red);
+    border-color: var(--red);
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.btn-danger:hover {
+    background-color: var(--darker-red);
+    border-color: var(--darker-red);
+}
+
+/* Input Fields */
+input[type="text"],
+textarea {
+    background-color: var(--slightly-lighter-blue-gray);
+    color: var(--light-gray);
+    border: 1px solid var(--muted-gray);
+    border-radius: 5px;
+    padding: 10px;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+    border-color: var(--teal-green);
+    outline: none;
+}
+
+/* Placeholder text color */
+::placeholder {
+    color: var(--lighter-muted-gray);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .card-header {
+        font-size: 1rem;
+    }
+
+    .chart-container {
+        height: 200px;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    h1, h2, h3 {
+        font-size: 1rem;
+    }
+
+    .row > .col-md-8, .row > .col-md-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .row > .col-12 {
+        padding: 10px;
+    }
+}

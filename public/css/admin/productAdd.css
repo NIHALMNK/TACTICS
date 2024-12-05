@@ -1,0 +1,123 @@
+/* Custom Theme Colors */
+:root {
+    --dark-blue-gray: #2c3e50;
+    --light-gray: #ecf0f1;
+    --slightly-lighter-blue-gray: #34495e;
+    --teal-green: #1abc9c;
+    --darker-teal-green: #16a085;
+    --red: #e74c3c;
+    --darker-red: #c0392b;
+    --muted-gray: #bdc3c7;
+    --lighter-muted-gray: #95a5a6;
+}
+
+/* General Styles */
+body {
+    background-color: var(--dark-blue-gray);
+    font-family: 'Arial', sans-serif;
+    color: var(--light-gray);
+}
+
+.product-form-container {
+    background-color: var(--slightly-lighter-blue-gray);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-top: 30px;
+}
+
+.form-group label {
+    color: var(--light-gray);
+}
+
+.form-control {
+    background-color: var(--dark-blue-gray);
+    color: var(--light-gray);
+    border: 1px solid var(--muted-gray);
+}
+
+.form-control:focus {
+    border-color: var(--teal-green);
+}
+
+.round-preview {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--teal-green);
+    margin: 15px auto;
+    display: block;
+}
+
+.btn-primary {
+    background-color: var(--teal-green);
+    border-color: var(--teal-green);
+}
+
+.btn-primary:hover {
+    background-color: var(--darker-teal-green);
+    border-color: var(--darker-teal-green);
+}
+
+.btn-danger {
+    background-color: var(--red);
+    border-color: var(--red);
+}
+
+.btn-danger:hover {
+    background-color: var(--darker-red);
+    border-color: var(--darker-red);
+}
+
+.btn-crop {
+    margin-top: 10px;
+}
+
+.modal-content {
+    background-color: var(--slightly-lighter-blue-gray);
+    color: var(--light-gray);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--muted-gray);
+}
+
+.modal-footer button {
+    background-color: var(--teal-green);
+    border-color: var(--teal-green);
+}
+
+.modal-footer .btn-secondary {
+    background-color: var(--muted-gray);
+    border-color: var(--muted-gray);
+}
+
+.row > .col-md-6, .row > .col-lg-3 {
+    padding: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .product-form-container {
+        padding: 15px;
+        margin-top: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .round-preview {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-submit {
+        width: 100% !important;
+    }
+}

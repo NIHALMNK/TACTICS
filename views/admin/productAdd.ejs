@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Product Management Panel</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Cropper.js CSS -->
+    <link href="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin/productAdd.css">
+</head>
+<body>
+       <!--------------------------------------------------->
+       <%- include('./layout/sidenav.ejs') %>
+       <!--------------------------------------------------->
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="product-form-container">
+                    <h2 class="text-center mb-4">Add New Product</h2>
+
+                    <form id="productForm" action="/admin/productManagement/add" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="productName" class="form-label">Product Name</label>
+                                    <input type="text" class="form-control" id="productName" name="productName" >
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="productPrice" class="form-label">Price</label>
+                                    <input type="number" class="form-control" id="productPrice" name="productPrice" >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="offerPrice" class="form-label">Offer Price</label>
+                                    <input type="number" class="form-control" id="offerPrice" name="productOfferPrice">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="productStock" class="form-label">Stock</label>
+                                    <input type="number" class="form-control" id="productStock" name="productStock">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Product Images</label>
+                            <div class="row">
+                                <div class="col-md-6 col-lg-3 text-center">
+                                    <img id="roundPreview0" alt="Preview" style="display: none;" class="round-preview" />
+                                    <input type="file" class="form-control product-image" id="productImage1"
+                                        accept="image/*" onchange="previewAndCrop(event, 0)" name="productImage1" />
+                                </div>
+                                <div class="col-md-6 col-lg-3 text-center">
+                                    <img id="roundPreview1" alt="Preview" style="display: none;" class="round-preview" />
+                                    <input type="file" class="form-control product-image" id="productImage2"
+                                        accept="image/*" onchange="previewAndCrop(event, 1)" name="productImage2" />
+                                </div>
+                                <div class="col-md-6 col-lg-3 text-center">
+                                    <img id="roundPreview2" alt="Preview" style="display: none;" class="round-preview" />
+                                    <input type="file" class="form-control product-image" id="productImage3"
+                                        accept="image/*" onchange="previewAndCrop(event, 2)" name="productImage3" />
+                                </div>
+                                <div class="col-md-6 col-lg-3 text-center">
+                                    <img id="roundPreview3" alt="Preview" style="display: none;" class="round-preview" />
+                                    <input type="file" class="form-control product-image" id="productImage4"
+                                        accept="image/*" onchange="previewAndCrop(event, 3)" name="productImage4" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="productDescription" name="productDescription" rows="4" ></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="productTags" class="form-label">Tags</label>
+                                    <input type="text" class="form-control" id="productTags" name="productTags" placeholder="Comma separated">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="productSizes" class="form-label">Sizes</label>
+                                    <input type="text" class="form-control" id="productSizes" name="productSizes" placeholder="Comma separated">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="productColors" class="form-label">Colors</label>
+                                    <input type="text" class="form-control" id="productColors" name="productColors" placeholder="Comma separated">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="productBrand" class="form-label">Brand</label>
+                                    <input type="text" class="form-control" id="productBrand" name="productBrand" >
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="cashOnDelivery">Cash on Delivery</label>
+                                    <div>
+                                        <label>
+                                            <input type="radio" name="productCashOnDelivery" value="Yes" > Yes
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="productCashOnDelivery" value="No"> No
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="productWarranty" class="form-label">Warranty</label>
+                                    <input type="text" class="form-control" id="productWarranty" name="productWarranty" placeholder="e.g., 1 year">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="productReturnPolicy" class="form-label">Return Policy</label>
+                                    <input type="text" class="form-control" id="productReturnPolicy" name="productReturnPolicy" placeholder="e.g., 30 days">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <div class="form-group">
+                            <label for="productCategory" class="form-label">Category</label>
+                            <input type="text" class="form-control" id="productCategory" name="productCategory" placeholder="e.g., Electronics">
+                        </div> -->
+                        <div class="form-group">
+                            <label for="productCategory" class="form-label">Category</label>
+                            <select class="form-control" id="productCategory" name="productCategory" >
+                                <% categories.forEach(category => { %>
+                                    <option value="<%= category._id %>"><%= category.name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+
+                        <!-- add *001 (on text) -->
+                      
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-submit mt-3 w-50">
+                                Add Product
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Cropper.js and Supporting Scripts -->
+    <script src="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/admin/productAdd.js"></script>
+</body>
+</html>
