@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controller/userController');
+const nocache = require('nocache');
 
 
 
@@ -10,11 +11,11 @@ router.get('/register', userController.loadRegister);
 router.post('/register/check-user', userController.checkUser);
 router.post('/register/resendOtp', userController.resendOTP);
 router.post('/register/verifyOtp', userController.verifyOTP);
-router.get('/register/otp', userController.loadOTP);
+router.get('/register/otp',userController.loadOTP);
 
 // Login routes
-router.get('/login', userController.loadLogin);
-router.post('/checklogin', userController.checkLogin);
+router.get('/login',userController.loadLogin);
+router.post('/checklogin',userController.checkLogin);
 
 // Protected route
 router.get('/home',userController.loadHome);
