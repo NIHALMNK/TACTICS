@@ -7,7 +7,7 @@ let banCheck = async (req, res, next) => {
         console.log(email)
         const user = await userModal.findOne({ email });
         if (user && user.isDeleted) {
-            return res.render('error/erroralert');
+            return res.render('error/baned');
         }
     }
     return next();
