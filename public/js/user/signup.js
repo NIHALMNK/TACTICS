@@ -1,6 +1,5 @@
 const message = document.getElementById("message").value;
 
-// Show initial message if exists
 if (message) {
   swal({
     title: message,
@@ -40,7 +39,6 @@ if (message) {
     const signupText = document.querySelector('.signup-text');
     const successMessage = document.querySelector('.success-message');
 
-    // Toggle password visibility
     const passwordToggle = document.querySelector('.password-toggle');
     passwordToggle.addEventListener('click', () => {
         const isPasswordVisible = inputs.password.element.getAttribute('type') === 'password';
@@ -50,7 +48,6 @@ if (message) {
         icon.classList.toggle('fa-eye-slash', !isPasswordVisible);
     });
 
-    // Validate input fields
     const validateInput = (inputConfig) => {
         const { element, pattern, errorMessage } = inputConfig;
         const isValid = pattern.test(element.value);
@@ -67,16 +64,13 @@ if (message) {
         return isValid;
     };
 
-    // Attach input validation listeners
     Object.values(inputs).forEach(({ element, pattern, errorMessage }) => {
         element.addEventListener('input', () => validateInput({ element, pattern, errorMessage }));
     });
 
-    // Handle form submission
     form.addEventListener('submit', (event) => {
         event.preventDefault();
 
-        // Validate all inputs and terms checkbox
         const areInputsValid = Object.values(inputs).every((inputConfig) =>
             validateInput(inputConfig)
         );
@@ -94,7 +88,6 @@ if (message) {
         }
 
         if (areInputsValid && areTermsAccepted) {
-            // Simulate account creation
             signupButton.disabled = true;
             spinner.classList.remove('d-none');
             signupText.textContent = 'Creating account...';
@@ -103,7 +96,6 @@ if (message) {
                 successMessage.style.display = 'block';
 
                 setTimeout(() => {
-                    // Reset the form
                     form.reset();
                     Object.values(inputs).forEach(({ element }) => {
                         element.classList.remove('is-valid');

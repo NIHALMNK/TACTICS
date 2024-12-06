@@ -1,23 +1,17 @@
-// loadCategoryManagement,
-//     loadUpdateCategory,
-//     deleteCategory,
 
-//     loadDelCategoryPage,
-//     recoverCategory,
-//     permanentDeleteCategory
 
 const Category = require("../../models/categoryModel");
 const Products = require("../../models/productModel");
 
 
-// Helper Function for Deletion
+
 async function deleteCategoryById(id, isPermanent = false) {
   try {
       if (isPermanent) {
-          // Permanent deletion
+          
           return await Category.findByIdAndDelete(id);
       } else {
-          // Soft deletion (mark as deleted)
+          
           return await Category.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
       }
   } catch (error) {
@@ -36,7 +30,7 @@ async loadCategoryManagement(req, res) {
       const categories = await Category.find({ isDeleted: false });
       
       if (!categories || categories.length === 0) {
-          // Render the page with a "no categories" message
+          
           return res.status(200).render("admin/categoryManagement", { 
               categoriesWithCounts: [], 
               msg: "No categories found" 
@@ -53,10 +47,10 @@ async loadCategoryManagement(req, res) {
           })
       );
 
-      // Render the page with the categories
+      
       return res.status(200).render("admin/categoryManagement", { 
           categoriesWithCounts,
-          msg: null // No error message
+          msg: null 
       });
   } catch (error) {
       console.error("Error loading category management page:", error);
@@ -65,14 +59,14 @@ async loadCategoryManagement(req, res) {
 },
 
   async loadUpdateCategory(req, res) {
-    const categoryId = req.params .id; // Get categoryId from URL parameter
+    const categoryId = req.params .id; 
     try {
-        const category = await Category.findById(categoryId); // Find category by ID
+        const category = await Category.findById(categoryId); 
         if (!category) {
             return res.status(404).json({ message: "Category not found" });
         }
 
-        // Render the update page with the category data
+        
         return res.render("admin/categoryUpdate", { category: category });
     } catch (error) {
         console.error("Error loading category update page:", error);
@@ -95,13 +89,13 @@ async loadCategoryManagement(req, res) {
       category.name = categoryName;
       category.description = categoryDescription;
    
-      console.log('File Path:', req.file?.path);  // Debugging line
+      console.log('File Path:', req.file?.path);  
    
-      // Check if a new image was uploaded
+      
       if (req.file) {
-        categoryImage = req.file.path.split("public")[1];  // Storing relative image path
-        category.image = categoryImage;  // Update the image field
-        console.log('Uploaded file:', req.file);  // Debugging line
+        categoryImage = req.file.path.split("public")[1];  
+        category.image = categoryImage;  
+        console.log('Uploaded file:', req.file);  
       }
    
       category.updatedAt = Date.now();
@@ -111,7 +105,7 @@ async loadCategoryManagement(req, res) {
         .status(200)
         .json({ success: true, message: "Successfully updated category" });
     } catch (error) {
-      console.error("Error updating category:", error);  // Error logging
+      console.error("Error updating category:", error);  
       return res
         .status(500)
         .json({ success: false, message: "Error updating category" });
@@ -138,7 +132,7 @@ async loadCategoryManagement(req, res) {
 
         const { categoryName, categoryDescription } = req.body;
 
-        // Check if an image was uploaded
+        
         if (!req.file) {
             return res.status(400).json({ val: false, msg: "No image file uploaded." });
         }

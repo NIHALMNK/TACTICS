@@ -1,11 +1,17 @@
 const nodemailer = require('nodemailer');
 
+
 let transporter = nodemailer.createTransport({
-  service:'gmail',
+ 
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,  
   auth: {
     user: process.env.USER_EMAIL,
-    pass: process.env.USER_PASSWORD,
-  }
+    pass: "wpgl cphq vbtn uxgn",
+  }, tls: {
+    rejectUnauthorized: false
+}
 });
 
 const sendEmail = async (email,otp)=> {

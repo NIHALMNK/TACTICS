@@ -4,7 +4,7 @@ let authCheck = (req, res, next) => {
             return res.redirect('/register');
         }
         return next();
-    } else if (['/register', '/login'].includes(req.url)) {
+    } else if (['/register', '/login','/register/otp'].includes(req.url)) {
         if (req.session.loggedIn) {
             return res.redirect('/home');
         }

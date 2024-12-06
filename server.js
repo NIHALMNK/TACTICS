@@ -19,14 +19,14 @@ require('./config/passport')
 
 
 // Apply middlewares
-app.use(nocache()); // Disable caching
-app.use(cors());    // Enable CORS
+app.use(nocache()); 
+app.use(cors());   
 
 // Setup session
 app.use(session({
-    secret: 'mysecretkey', // Use a strong, secret key for session security
-    resave: false,         // Don't save session if it hasn't been modified
-    saveUninitialized: true, // Save session even if it's not modified
+    secret: 'mysecretkey', 
+    resave: false,         
+    saveUninitialized: true, 
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 // 1 day session expiry
     }
@@ -37,11 +37,12 @@ app.use(session({
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Serve static files
-// app.use(express.static('public'));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use((error, req, res, next)=>{
 
+})
 
 // Parse incoming request data
 app.use(express.urlencoded({ extended: true }));
@@ -61,7 +62,6 @@ app.use('/admin', adminRouter);
 
 app.get('/*',(req,res)=>{
     res.render('error/erroralert')
-    console.log("server: page not found ")
   })
 
 // Start the server

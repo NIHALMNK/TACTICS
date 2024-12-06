@@ -94,7 +94,7 @@ document.getElementById('cropConfirmBtn').addEventListener('click', function () 
             roundPreview.style.display = 'block';
             photoPlaceholder.style.display = 'none';
             removeImageBtn.style.display = 'inline-block';
-            categoryImage.value = ''; // Clear file input
+            categoryImage.value = ''; 
 
             const cropModal = bootstrap.Modal.getInstance(document.getElementById('cropModal'));
             cropModal.hide();
@@ -126,7 +126,6 @@ document.getElementById('updateCategoryForm').addEventListener('input', function
 document.getElementById("updateCategoryForm").addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    // Perform Final Validation
     if (!validateName() || !validateDescription() || !validateImage()) {
         return;
     }
@@ -139,7 +138,6 @@ document.getElementById("updateCategoryForm").addEventListener('submit', async f
 
     const formData = new FormData(this);
 
-    // If a new cropped image exists, append it
     if (croppedImageBlob) {
         formData.set('categoryImage', croppedImageBlob, 'category-image.jpg');
     }

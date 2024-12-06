@@ -1,4 +1,4 @@
-// controllers/userController.js
+
 const bcrypt = require("bcrypt");
 const otpGenerator = require("otp-generator");
 const OTP = require("../models/otpModel");
@@ -9,7 +9,7 @@ const categoryModel = require("../models/categoryModel");
 const passport = require("passport");
 
 module.exports = {
-  // Render the registration page
+  
   async loadRegister(req, res) {
     try {
       res.render("user/register", { user: req.session.user || null });
@@ -19,7 +19,7 @@ module.exports = {
     }
   },
 
-  // Render the login page
+  
   async loadLogin(req, res) {
     try {
       res.render("user/login", {
@@ -32,7 +32,7 @@ module.exports = {
     }
   },
 
-  // Render OTP page
+  
   async loadOTP(req, res) {
     try {
       const { email } = req.session.user;
@@ -45,12 +45,12 @@ module.exports = {
     }
   },
 
-  // Check if user exists and send OTP for verification
+  // check User
   async checkUser(req, res) {
     try {
       const { name, email, phno, password } = req.body;
 
-      // Check if user already exists
+      
       const existingUser = await User.findOne({ email });
       if (existingUser) {
         return res.json({
@@ -59,7 +59,7 @@ module.exports = {
         });
       }
 
-      // Save user data in session for OTP verification
+      
       req.session.user = { name, email, phno, password, verified: false };
 
       // Generate OTP
@@ -91,6 +91,8 @@ module.exports = {
   async resendOTP(req, res) {
     try {
       const { email } = req.body;
+      console.log("this is the resetOTP : " + email);
+
 
       // Check if OTP exists
       const existingOTP = await OTP.findOne({ email });
@@ -106,6 +108,8 @@ module.exports = {
         lowerCaseAlphabets: false,
         specialChars: false,
       });
+      console.log('Resending OTP: ' + otp);
+
       await OTP.findOneAndUpdate(
         { email },
         {
@@ -117,14 +121,14 @@ module.exports = {
       );
 
       sendEmail(email, otp);
-      res
-        .status(200)
-        .json({ success: true, message: "OTP resent successfully." });
+
+      return res.status(200).json({ success: true, message: "OTP resent successfully." });
     } catch (error) {
       console.error("Error in resendOTP:", error);
       res.status(500).json({ success: false, error: error.message });
     }
   },
+
 
   // Verify OTP and register user
   async verifyOTP(req, res) {
@@ -190,7 +194,7 @@ module.exports = {
         });
       }
 
-      // Compare hashed password
+    
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
         return res.render("user/login", {
@@ -199,7 +203,7 @@ module.exports = {
         });
       }
 
-      // Set session user
+      
       req.session.user = {
         id: user._id,
         name: user.name,
@@ -232,13 +236,13 @@ module.exports = {
 
   async loadShop(req, res) {
     try {
-      // Get the category filter from the query parameters
+      
       const categoryName = req.query.category;
 
       let products;
 
       if (categoryName) {
-        // Fetch products of the selected category
+        
         const category = await categoryModel.findOne({
           name: categoryName,
           isDeleted: false,
@@ -252,13 +256,13 @@ module.exports = {
           .find({ category: category._id, isDeleted: false })
           .populate("category");
       } else {
-        // Fetch all products if no category filter is applied
+        
         products = await productModel
           .find({ isDeleted: false })
           .populate("category");
       }
 
-      // Render the shop page with the filtered products
+      
       res.render("user/shop", { user: req.session.user, products });
     } catch (error) {
       console.error("Error loading shop:", error);
@@ -302,10 +306,10 @@ module.exports = {
 
   async getProductDetail(req, res) {
     try {
-      // Get product ID from route parameters
+     
       const productId = req.params.id;
 
-      // Fetch product from the database
+      
       const product = await productModel
         .findById(productId)
         .populate("category");
@@ -313,14 +317,13 @@ module.exports = {
         return res.status(404).send("Product not found");
       }
 
-      // Fetch all products for additional information
+     
       const productAll = await productModel.find({ isDeleted: false });
       const relatedProducts = await productModel.find({
         tags: { $in: product.tags },
         _id: { $ne: product._id },
       });
 
-      // Render the product detail page and pass the product data to the view
       return res.status(200).render("user/productdetail", {
         product,
         user: req.session.user,
@@ -333,18 +336,18 @@ module.exports = {
     }
   },
 
-//logout: 
-async logout(req, res) {
-  try {
-    req.session.destroy();
-    res.clearCookie("session_id");
-    res.redirect("/home");
+  //logout: 
+  async logout(req, res) {
+    try {
+      req.session.destroy();
+      res.clearCookie("session_id");
+      res.redirect("/home");
     } catch (error) {
       console.error("Error logging out:", error);
       res.status(500).send("Server error");
 
-}
-},
+    }
+  },
 
 
   //end{code}

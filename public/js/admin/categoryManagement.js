@@ -1,9 +1,7 @@
-// Unlink category with SweetAlert2
 document.querySelectorAll('.unlist').forEach(button => {
     button.addEventListener('click', async function (e) {
         const categoryId = e.target.closest('.unlist').getAttribute('data-id');
 
-        // SweetAlert confirmation dialog
         const result = await Swal.fire({
             title: 'Are you sure?',
             text: "This will unlink the category!",
@@ -27,7 +25,7 @@ document.querySelectorAll('.unlist').forEach(button => {
 
                 if (data.success) {
                     Swal.fire('Unlinked!', 'The category has been unlinked.', 'success');
-                    window.location.reload(); // Reload after unlinking
+                    window.location.reload(); 
                 } else {
                     Swal.fire('Error', data.message || 'Error unlinking category.', 'error');
                 }
@@ -41,11 +39,11 @@ document.querySelectorAll('.unlist').forEach(button => {
 
 // Navigation buttons
 document.getElementById('btn-add-cat').addEventListener('click', () => {
-    window.location.href = '/admin/category/add'; // Redirect to add category page
+    window.location.href = '/admin/category/add'; 
 });
 
 document.getElementById('btn-del-cat').addEventListener('click', () => {
-    window.location.href = '/admin/category/del'; // Redirect to unlisted categories page
+    window.location.href = '/admin/category/del'; 
 });
 
 // Real-time search

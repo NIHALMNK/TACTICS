@@ -12,18 +12,18 @@ module.exports = {
             return res.status(200).render('admin/login', { message: "" });
         }
         
-        // Get current page from query params, default to 1 if not specified
+       
         const page = parseInt(req.query.page) || 1;
         const productsPerPage = 10;
         const skip = (page - 1) * productsPerPage;
 
-        // Fetch products with pagination
+        
         const products = await Products.find({ isDeleted: false })
             .skip(skip)
             .limit(productsPerPage)
             .populate('category');
 
-        // Get total product count to calculate total pages
+        
         const totalProducts = await Products.countDocuments({ isDeleted: false });
         const totalPages = Math.ceil(totalProducts / productsPerPage);
 
@@ -31,7 +31,7 @@ module.exports = {
             return res.status(200).render('admin/productManagement', { msg: 'No products found', products: [], currentPage: page, totalPages });
         }
 
-        // Render the product management page with pagination data
+        
         return res.status(200).render('admin/productManagement', { products, currentPage: page, totalPages });
     } catch (error) {
         console.log('Error loading product management ➡️' + error);

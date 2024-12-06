@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-    // Toggle password visibility
     passwordToggle.addEventListener('click', () => {
         const isPasswordVisible = passwordInput.getAttribute('type') === 'password';
         passwordInput.setAttribute('type', isPasswordVisible ? 'text' : 'password');
@@ -21,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
         icon.classList.toggle('fa-eye-slash', !isPasswordVisible);
     });
 
-    // Real-time validation
     const validateInput = (input, pattern, errorMessage) => {
         if (!pattern.test(input.value)) {
             input.classList.add('is-invalid');
@@ -41,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
         validateInput(passwordInput, passwordPattern);
     });
 
-    // Handle form submission
     form.addEventListener('submit', (event) => {
         event.preventDefault();
 
@@ -49,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const isPasswordValid = passwordPattern.test(passwordInput.value);
 
         if (!isPasswordValid) {
-            // Show SweetAlert error for password
+            
             Swal.fire({
                 icon: 'error',
                 title: 'Invalid Password',
@@ -58,23 +55,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 timerProgressBar: true,
                 showConfirmButton: false,
             });
-            return; // Stop form submission
+            return; 
         }
 
         if (isEmailValid && isPasswordValid) {
             form.classList.add('was-validated');
 
-            // Simulate loading state
             loginButton.disabled = true;
             spinner.classList.remove('d-none');
             loginText.textContent = 'Signing in...';
 
             setTimeout(() => {
-                // Show success message
                 successMessage.style.display = 'block';
 
                 setTimeout(() => {
-                    // Reset form and button state
                     form.reset();
                     emailInput.classList.remove('is-valid');
                     passwordInput.classList.remove('is-valid');

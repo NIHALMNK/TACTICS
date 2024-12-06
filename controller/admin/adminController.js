@@ -38,27 +38,28 @@ module.exports ={
             console.log('Admin email:', email);
             console.log('Admin password:', password);
     
-            // Step 1: Find the user by email
+            
             const admin = await User.findOne({ email });
             if (!admin) {
-                // Email not found in the database
+
+               
                 return res.render('admin/login', { message: 'User not found' });
             }
     
-            // Step 2: Check if the role is 'admin'
+            
             if (admin.role !== 'admin') {
-                // The user is not an admin
+                
                 return res.render('admin/login', { message: 'User not found' });
             }
     
-            // Step 3: Compare the provided password with the stored hashed password
+         
             const isPasswordValid = await bcrypt.compare(password, admin.password);
             if (!isPasswordValid) {
-                // Password is incorrect
+                
                 return res.render('admin/login', { message: 'Incorrect password' });
             }
     
-            // Step 4: Successful login, set session and redirect
+            
             req.session.admin = {
                 id: admin._id,
                 name: admin.name,
@@ -76,13 +77,13 @@ module.exports ={
     
     async logout(req, res) {
         try {
-            // Destroy the session
+            
             req.session.destroy((err) => {
                 if (err) {
                     console.error('Error during logout:', err);
                     return res.status(500).send('Unable to log out');
                 }
-                // Redirect to login page after logout
+                
                 return res.redirect('/admin/login');
             });
         } catch (error) {

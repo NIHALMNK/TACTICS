@@ -3,7 +3,7 @@ $('.btn-recover, .btn-delete').on('click', async function (e) {
 
     const button = $(this);
     const action = button.hasClass('btn-recover') ? 'recover' : 'delete';
-    const productId = button.data('id'); // Ensure this is set in the HTML
+    const productId = button.data('id'); 
     const productName = button.closest('tr').find('td:first').text();
 
     if (!productId) {
@@ -61,9 +61,9 @@ $('.btn-recover, .btn-delete').on('click', async function (e) {
             });
 
             if (action === 'delete') {
-                button.closest('tr').remove(); // Remove row for delete
+                button.closest('tr').remove(); 
             } else {
-                window.location.reload(); // Reload for recover
+                window.location.reload(); 
             }
         } else {
             throw new Error(data.message || `Failed to ${action} the product.`);

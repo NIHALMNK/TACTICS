@@ -5,7 +5,7 @@ let croppedImageBlob = null;
 function validateName() {
     const nameError = document.getElementById('nameError');
     const nameValue = categoryName.value.trim();
-    const nameRegex = /^[A-Za-z\s]{3,50}$/; // Allows only alphabets and spaces, 3-50 characters
+    const nameRegex = /^[A-Za-z\s]{3,50}$/; 
     const isValid = nameRegex.test(nameValue);
     nameError.style.display = isValid ? 'none' : 'block';
     return isValid;
@@ -21,16 +21,14 @@ function validateDescription() {
 
 function validateImage() {
     const imageError = document.getElementById('imageError');
-    const isValid = croppedImageBlob !== null; // Ensure an image has been cropped and set
+    const isValid = croppedImageBlob !== null; 
     imageError.style.display = isValid ? 'none' : 'block';
     return isValid;
 }
 
-// Real-Time Validation (binds to input events)
 categoryName.addEventListener('input', validateName);
 categoryDescription.addEventListener('input', validateDescription);
 
-// Image Upload Handling
 categoryImage.addEventListener('change', function (event) {
     const file = event.target.files[0];
     if (file) {
@@ -42,7 +40,7 @@ categoryImage.addEventListener('change', function (event) {
             const cropModal = new bootstrap.Modal(document.getElementById('cropModal'));
             cropModal.show();
 
-            if (cropper) cropper.destroy(); // Reset cropper instance
+            if (cropper) cropper.destroy(); 
             cropper = new Cropper(cropModalImage, {
                 aspectRatio: 1,
                 viewMode: 1,
@@ -61,7 +59,6 @@ document.getElementById('cropConfirmBtn').addEventListener('click', function () 
             croppedImageBlob = blob;
             const imageUrl = URL.createObjectURL(blob);
 
-            // Update preview
             roundPreview.src = imageUrl;
             roundPreview.style.display = 'block';
             photoPlaceholder.style.display = 'none';
@@ -70,7 +67,7 @@ document.getElementById('cropConfirmBtn').addEventListener('click', function () 
             const cropModal = bootstrap.Modal.getInstance(document.getElementById('cropModal'));
             cropModal.hide();
 
-            validateImage(); // Re-validate image after cropping
+            validateImage(); 
         });
     }
 });
@@ -84,12 +81,12 @@ removeImageBtn.addEventListener('click', function () {
     categoryImage.value = '';
     croppedImageBlob = null;
     if (cropper) cropper.destroy();
-    validateImage(); // Re-validate image after removing
+    validateImage(); 
 });
 
 // Form Submission
 categoryForm.addEventListener('submit', function (e) {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault(); 
 
     const isNameValid = validateName();
     const isDescValid = validateDescription();
@@ -104,7 +101,6 @@ categoryForm.addEventListener('submit', function (e) {
             new File([croppedImageBlob], 'category-image.png', { type: 'image/png' })
         );
 
-        // Perform form submission using fetch API
         fetch('/admin/category/add', {
             method: 'POST',
             body: formData,
@@ -123,7 +119,7 @@ categoryForm.addEventListener('submit', function (e) {
                     title: 'Category Added',
                     text: 'The category has been successfully added!',
                 }).then(() => {
-                    window.location.reload(); // Reload the page to reset the form
+                    window.location.reload(); 
                 });
             })
             .catch((error) => {
@@ -135,7 +131,6 @@ categoryForm.addEventListener('submit', function (e) {
                 });
             });
     } else {
-        // Highlight errors if form is invalid
         validateName();
         validateDescription();
         validateImage();
