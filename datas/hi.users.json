@@ -1,0 +1,231 @@
+[{
+  "_id": {
+    "$oid": "675127b107711298166b1cfb"
+  },
+  "name": "MOHAMMED NIHAL.K",
+  "email": "keedathnihal@gmail.com",
+  "phone": null,
+  "role": "user",
+  "isDeleted": false,
+  "isGoogleLogin": true,
+  "googleId": "112698677879632010049",
+  "isValid": false,
+  "address": [],
+  "createdAt": {
+    "$date": "2024-12-05T04:10:25.660Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-05T04:10:25.660Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67512dbd4823f0a83e841889"
+  },
+  "name": "NIHALMNK",
+  "email": "nihalkeedath@gmail.com",
+  "password": "$2b$10$fJsgwsGym4GRxIBqvPCSuOel65kf.2wsT3atIPpAh29llyvW.A8PK",
+  "phone": "7558928213",
+  "role": "admin",
+  "isDeleted": false,
+  "isGoogleLogin": false,
+  "isValid": true,
+  "address": [],
+  "createdAt": {
+    "$date": "2024-12-05T04:36:13.791Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-05T04:36:13.791Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "675136518816d19ebafdd351"
+  },
+  "name": "Adarsh",
+  "email": "adarsh@gmail.com",
+  "password": "$2b$10$1EzUDz1ZRs.CU9kpk1/bl.69TfALHtQRrBw.V1cKkFx22qqtDQTma",
+  "phone": "1212121222",
+  "role": "user",
+  "isDeleted": false,
+  "isGoogleLogin": false,
+  "isValid": true,
+  "address": [],
+  "createdAt": {
+    "$date": "2024-12-05T05:12:49.894Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-05T05:12:49.894Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6751d17a88ac255bbfdcb5de"
+  },
+  "name": "vishnu",
+  "email": "vishnu@gmail.com",
+  "password": "$2b$10$/WN6r5IFdXrjQJOLjhsGBOH9ngb0O6pSdeJU9fpGb/6p8kjZBv7Ru",
+  "phone": "0000000000",
+  "role": "user",
+  "isDeleted": false,
+  "isGoogleLogin": false,
+  "isValid": true,
+  "address": [],
+  "createdAt": {
+    "$date": "2024-12-05T16:14:50.024Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-05T16:14:50.024Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6751d33c96ddfd01a590aa66"
+  },
+  "name": "rashid",
+  "email": "rashid@gmail.com",
+  "password": "$2b$10$JKE7BrUMkGsiDzOK26gDru4TEDlcsu2x/f1IOGMHRr3rwVQZMXDtK",
+  "phone": "1234567890",
+  "role": "user",
+  "isDeleted": false,
+  "isGoogleLogin": false,
+  "isValid": true,
+  "address": [],
+  "createdAt": {
+    "$date": "2024-12-05T16:22:20.421Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-05T16:22:20.421Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6751d44b9e17afa1aede1c63"
+  },
+  "name": "Afsal",
+  "email": "afsal@gmail.com",
+  "password": "$2b$10$LhBO4SRzMwIDrbzzT3lPn.e/XQdACPx1hYwVPzsUDcbhi0M57sPyq",
+  "phone": "4545454545",
+  "role": "user",
+  "isDeleted": false,
+  "isGoogleLogin": false,
+  "isValid": true,
+  "address": [],
+  "createdAt": {
+    "$date": "2024-12-05T16:26:51.880Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-05T16:26:51.880Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6752729e540117549c6c35cc"
+  },
+  "name": "junid",
+  "email": "unid@gmail.com",
+  "password": "$2b$10$jWrCPDtR97S9/bFp0ZpNHe3gIkIaXNxWAXyBkCZ0A2AB0fM7./Z82",
+  "phone": "7878787878",
+  "role": "user",
+  "isDeleted": false,
+  "isGoogleLogin": false,
+  "isValid": true,
+  "address": [],
+  "createdAt": {
+    "$date": "2024-12-06T03:42:22.879Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-06T03:42:22.879Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "675275f309011a638b99e009"
+  },
+  "name": "Jinan",
+  "email": "jinan@gmail.com",
+  "password": "$2b$10$tH5FbvUOZqj2yrPQ18RcqOKzFQqZwKGTlNoLh9HlarSx/apNb6sV2",
+  "phone": "1591591591",
+  "role": "user",
+  "isDeleted": false,
+  "isGoogleLogin": false,
+  "isValid": true,
+  "address": [],
+  "createdAt": {
+    "$date": "2024-12-06T03:56:35.600Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-06T03:56:35.600Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6752772cb222c38fd64adab1"
+  },
+  "name": "Jinand",
+  "email": "jinand@gmail.com",
+  "password": "$2b$10$fe1evXbzu75cZ9cdeeWwd.duOGdBNIHyH2YmuKgB/HPQTf4Z2SRZm",
+  "phone": "1591591555",
+  "role": "user",
+  "isDeleted": false,
+  "isGoogleLogin": false,
+  "isValid": true,
+  "address": [],
+  "createdAt": {
+    "$date": "2024-12-06T04:01:48.883Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-06T04:01:48.883Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6752ea1d517087883a88e7aa"
+  },
+  "name": "asmi",
+  "email": "la.mervillaonline@gmail.com",
+  "password": "$2b$10$wedkrGliun199aqqsz6zSuqocZtxZEVBe4E8QnkjOuMfVCk8qPTSa",
+  "phone": "8547535435",
+  "role": "user",
+  "isDeleted": false,
+  "isGoogleLogin": false,
+  "isValid": true,
+  "address": [],
+  "createdAt": {
+    "$date": "2024-12-06T12:12:13.433Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-06T12:12:13.433Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6752f73a2b678de0be63afdf"
+  },
+  "name": "shariq",
+  "email": "shariq@gmail.com",
+  "password": "$2b$10$2NcyUdcihaW99ZTwKv.a8u0BMycPij3vNHhnoAGcyib2Cr78liahC",
+  "phone": "7778889994",
+  "role": "user",
+  "isDeleted": false,
+  "isGoogleLogin": false,
+  "isValid": true,
+  "address": [],
+  "createdAt": {
+    "$date": "2024-12-06T13:08:10.390Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-06T13:08:10.390Z"
+  },
+  "__v": 0
+}]
