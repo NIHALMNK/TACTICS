@@ -31,7 +31,7 @@ h4.card-title {
 }
 
 /* Navigation Sidebar */
-.sidebar-nav {
+/* .sidebar-nav {
   width: 90px;
   position: fixed;
   left: 0;
@@ -39,7 +39,7 @@ h4.card-title {
   bottom: 0;
   background-color: var(--primary-bg);
   z-index: 1000;
-}
+} */
 
 /* Search bar */
 .search input {
