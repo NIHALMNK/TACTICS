@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Restricted</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        
+        .ban-container {
+            background-color: #f9f9f9;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            animation: fadeIn 1s ease-out;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .ban-icon {
+            font-size: 80px;
+            color: #ff4757;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .reason {
+            background-color: #f4f4f4;
+            border-left: 5px solid #ff4757;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .contact-info {
+            color: #666;
+            margin-top: 30px;
+        }
+        
+        .appeal-btn {
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        
+        .appeal-btn:hover {
+            background-color: #ff6b6b;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="ban-container">
+        <div class="ban-icon">🚫</div>
+        <h1>Account Suspended</h1>
+        <p>Your account has been temporarily restricted due to a violation of our terms of service.</p>
+        
+        <div class="reason">
+            <strong>Reason for Suspension:</strong>
+            <p id="suspension-reason">Violation of Community Guidelines</p>
+        </div>
+        
+        <p>If you believe this is a mistake, you can submit an appeal.</p>
+        
+        <button class="appeal-btn" onclick="showAppealForm()">Appeal Suspension</button>
+        
+        <div class="contact-info">
+            Need help? Contact support at support@example.com
+        </div>
+    </div>
+    
+    <script>
+        function showAppealForm() {
+            const container = document.querySelector('.ban-container');
+            container.innerHTML = `
+                <h2>Submit Appeal</h2>
+                <form id="appeal-form">
+                    <textarea
+                        placeholder="Explain why you believe your account should be reinstated"
+                        rows="5"
+                        style="width: 100%; margin-bottom: 15px; padding: 10px;"
+                    ></textarea>
+                    <button type="submit" class="appeal-btn">Submit Appeal</button>
+                </form>
+            `;
+            
+            document.getElementById('appeal-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Your appeal has been submitted and will be reviewed within 3-5 business days.');
+            });
+        }
+    </script>
+</body>
+</html>

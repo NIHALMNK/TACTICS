@@ -1,0 +1,155 @@
+ /* Base Responsive Styles */
+ body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+}
+
+/* Navbar Styles */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1050;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 80px;
+}
+
+/* Profile Session Container */
+.profile-session-container {
+  padding-top: 80px; /* Accommodate fixed navbar */
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.dashboard {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* Sidebar Styles */
+.sidebar {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+}
+
+.nav-button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-button svg {
+  margin-right: 0.75rem;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.nav-button:hover {
+  background-color: #f3f4f6;
+}
+
+.nav-button.active {
+  background-color: #0d9488;
+  color: white;
+}
+
+/* Main Content Styles */
+.main-content {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  flex-grow: 1;
+}
+
+/* Responsive Breakpoints */
+/* Mobile Devices */
+@media (max-width: 768px) {
+  .dashboard {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .main-content {
+    width: 100%;
+  }
+}
+
+/* Laptop and Above */
+@media (min-width: 769px) {
+  .dashboard {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .sidebar {
+    width: 250px; /* Fixed width for sidebar */
+    flex-shrink: 0;
+  }
+
+  .main-content {
+    flex-grow: 1;
+    width: calc(100% - 250px); /* Adjust based on sidebar width */
+  }
+}
+
+/* Laptop L (1440px) */
+@media (min-width: 1440px) {
+  .sidebar {
+    width: 300px;
+  }
+
+  .main-content {
+    width: calc(100% - 300px);
+  }
+}
+
+/* 4K and Above */
+@media (min-width: 2560px) {
+  .container {
+    max-width: 2000px;
+  }
+
+  .sidebar {
+    width: 350px;
+  }
+
+  .main-content {
+    width: calc(100% - 350px);
+    padding: 2rem;
+  }
+
+  .nav-button {
+    padding: 1rem 1.25rem;
+    font-size: 1.1rem;
+  }
+}
+
+/* Additional 8K Breakpoint */
+@media (min-width: 7680px) {
+  .sidebar {
+    width: 400px;
+  }
+
+  .main-content {
+    width: calc(100% - 400px);
+    padding: 2.5rem;
+  }
+}

@@ -1,0 +1,158 @@
+:root {
+  --primary-bg: #2c3e50;
+  --container-bg: #34495e;
+  --text-color: #ecf0f1;
+  --teal: #1abc9c;
+  --teal-hover: #16a085;
+  --red: #e74c3c;
+  --red-hover: #c0392b;
+  --muted-gray: #bdc3c7;
+  --light-muted-gray: #95a5a6;
+}
+
+/* Global styles */
+body {
+  background-color: var(--primary-bg);
+  color: var(--text-color);
+  font-family: 'Arial', sans-serif;
+  padding-left: 90px; /* Space for navigation bar */
+}
+
+h4.card-title {
+  font-weight: bold;
+  font-size: 1.8rem;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+}
+
+.container-fluid {
+  padding: 2rem;
+  padding-left: calc(2rem + 90px); /* Adjust for navigation bar */
+}
+
+/* Navigation Sidebar */
+/* .sidebar-nav {
+  width: 90px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: var(--primary-bg);
+  z-index: 1000;
+} */
+
+/* Search bar */
+.search input {
+  border-radius: 20px;
+  background: var(--container-bg);
+  border: 1px solid var(--muted-gray);
+  color: var(--text-color);
+}
+
+.search button {
+  border-radius: 20px;
+  background: var(--teal);
+  border: none;
+  color: var(--text-color);
+}
+
+.search input:focus, .search button:hover {
+  box-shadow: 0 0 10px rgba(26, 188, 156, 0.7);
+}
+
+/* Table styling */
+.table-responsive {
+  background: var(--container-bg);
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.table {
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  border: 1px solid var(--primary-bg);
+  padding: 12px 15px;
+}
+
+.table th {
+  background: var(--primary-bg);
+  text-transform: uppercase;
+  color: var(--text-color);
+}
+
+.table td {
+  background: var(--container-bg);
+  color: var(--light-muted-gray);
+}
+
+.table tr:hover {
+  background: var(--teal-hover);
+  color: var(--text-color);
+}
+
+/* Buttons */
+.btn-ban {
+  background-color: var(--red);
+  border: none;
+  color: var(--text-color);
+  transition: background-color 0.3s ease;
+}
+
+.btn-ban:hover {
+  background-color: var(--red-hover);
+}
+
+.btn-view {
+  background-color: var(--teal);
+  border: none;
+  color: var(--text-color);
+  transition: background-color 0.3s ease;
+}
+
+.btn-view:hover {
+  background-color: var(--teal-hover);
+}
+
+/* User Info section */
+.userInfoView {
+  background: var(--container-bg);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  color: var(--text-color);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.userInfoView h4 {
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.userInfoView p {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+      padding-left: 0;
+  }
+
+  .container-fluid {
+      padding: 1rem;
+  }
+
+  .table-responsive {
+      padding: 1rem;
+  }
+
+  .userInfoView {
+      padding: 1rem;
+  }
+}
+
+/*==========================================================*/

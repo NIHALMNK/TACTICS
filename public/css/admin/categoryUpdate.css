@@ -1,0 +1,133 @@
+:root {
+    --dark-blue-gray: #2c3e50;
+    --light-gray: #ecf0f1;
+    --slightly-lighter-blue-gray: #34495e;
+    --teal-green: #1abc9c;
+    --darker-teal-green: #16a085;
+    --red: #e74c3c;
+    --darker-red: #c0392b;
+    --muted-gray: #bdc3c7;
+    --lighter-muted-gray: #95a5a6;
+    --primary-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --border-radius: 8px;
+}
+
+body {
+    background: var(--dark-blue-gray);
+    font-family: var(--primary-font);
+    color: var(--light-gray);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.category-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 2rem;
+    background: var(--slightly-lighter-blue-gray);
+    border-radius: var(--border-radius);
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.round-photo-input {
+    width: 200px;
+    height: 200px;
+    border: 4px dashed var(--teal-green);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.round-photo-input:hover {
+    border-color: var(--darker-teal-green);
+}
+
+.photo-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.photo-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.btn-update {
+    background-color: var(--teal-green);
+    color: var(--dark-blue-gray);
+    border-radius: var(--border-radius);
+    transition: all 0.3s;
+    width: 100%;
+    font-weight: 600;
+    padding: 12px;
+}
+
+.btn-update:hover {
+    background-color: var(--darker-teal-green);
+    box-shadow: 0 4px 12px rgba(26, 188, 156, 0.3);
+}
+
+.error-message {
+    color: var(--red);
+    font-size: 0.9rem;
+    margin-top: 5px;
+    display: none;
+}
+
+.feedback-message {
+    display: none;
+    margin-top: 20px;
+    border-radius: var(--border-radius);
+}
+
+.alert-success {
+    background-color: rgba(26, 188, 156, 0.1);
+    border: 1px solid var(--teal-green);
+    color: var(--teal-green);
+}
+
+.alert-danger {
+    background-color: rgba(231, 76, 60, 0.1);
+    border: 1px solid var(--red);
+    color: var(--red);
+}
+
+.btn-remove-image {
+    margin-top: 10px;
+    color: var(--red);
+}
+
+.btn-remove-image:hover {
+    color: var(--darker-red);
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .category-container {
+        padding: 1rem;
+    }
+    
+    .round-photo-input {
+        width: 160px;
+        height: 160px;
+    }
+}

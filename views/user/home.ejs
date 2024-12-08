@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tactics</title>
+    <link rel="icon" type="image/x-icon" href="/images/produts-tactics/LOGO/3.png">
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/css/user/home.css" />
+  </head>
+  <body>
+    <!-------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <%- include('./layout/NAV.ejs',{ user: user }) %>
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!-- Updated Carousel Section -->
+    <section class="section-slide">
+      <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+              <!-- Slide 1 -->
+              <div class="carousel-item active" >
+                  <div class="item-slick1" style="background-image: url('/images/produts-tactics/carosal/1.png');">
+                      <div class="container">
+                          <div class="row">
+                              <div class="col-12">
+                                  <div class="layer-slick1">
+                                      <span class="ltext-101">men's Collection 2024</span>
+                                  </div>
+                                  <div class="layer-slick1">
+                                      <h2 class="ltext-201">NEW SEASON</h2>
+                                  </div>
+                                  <div class="layer-slick1">
+                                      <a href="#" class="flex-c-m">Shop Now</a>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <!-- Slide 2 -->
+              <div class="carousel-item" >
+                  <div class="item-slick1"style="background-image: url('/images/produts-tactics/carosal/2.png');">
+                      <div class="container">
+                          <div class="row">
+                              <div class="col-12">
+                                  <div class="layer-slick1">
+                                      <span class="ltext-101">men's Collection 2024</span>
+                                  </div>
+                                  <div class="layer-slick1">
+                                      <h2 class="ltext-201">NEW SEASON</h2>
+                                  </div>
+                                  <div class="layer-slick1">
+                                      <a href="#" class="flex-c-m">Shop Now</a>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <!-- Slide 3 -->
+              <div class="carousel-item" >
+                  <div class="item-slick1"style="background-image: url('/images/produts-tactics/carosal/3.png');">
+                      <div class="container">
+                          <div class="row">
+                              <div class="col-12">
+                                  <div class="layer-slick1">
+                                      <span class="ltext-101">men's Collection 2024</span>
+                                  </div>
+                                  <div class="layer-slick1">
+                                      <h2 class="ltext-201">NEW SEASON</h2>
+                                  </div>
+                                  <div class="layer-slick1">
+                                      <a href="#" class="flex-c-m">Shop Now</a>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <!-- Slide 4 -->
+              <div class="carousel-item" >
+                  <div class="item-slick1"style="background-image: url('/images/produts-tactics/carosal/4.png');">
+                      <div class="container">
+                          <div class="row">
+                              <div class="col-12">
+                                  <div class="layer-slick1">
+                                      <span class="ltext-101">men's Collection 2024</span>
+                                  </div>
+                                  <div class="layer-slick1">
+                                      <h2 class="ltext-201">NEW SEASON</h2>
+                                  </div>
+                                  <div class="layer-slick1">
+                                      <a href="#" class="flex-c-m">Shop Now</a>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Carousel Controls -->
+          <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+          </button>
+      </div>
+  </section>
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!-- our produts -->
+    <section>
+      <div class="min-box-section">
+        <div class="min-box-card">
+          <div class="container my-5">
+            <h2 class="text-center mb-4">Our Products</h2>
+            <div class="row g-4">
+              <!-- Product Card 1: SHIRT Category -->
+              <div class="col-md-4">
+                <div class="min-box-card">
+                  <img src="/images/images/banner-01.jpg" alt="Women Collection" />
+                  <div class="min-box-card-body">
+                    <h5>SHIRT</h5>
+                    <p>Spring 2018</p>
+                    <!-- Shop Now link for SHIRT category -->
+                    <a href="/shop?category=SHIRT">Shop Now</a>
+                  </div>
+                </div>
+              </div>
+              <!-- Product Card 2: TROUSERS Category -->
+              <div class="col-md-4">
+                <div class="min-box-card">
+                  <img src="/images/images/banner-02.jpg" alt="Men Collection" />
+                  <div class="min-box-card-body">
+                    <h5>TROUSERS</h5>
+                    <p>Spring 2018</p>
+                    <!-- Shop Now link for TROUSERS category -->
+                    <a href="/shop?category=TROUSERS">Shop Now</a>
+                  </div>
+                </div>
+              </div>
+              <!-- Product Card 3: JACKETS Category -->
+              <div class="col-md-4">
+                <div class="min-box-card">
+                  <img src="/images/images/banner-03.jpg" alt="Accessories Collection" />
+                  <div class="min-box-card-body">
+                    <h5>JACKETS</h5>
+                    <p>New Trend</p>
+                    <!-- Shop Now link for JACKETS category -->
+                    <a href="/shop?category=JACKETS">Shop Now</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!-- Product Overview -->
+    <section>
+      <div class="container">
+        <div class="row">
+            <% if (products && products.length > 0) { %>
+                <% products.forEach((product) => { %>
+                    <div class="col-md-3 mb-4 d-flex justify-content-center">
+                        <div class="product-card card">
+                            <% if (product.discount) { %>
+                                <div class="discount-badge"><%= product.discount %>% OFF</div>
+                            <% } %>
+                            
+                           <a href="/product-detail/<%= product._id %>"> <img src="<%= product.images[0] %>" alt="<%= product.name %>" class="product-image main-image">
+                            <img src="<%= product.images[1] || product.images[0] %>" alt="<%= product.name %> Back" class="product-image hover-image"></a>
+                            
+                            <div class="card-icons">
+                                <div class="card-icon wishlist-icon">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <div class="card-icon cart-icon">
+                                    <i class="fas fa-shopping-bag"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="product-details">
+                                <h5 class="card-title"><%= product.name %></h5>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-danger fw-bold">
+                                        $<%= (product.offerPrice || product.price).toFixed(2) %>
+                                    </span>
+                                    
+                                    <% if (product.price) { %>
+                                        <span class="text-muted text-decoration-line-through">$<%= product.price.toFixed(2) %></span>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="col-12">
+                    <p class="text-center">No products available.</p>
+                </div>
+            <% } %>
+        </div>
+    </div>
+    </section>
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!--button for LODE MORE-->
+    <section class="button-container">
+      <button class="button-load">
+        <span class="button-content">Lode more...</span>
+      </button>
+    </section>
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <%- include('./layout/FOOTER.ejs') %>
+    
+    
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+     document.addEventListener("DOMContentLoaded", function () {
+            const carousel = document.getElementById("mainCarousel");
+
+            function animateLayers(layers) {
+                layers.forEach((layer, index) => {
+                    layer.style.animationDelay = `${index * 0.5}s`; // Smooth delay
+                    layer.classList.remove("animated"); // Reset animation
+                    void layer.offsetWidth; // Trigger reflow to restart animation
+                    layer.classList.add("animated");
+                });
+            }
+
+            // Add event listener for carousel slide changes
+            carousel.addEventListener("slid.bs.carousel", function (event) {
+                const activeSlide = event.relatedTarget;
+                const layers = activeSlide.querySelectorAll(".layer-slick1");
+                animateLayers(layers);
+            });
+
+            // Animate first slide on page load
+            const firstSlideLayers = document.querySelectorAll(
+                ".carousel-item.active .layer-slick1"
+            );
+            animateLayers(firstSlideLayers);
+        });
+//=====================>product  <=============//
+document.querySelectorAll('.wishlist-icon').forEach(icon => {
+            icon.addEventListener('click', function() {
+                this.classList.toggle('text-danger');
+            });
+        });
+
+        document.querySelectorAll('.cart-icon').forEach(icon => {
+            icon.addEventListener('click', function() {
+                alert('Added to cart!');
+            });
+        });
+
+
+    </script>
+    <!-- Your existing JavaScript code remains the same -->
+  </body>
+</html>

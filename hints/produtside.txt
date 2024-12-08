@@ -1,0 +1,17 @@
+001:{
+add this to product side after set the category
+
+<div class="form-group">
+    <label for="productCategory" class="form-label">Category</label>
+    <select class="form-control" id="productCategory" name="productCategory" required>
+        <% categories.forEach(category => { %>
+            <option value="<%= category._id %>"><%= category.name %></option>
+        <% }) %>
+    </select>
+</div>
+}
+
+
+002:{
+    
+}

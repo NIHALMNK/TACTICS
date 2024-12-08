@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tactics</title>
+    <link rel="icon" type="image/x-icon" href="/images/produts-tactics/LOGO/3.png">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Font Awesome for better icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/user/login.css" />
+</head>
+
+<body>
+  <!-------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+  <%- include('./layout/NAV.ejs') %>
+  <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+  <div class="container-fluid">
+    <div class="login-container">
+      <div class="row h-100">
+        <div class="col-lg-6 login-section">
+          <div class="login-content fade-in">
+            <a href="#" class="back-button">
+              <i class="fas fa-arrow-left me-2"></i>
+              Back
+            </a>
+            <h1 class="mb-2 fw-bold">Welcome back!</h1>
+            <p class="text-muted mb-4">
+              Enter your credentials to access your account
+            </p>
+
+            <div class="success-message">
+              <i class="fas fa-check-circle me-2"></i>
+              Login successful! Redirecting...
+            </div>
+
+            <form id="loginForm" method="post" action="/checklogin" novalidate>
+              <!------------->
+              <input type="text" id="message" value="<%= message %>" name="message" hidden />
+              <!------------->
+
+              <div class="form-floating">
+                <input type="email" class="form-control" name="email" id="emailInput" placeholder="name@example.com" required />
+                <label for="emailInput">Email address</label>
+                <div class="invalid-feedback">
+                  Please enter a valid email address
+                </div>
+              </div>
+
+              <div class="form-floating password-field">
+                <input type="password" class="form-control" name="password" id="passwordInput" placeholder="Password" required minlength="8" />
+                <label for="passwordInput">Password</label>
+                <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <div class="invalid-feedback">
+                  Password must be at least 8 characters long
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="remember" />
+                  <label class="form-check-label" for="remember">
+                    Remember for 30 days
+                  </label>
+                </div>
+                <a href="#" class="forgot-password">Forgot password?</a>
+              </div>
+
+              <button type="submit" class="btn btn-login mb-3">
+                <span class="login-text">Sign In</span>
+                <span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+              </button>
+
+              <div class="divider">or continue with</div>
+
+              <div class="row g-3 mb-3">
+                <div class="col-12">
+                  <a href="/auth/google">
+
+                    <button type="button" class="social-button w-100 d-flex align-items-center justify-content-center gap-2">
+                      <img src="/images/logos/google.png" alt="Google logo" />
+                      Google
+                    </button>
+                  </a>
+                </div>
+              </div>
+
+              <p class="text-center signup-text">
+                Don't have an account? <a href="/register">Sign up now</a>
+              </p>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-6 image-section p-0">
+          <img src="/images/logSide/about-01.jpg" alt="Login page decorative image" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+  <%- include('./layout/FOOTER.ejs') %>
+
+  <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- <script src="/js/user/login.js"></script> -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Server message handling
+      const serverMessage = "<%= message %>";
+      if (serverMessage) {
+        Swal.fire({
+          icon: serverMessage.includes("success") ? "success" : "error",
+          title: serverMessage,
+          timer: 2000,
+        });
+      }
+
+      // Form submission with client-side validation
+      const loginForm = document.getElementById("loginForm");
+      loginForm.addEventListener("submit", (e) => {
+        if (!formValidate()) {
+          e.preventDefault();
+        }
+      });
+
+      // Validation logic
+      function formValidate() {
+        const emailInput = document.getElementById("emailInput");
+        const passwordInput = document.getElementById("passwordInput");
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        // Validate email
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          Swal.fire({
+            icon: "error",
+            title: "Invalid Email",
+            text: "Please enter a valid email address.",
+          });
+          return false;
+        }
+
+        // Validate password length
+        if (password.length < 8) {
+          Swal.fire({
+            icon: "error",
+            title: "Weak Password",
+            text: "Password must be at least 8 characters long.",
+          });
+          return false;
+        }
+
+        return true;
+      }
+
+      // Password visibility toggle
+      document.querySelector(".password-toggle").addEventListener("click", () => {
+        const passwordInput = document.getElementById("passwordInput");
+        const icon = document.querySelector(".password-toggle i");
+
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          icon.classList.replace("fa-eye", "fa-eye-slash");
+        } else {
+          passwordInput.type = "password";
+          icon.classList.replace("fa-eye-slash", "fa-eye");
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

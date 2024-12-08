@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tactics</title>
+    <link rel="icon" type="image/x-icon" href="/images/produts-tactics/LOGO/3.png">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/user/contact.css">
+</head>
+
+<body>
+ <!-------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+ <%- include('./layout/NAV.ejs') %>
+ <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+ 
+  <!-- Heading -->
+  <div class="heading-container">
+    <h1 class="heading-text">Contact</h1>
+  </div>
+
+ <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+<!------------contact------------>
+<div class="container py-5 d-flex align-items-center" style="min-height: 100vh;">
+    <div class="row justify-content-center align-items-center w-100">
+        <!-- Contact Form -->
+        <div class="col-lg-6 mb-4">
+            <div class="bg-white p-4 shadow rounded">
+                <h2 class="text-center mb-4">Send Us A Message</h2>
+                <form>
+                    <input type="email" class="form-control mb-3" placeholder="Your Email Address" required>
+                    <textarea class="form-control mb-3" rows="6" placeholder="How Can We Help?" required></textarea>
+                    <button type="submit" class="btn btn-dark w-100 rounded-pill">SUBMIT</button>
+                </form>
+            </div>
+        </div>
+        <!-- Contact Info -->
+        <div class="col-lg-6">
+            <div class="bg-light p-4 rounded shadow">
+                <div class="mb-4 d-flex align-items-start">
+                    <svg class="me-3" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <div>
+                        <h3 class="h6">Address</h3>
+                        <p>Cozy Store Center 8th floor, 379<br>Hudson St, New York, NY 10018 US</p>
+                    </div>
+                </div>
+                <div class="mb-4 d-flex align-items-start">
+                    <svg class="me-3" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                    <div>
+                        <h3 class="h6">Let's Talk</h3>
+                        <a href="tel:+18001236879" class="text-decoration-none text-dark">+1 800 1236879</a>
+                    </div>
+                </div>
+                <div class="d-flex align-items-start">
+                    <svg class="me-3" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <div>
+                        <h3 class="h6">Sale Support</h3>
+                        <a href="mailto:contact@example.com" class="text-decoration-none text-dark">contact@example.com</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+<!------map------------>
+<div class="map-container">
+    <div id="map" class="map"></div>
+    <div class="map-overlay">
+        <div class="location-info">
+            <h3>Our Location</h3>
+            <p>379 Hudson St, New York, NY 10018</p>
+            <p>Open Monday-Friday: 9am - 6pm</p>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!------footer------->
+    <%- include('./layout/FOOTER.ejs') %>
+      <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+      
+
+
+  <script>
+    // Parallax effect on scroll
+    window.addEventListener("scroll", function () {
+      const header = document.querySelector(".heading-container");
+      const scrollPosition = window.pageYOffset;
+      header.style.backgroundPositionY = scrollPosition * 0.5 + "px";
+    });
+
+
+    //----------------------------------------------------------------->
+    // Initialize and add the map
+    function initMap() {
+            // The location of the marker (New York coordinates)
+            const location = { lat: 40.7268, lng: -74.0076 };
+
+            // Map options
+            const mapOptions = {
+                zoom: 15,
+                center: location,
+                styles: [
+                    {
+                        "featureType": "all",
+                        "elementType": "geometry",
+                        "stylers": [
+                            { "saturation": -80 }
+                        ]
+                    },
+                    {
+                        "featureType": "water",
+                        "elementType": "geometry.fill",
+                        "stylers": [
+                            { "color": "#a3c7df" }
+                        ]
+                    }
+                ],
+                disableDefaultUI: true,
+                zoomControl: true
+            };
+
+            // The map
+            const map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+            // The marker
+            const marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                title: "Our Location"
+            });
+        }
+
+        // Load Google Maps API dynamically
+        function loadGoogleMaps() {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBfI74U1ADa2S-qDmnT7lv4R192IQTqeWk&callback=initMap`;
+            script.async = true;
+            script.defer = true;
+            script.onerror = () => console.error("Google Maps API failed to load.");
+            document.head.appendChild(script);
+        }
+
+        // Call the function to load the map
+        loadGoogleMaps();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

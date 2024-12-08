@@ -1,0 +1,133 @@
+:root {
+    --primary-bg-color: #2c3e50;
+    --container-bg-color: #34495e;
+    --text-color: #ecf0f1;
+    --secondary-text-color: #bdc3c7;
+    --muted-text-color: #95a5a6;
+    --primary-action-color: #1abc9c;
+    --primary-action-hover: #16a085;
+    --danger-action-color: #e74c3c;
+    --danger-action-hover: #c0392b;
+    --hover-bg-color: #2f4a5a;
+}
+
+body {
+    background-color: var(--primary-bg-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+    background-color: var(--container-bg-color);
+    color: var(--text-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    border-bottom: 1px solid var(--muted-text-color);
+    padding: 1.5rem;
+    background-color: var(--container-bg-color);
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box input {
+    background-color: var(--primary-bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--muted-text-color);
+    border-radius: 25px;
+    padding: 12px 20px 12px 40px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted-text-color);
+}
+
+.table {
+    color: var(--text-color);
+}
+
+.table th {
+    border-top: none;
+    background-color: var(--container-bg-color);
+    color: var(--text-color);
+}
+
+.table td {
+    vertical-align: middle;
+    background-color: var(--primary-bg-color);
+}
+
+.table tr:hover {
+    background-color: var(--hover-bg-color);
+}
+
+.btn-custom {
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn-create {
+    background-color: var(--primary-action-color);
+    color: var(--text-color);
+}
+
+.btn-create:hover {
+    background-color: var(--primary-action-hover);
+}
+
+.btn-unlist {
+    background-color: var(--danger-action-color);
+    color: var(--text-color);
+}
+
+.btn-unlist:hover {
+    background-color: var(--danger-action-hover);
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 0.875rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn-custom {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+}

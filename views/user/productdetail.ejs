@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tactics</title>
+    <link rel="icon" type="image/x-icon" href="/images/produts-tactics/LOGO/3.png">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/user/productDetail.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <%- include('./layout/NAV.ejs') %>
+
+    <!-- Product Details Section -->
+    <div class="container py-5">
+        <!-- Breadcrumb -->
+<div class="row mb-4">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/home">Home</a></li>
+                <li class="breadcrumb-item"><a href="/shop"><%= product.category.name %></a></li> <!-- Access the name property -->
+                <li class="breadcrumb-item active" aria-current="page"><%= product.name %></li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+        <!-- Main Product Content -->
+        <div class="row">
+            <!-- Product Images -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <span class="product-badge badge-new"><%= product.badge %></span>
+                    <div class="img-magnifier-container">
+                        <div class="product-image-wrapper">
+                            <a href=""><img src="<%= product.images[0] %>" alt="Product Image" id="productImage" class="card-img-top product-image"></a>
+                            <div class="img-magnifier-glass"></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mt-3">
+                            <% product.images.forEach((img, index) => { %>
+                                <div class="col-3">
+                                    <img src="<%= img %>" alt="Thumbnail <%= index + 1 %>" class="img-thumbnail thumbnail">
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Details -->
+            <!-- Product Details -->
+<div class="col-md-6">
+    <h1 class="product-title mb-3"><%= product.title %></h1>
+    <div class="d-flex align-items-center mb-3">
+        <div class="rating me-2">
+            <% for (let i = 0; i < product.rating; i++) { %>
+                <i class="fas fa-star"></i>
+            <% } %>
+            <% for (let i = product.rating; i < 5; i++) { %>
+                <i class="far fa-star"></i>
+            <% } %>
+        </div>
+        <span class="text-muted">(<%= product.reviews.length %> Reviews)</span>
+    </div>
+
+    <div class="mb-3">
+        <% if (product.offerPrice && product.offerPrice < product.price) { %>
+            <h2 class="h4 text-danger">
+                $<%= product.offerPrice.toFixed(2) %> <!-- Offer Price -->
+            </h2>
+            <h4 class="text-muted text-decoration-line-through">
+                $<%= product.price.toFixed(2) %> <!-- Original Price -->
+            </h4>
+        <% } else { %>
+            <h2 class="h4">
+                $<%= product.price.toFixed(2) %> <!-- Regular Price -->
+            </h2>
+        <% } %>
+    </div>
+    
+
+    <p class="availability mb-3">
+        <i class="fas fa-check-circle"></i> <%= product.stock %> Items in Stock
+    </p>
+    
+    <!-- Description -->
+    <p class="product-description"><%= product.description %></p>
+
+    <!-- Wishlist Icon -->
+    <button class="btn btn-light mb-3" id="wishlistBtn">
+        <i class="fas fa-heart"></i> Add to Wishlist
+    </button>
+
+    <!-- Size Selector -->
+    <div class="mb-4">
+        <h3 class="h5">Select Size:</h3>
+        <div class="btn-group" role="group">
+            <% product.sizes.forEach(size => { %>
+                <input type="radio" class="btn-check" name="size" id="size-<%= size %>" autocomplete="off">
+                <label class="btn btn-outline-secondary" for="size-<%= size %>"><%= size %></label>
+            <% }) %>
+        </div>
+    </div>
+
+    <!-- Quantity Selector -->
+    <div class="mb-4">
+        <h3 class="h5">Quantity:</h3>
+        <div class="d-flex align-items-center">
+            <div class="input-group me-3" style="width: 130px;">
+                <button class="btn btn-outline-secondary" type="button" id="decrease">-</button>
+                <input 
+                    type="number" 
+                    class="form-control text-center" 
+                    value="1" 
+                    min="1" 
+                    max="<%= product.stock %>" 
+                    id="quantity" 
+                    readonly>
+                <button class="btn btn-outline-secondary" type="button" id="increase">+</button>
+            </div>
+            <span class="text-muted">Available: <%= product.stock %> in stock</span>
+        </div>
+    </div>
+    
+    
+    
+
+            <!-- Buy Now Button -->
+            <button class="btn btn-success" id="buyNowBtn">Buy Now</button>
+        </div>
+    </div>
+</div>    
+        <!-- Reviews Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="mb-4 text-center">Customer Reviews</h3>
+        
+                <% if (product.reviews && product.reviews.length > 0) { %>
+                    <% product.reviews.forEach(review => { %>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="d-flex mb-3">
+                                    <img src="<%= review.avatar %>" alt="Avatar" class="review-avatar me-3">
+                                    <div>
+                                        <h6 class="mb-1"><%= review.name %></h6>
+                                        <div class="rating mb-1">
+                                            <% for (let i = 0; i < review.rating; i++) { %>
+                                                <i class="fas fa-star"></i>
+                                            <% } %>
+                                            <% for (let i = review.rating; i < 5; i++) { %>
+                                                <i class="far fa-star"></i>
+                                            <% } %>
+                                        </div>
+                                        <p class="review-date"><%= review.date %></p>
+                                    </div>
+                                </div>
+                                <p class="mb-0"><%= review.comment %></p>
+                            </div>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <p class="text-center text-muted">No reviews available.</p>
+                <% } %>
+            </div>
+        </div>
+        
+        
+
+   <!-- Related Products -->
+   <div class="container mt-5">
+    <h3>Related Products</h3>
+    <div class="row">
+        <% if (relatedProducts && relatedProducts.length > 0) { %>
+            <% relatedProducts.forEach((related) => { %>
+                <div class="col-md-3 mb-4 d-flex justify-content-center">
+                    <div class="related-product-card card">
+                        <% if (related.discount) { %>
+                            <div class="related-discount-badge"><%= related.discount %>% OFF</div>
+                        <% } %>
+                        
+                        <a href="/product-detail/<%= related._id %>">
+                            <img src="<%= related.images[0] %>" alt="<%= related.name %>" class="related-product-image related-main-image">
+                            <img src="<%= related.images[1] || related.images[0] %>" alt="<%= related.name %> Back" class="related-product-image related-hover-image">
+                        </a>
+                        
+                        <div class="related-card-icons">
+                            <div class="related-card-icon related-wishlist-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="related-card-icon related-cart-icon">
+                                <i class="fas fa-shopping-bag"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="related-product-details">
+                            <h5 class="card-title"><%= related.name %></h5>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-danger fw-bold">
+                                    $<%= (related.offerPrice || related.price).toFixed(2) %>
+                                </span>
+                                
+                                <% if (related.price) { %>
+                                    <span class="text-muted text-decoration-line-through">$<%= related.price.toFixed(2) %></span>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <div class="col-12">
+                <p class="text-center">No related products available.</p>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+
+    <!-- Footer -->
+    <%- include('./layout/FOOTER.ejs') %>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    // Quantity input handlers
+    const quantityInput = document.getElementById('quantity');
+    document.getElementById('increase').addEventListener('click', () => {
+        quantityInput.value = parseInt(quantityInput.value) + 1;
+    });
+
+    document.getElementById('decrease').addEventListener('click', () => {
+        if (parseInt(quantityInput.value) > 1) {
+            quantityInput.value = parseInt(quantityInput.value) - 1;
+        }
+    });
+
+    // Thumbnail click handler
+    document.querySelectorAll('.thumbnail').forEach(thumb => {
+        thumb.addEventListener('click', () => {
+            document.querySelector('.product-image').src = thumb.src;
+        });
+    });
+
+    // Magnifier functionality
+    const productImage = document.getElementById('productImage');
+    const magnifierGlass = document.querySelector('.img-magnifier-glass');
+    const zoomLevel = 3;
+
+    function setupMagnifier() {
+        magnifierGlass.style.backgroundImage = `url('${productImage.src}')`;
+        magnifierGlass.style.backgroundRepeat = 'no-repeat';
+        magnifierGlass.style.backgroundSize = `${productImage.width * zoomLevel}px ${productImage.height * zoomLevel}px`;
+
+        productImage.parentElement.addEventListener('mousemove', moveMagnifier);
+        productImage.parentElement.addEventListener('mouseenter', () => {
+            magnifierGlass.style.display = 'block';
+        });
+        productImage.parentElement.addEventListener('mouseleave', () => {
+            magnifierGlass.style.display = 'none';
+        });
+    }
+
+    function moveMagnifier(e) {
+        const rect = productImage.getBoundingClientRect();
+        const x = e.pageX - rect.left - window.pageXOffset;
+        const y = e.pageY - rect.top - window.pageYOffset;
+
+        const glassHalfWidth = magnifierGlass.offsetWidth / 2;
+        const glassHalfHeight = magnifierGlass.offsetHeight / 2;
+
+        // Calculate magnifier position
+        let posX = x - glassHalfWidth;
+        let posY = y - glassHalfHeight;
+
+        // Constrain within image bounds
+        posX = Math.max(0, Math.min(posX, productImage.width - magnifierGlass.offsetWidth));
+        posY = Math.max(0, Math.min(posY, productImage.height - magnifierGlass.offsetHeight));
+
+        magnifierGlass.style.left = `${posX}px`;
+        magnifierGlass.style.top = `${posY}px`;
+
+        // Calculate background position
+        const bgPosX = -(x * zoomLevel - glassHalfWidth);
+        const bgPosY = -(y * zoomLevel - glassHalfHeight);
+
+        magnifierGlass.style.backgroundPosition = `${bgPosX}px ${bgPosY}px`;
+    }
+
+    // Initialize magnifier once the product image has loaded
+    productImage.addEventListener('load', setupMagnifier);
+    setupMagnifier(); // Call it for the initial load
+});
+//-------------------------------------------------------------->
+
+document.addEventListener('DOMContentLoaded', () => {
+    const quantityInput = document.getElementById('quantity');
+    const increaseBtn = document.getElementById('increase');
+    const decreaseBtn = document.getElementById('decrease');
+
+    // Get the stock limit from the input's "max" attribute
+    const maxStock = parseInt(quantityInput.getAttribute('max'));
+
+    // Handle "Increase" button click
+    increaseBtn.addEventListener('click', () => {
+        let currentValue = parseInt(quantityInput.value);
+
+        // Increase the value only if it's below the stock limit
+        if (currentValue < maxStock) {
+            quantityInput.value = currentValue + 1;
+        } else {
+            alert('Cannot exceed available stock!');
+            quantityInput.value = currentValue - 1;
+        }
+    });
+
+    // Handle "Decrease" button click
+    decreaseBtn.addEventListener('click', () => {
+        let currentValue = parseInt(quantityInput.value);
+
+        // Decrease the value only if it's above the minimum (1)
+        if (currentValue > 1) {
+            quantityInput.value = currentValue - 1;
+        } else {
+            alert('Quantity cannot be less than 1!');
+        }
+    });
+
+    // Prevent manual input outside valid range
+    quantityInput.addEventListener('input', () => {
+        let currentValue = parseInt(quantityInput.value);
+
+        // Check and enforce limits
+        if (currentValue > maxStock) {
+            quantityInput.value = maxStock;
+            alert('Quantity cannot exceed available stock!');
+        } else if (currentValue < 1) {
+            quantityInput.value = 1;
+            alert('Quantity cannot be less than 1!');
+        }
+    });
+});
+
+//======================================>
+
+document.querySelectorAll('.related-wishlist-icon').forEach(icon => {
+    icon.addEventListener('click', function () {
+        this.classList.toggle('text-danger');
+    });
+});
+
+document.querySelectorAll('.related-cart-icon').forEach(icon => {
+    icon.addEventListener('click', function () {
+        alert('Added to cart!');
+    });
+});
+
+
+   </script>
+</body>
+</html>

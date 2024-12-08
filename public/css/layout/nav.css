@@ -1,0 +1,150 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-background);
+    overflow-x: hidden;
+  }
+  /* Navbar Styles */
+  .navbar-placeholder {
+    height: 100%;
+  }
+
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1050;
+    background: white;
+    height: 80px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .navbar-brand img {
+    height: 40px;
+  }
+
+  .nav-link {
+    color: #333;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    transition: color 0.3s ease;
+  }
+
+  .nav-link:hover {
+    color: #007bff;
+  }
+
+  .nav-icons img {
+    width: 24px;
+    height: 24px;
+    margin: 0 8px;
+  }
+
+  .offcanvas {
+    width: 240px;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 786px) {
+    .navbar {
+      height: 70px;
+    }
+
+    .navbar-brand img {
+      height: 35px;
+    }
+
+    .offcanvas-body .nav-icons img {
+      width: 22px;
+      height: 22px;
+    }
+
+    .navbar-toggler {
+      margin-right: 10px;
+    }
+  }
+
+  @media (min-width: 2560px) {
+    .navbar {
+      height: 90px;
+    }
+
+    .navbar-brand img {
+      height: 50px;
+    }
+
+    .nav-icons img {
+      width: 32px;
+      height: 32px;
+    }
+
+    .offcanvas {
+      width: 400px;
+    }
+  }
+  /* Offer Section */
+.offer-ads {
+  background-color: #f8d7da; /* Light pink background */
+  color: #721c24; /* Dark red text */
+  text-align: center;
+  border-bottom: 1px solid #f5c6cb; /* Slight border to separate sections */
+}
+
+.offer-ads a {
+  color: #721c24;
+  text-decoration: none;
+}
+
+.offer-ads a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Text Size for Offer Section */
+.offer-text {
+  font-size: 16px; /* Default for medium screens */
+  font-weight: bold;
+}
+
+@media (max-width: 320px) { /* S (320px) */
+  .offer-text {
+    font-size: 12px; /* Smaller text for very small screens */
+  }
+}
+
+@media (min-width: 321px) and (max-width: 375px) { /* M (375px) */
+  .offer-text {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 376px) and (max-width: 425px) { /* L (425px) */
+  .offer-text {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 426px) and (max-width: 786px) { /* Tablet (786px) */
+  .offer-text {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 787px) and (max-width: 1024px) { /* Laptop (1024px) */
+  .offer-text {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1440px) { /* Laptop L (1440px) */
+  .offer-text {
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 1441px) and (max-width: 2560px) { /* 4K (2560px) */
+  .offer-text {
+    font-size: 22px;
+  }
+}

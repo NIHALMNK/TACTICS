@@ -1,0 +1,117 @@
+ /* CSS Variables for Color Palette */
+ :root {
+    --dark-blue-gray: #2c3e50;
+    --slightly-lighter-blue-gray: #34495e;
+    --light-gray: #ecf0f1;
+    --teal-green: #1abc9c;
+    --darker-teal-green: #16a085;
+    --red: #e74c3c;
+    --darker-red: #c0392b;
+    --muted-gray: #bdc3c7;
+    --lighter-muted-gray: #95a5a6;
+}
+
+/* General Styles */
+body {
+    background-color: var(--dark-blue-gray);
+    color: var(--light-gray);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.product-update-container {
+    background-color: var(--slightly-lighter-blue-gray);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-top: 50px;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-control {
+    background-color: var(--dark-blue-gray);
+    border: 1px solid var(--muted-gray);
+    color: var(--light-gray);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(26, 188, 156, 0.25);
+    border-color: var(--teal-green);
+}
+
+.btn-primary {
+    background-color: var(--teal-green);
+    border-color: var(--teal-green);
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
+
+.btn-primary:hover {
+    background-color: var(--darker-teal-green);
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background-color: var(--red);
+    border-color: var(--red);
+}
+
+.btn-danger:hover {
+    background-color: var(--darker-red);
+}
+
+.round-preview {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 12px;
+    object-fit: cover;
+    background-color: var(--muted-gray);
+    margin-bottom: 10px;
+}
+
+label {
+    color: var(--light-gray);
+}
+
+select, textarea {
+    background-color: var(--dark-blue-gray);
+    border: 1px solid var(--muted-gray);
+    color: var(--light-gray);
+}
+
+.text-muted {
+    color: var(--lighter-muted-gray) !important;
+}
+
+/* Responsive Media Queries */
+@media screen and (max-width: 768px) {
+    .product-update-container {
+        padding: 15px;
+        margin-top: 20px;
+    }
+
+    .round-preview-container {
+        flex-direction: column !important;
+        align-items: center;
+    }
+
+    .round-preview-container > div {
+        margin-bottom: 15px;
+        text-align: center !important;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .product-update-container {
+        box-shadow: none;
+        padding: 10px;
+    }
+
+    .btn-primary {
+        width: 100% !important;
+    }
+}
