@@ -140,45 +140,61 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function banUserHandler() {
         const email = this.getAttribute('data-id'); // Get the user's email from the data-id attribute
-        try {
-            const response = await fetch(`/admin/userManagement/ban?email=${email}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' }
-            });
-
-            const result = await response.json();
-            
-            // SweetAlert for success notification
-            Swal.fire({
-                title: 'Success!',
-                text: result.message,
-                icon: 'success',
-                confirmButtonText: 'OK'
-            });
-
-            if (result.isDeleted) {
-                this.textContent = 'Unban';
-                this.classList.remove('btn-danger');
-                this.classList.add('btn-success');
-            } else {
-                this.textContent = 'Ban';
-                this.classList.remove('btn-success');
-                this.classList.add('btn-danger');
+    
+        // Display the SweetAlert confirmation dialog
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: ' Are you sure you want to',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes!',
+            cancelButtonText: 'Cancel !',
+            reverseButtons: true
+        });
+    
+        // Check if the user confirmed the action
+        if (result.isConfirmed) {
+            try {
+                const response = await fetch(`/admin/userManagement/ban?email=${email}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+    
+                const result = await response.json();
+    
+                // SweetAlert for success notification
+                Swal.fire({
+                    title: 'Success!',
+                    text: result.message,
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+    
+                // Update button text and styles
+                if (result.isDeleted) {
+                    this.textContent = 'Unban';
+                    this.classList.remove('btn-danger');
+                    this.classList.add('btn-success');
+                } else {
+                    this.textContent = 'Ban';
+                    this.classList.remove('btn-success');
+                    this.classList.add('btn-danger');
+                }
+    
+            } catch (error) {
+                console.error('Error toggling ban status:', error.message);
+    
+                // SweetAlert for error notification
+                Swal.fire({
+                    title: 'Error!',
+                    text: `Failed to toggle ban status: ${error.message}`,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
             }
-
-        } catch (error) {
-            console.error('Error toggling ban status:', error.message);
-            
-            // SweetAlert for error notification
-            Swal.fire({
-                title: 'Error!',
-                text: `Failed to toggle ban status: ${error.message}`,
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
         }
     }
-
+    
     async function viewUserDetailsHandler() {
         const email = this.getAttribute('data-id');  // Get the user's email from the data-id attribute
         try {
