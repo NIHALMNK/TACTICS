@@ -24,6 +24,7 @@ module.exports = {
             user: req.session.user || null,
             message: null,
           });
+          
         } catch (error) {
           console.error("Error loading login:", error);
           res.status(500).send("Server Error");

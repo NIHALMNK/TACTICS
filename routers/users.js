@@ -60,7 +60,8 @@ router.get('/order', userController.loadOrders);
 // profile routes
 
 router.get('/profile', userController.loadProfile);
-// router.post('/profile/update', userController.updateProfile);
+router.put('/profile/update', userController.updateProfile);
+router.put('/profile/change-password', userController.updatePassword);
 
 // address routes
 router.get('/address', userController.loadAddress);

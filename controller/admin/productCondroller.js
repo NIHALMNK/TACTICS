@@ -138,7 +138,7 @@ async postAddProductsPage(req, res) {
 
 async loadUpdateProduct (req, res) {
     const productId = req.params.id; // Get productId from URL parameter
-    console.log(productId);
+    // console.log(productId);
 
     try {
         const product = await Products.findById(productId).populate('category'); // Find product by ID
@@ -251,7 +251,7 @@ async deleteProduct (req, res){
 
 async recoverProducts(req, res){
     const { id } = req.params;
-    console.log(id);
+    // console.log(id);
 
     try {
         await Products.findByIdAndUpdate(id, { isDeleted: false });
