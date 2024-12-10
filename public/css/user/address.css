@@ -153,3 +153,61 @@
     padding: 2.5rem;
   }
 }
+
+/*==============================================*/
+ /* Responsive Media Queries */
+        /* Small Devices (320px) */
+        @media screen and (max-width: 320px) {
+            .address-card {
+                font-size: 0.8rem;
+                padding: 5px;
+            }
+        }
+
+        /* Medium Devices (375px) */
+        @media screen and (min-width: 321px) and (max-width: 375px) {
+            .address-card {
+                font-size: 0.9rem;
+                padding: 8px;
+            }
+        }
+
+        /* Large Devices (425px) */
+        @media screen and (min-width: 376px) and (max-width: 425px) {
+            .address-card {
+                font-size: 1rem;
+                padding: 10px;
+            }
+        }
+
+        /* Tablet (786px) */
+        @media screen and (min-width: 426px) and (max-width: 786px) {
+            .address-card {
+                font-size: 1rem;
+                padding: 15px;
+            }
+        }
+
+        /* Laptop (1024px) */
+        @media screen and (min-width: 787px) and (max-width: 1024px) {
+            .address-card {
+                font-size: 1rem;
+                padding: 20px;
+            }
+        }
+
+        /* Laptop Large (1440px) */
+        @media screen and (min-width: 1025px) and (max-width: 1440px) {
+            .address-card {
+                font-size: 1.1rem;
+                padding: 25px;
+            }
+        }
+
+        /* 4K (2560px) */
+        @media screen and (min-width: 1441px) and (max-width: 2560px) {
+            .address-card {
+                font-size: 1.2rem;
+                padding: 30px;
+            }
+        }

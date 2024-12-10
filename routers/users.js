@@ -28,7 +28,6 @@ router.get('/logout', logController.logout);
 router.get('/home',userController.loadHome);
 
 //shop routes
-// router.get('/shop', userController.loadShop);
 // In your router file
 router.get('/shop', userController.loadShop);
 router.get('/shop/products', userController.loadShop);
@@ -65,7 +64,9 @@ router.put('/profile/change-password', userController.updatePassword);
 
 // address routes
 router.get('/address', userController.loadAddress);
-
+router.post('/address/create', userController.createAddress);
+router.put('/address/:addressId', userController.updateAddress);
+router.delete('/address/:addressId', userController.removeAddress);
 // wallet routes
 router.get('/wallet', userController.loadWallet);
 

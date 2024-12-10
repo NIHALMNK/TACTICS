@@ -253,17 +253,155 @@ async updatePassword(req, res) {
    
 //====================================================>
 
-
-
-    //load Address
-    async loadAddress(req, res) {
-      try {
-        res.render("user/address", { user: req.session.user });
-      } catch (error) {
-        console.error("Error loading address:", error);
-        res.status(500).send("Server Error");
-      }
-    },
+      // Load Address Page
+      async loadAddress(req, res) {
+        try {
+          const userId = req.session.user.id;
+          const user = await User.findById(userId);
+      
+          if (!user) {
+            return res.status(404).send("User not found");
+          }
+      
+          // Pagination for addresses
+          const page = parseInt(req.query.page) || 1;
+          const limit = 1; 
+          
+         
+          const totalPages = Math.ceil(user.address.length / limit);
+          
+          
+          const adjustedPage = Math.min(page, totalPages);
+          
+          const skip = (adjustedPage - 1) * limit;
+          const addresses = user.address.slice(skip, skip + limit);
+      
+          res.render("user/address", { 
+            user: req.session.user, 
+            addresses, 
+            currentPage: adjustedPage, 
+            totalPages 
+          });
+        } catch (error) {
+          console.error("Error loading addresses:", error);
+          res.status(500).send("Server Error");
+        }
+      },
+    
+      // Create New Address
+      async createAddress(req, res) {
+        try {
+          const userId = req.session.user.id;
+          const { 
+            house, street, city, 
+            district, state, country, pinCode 
+          } = req.body;
+    
+          const user = await User.findById(userId);
+          if (!user) {
+            return res.status(404).json({ message: "User not found" });
+          }
+    
+          const newAddress = {
+            houseNumber: house,
+            street,
+            city,
+            district,
+            state,
+            country,
+            pinCode
+          };
+    
+          user.address.push(newAddress);
+          await user.save();
+    
+          res.status(201).json({ 
+            message: "Address created successfully", 
+            address: newAddress 
+          });
+        } catch (error) {
+          console.error("Error creating address:", error);
+          res.status(500).json({ message: "Server error",error:error.message });
+        }
+      },
+    
+      // Update Existing Address
+      async updateAddress(req, res) {
+        console.log("fheufewiyvdvasufyakjhusfdsfhjsabkjsgiusaguskf");
+        
+        try {
+          const userId = req.session.user.id;
+          const { addressId } = req.params;
+          const { 
+            house, street, city, 
+            district, state, country, pinCode 
+          } = req.body;
+    
+          const user = await User.findById(userId);
+          if (!user) {
+            return res.status(404).json({ message: "User not found" });
+          }
+    
+          const addressIndex = user.address.findIndex(
+            addr => addr._id.toString() === addressId
+          );
+    
+          if (addressIndex === -1) {
+            return res.status(404).json({ message: "Address not found" });
+          }
+    
+          // Update address fields
+          user.address[addressIndex] = {
+            ...user.address[addressIndex],
+            houseNumber: house,
+            street,
+            city,
+            district,
+            state,
+            country,
+            pinCode
+          };
+    
+          await user.save();
+    
+          res.status(200).json({ 
+            message: "Address updated successfully", 
+            address: user.address[addressIndex] 
+          });
+        } catch (error) {
+          console.error("Error updating address:", error);
+          res.status(500).json({ message: "Server error" });
+        }
+      },
+    
+      // Remove Address
+      async removeAddress(req, res) {
+        try {
+          const userId = req.session.user.id;
+          const { addressId } = req.params;
+    
+          const user = await User.findById(userId);
+          if (!user) {
+            return res.status(404).json({ message: "User not found" });
+          }
+    
+          // Filter out the address to remove
+          user.address = user.address.filter(
+            addr => addr._id.toString() !== addressId
+          );
+    
+          await user.save();
+    
+          res.status(200).json({ 
+            message: "Address removed successfully" 
+          });
+        } catch (error) {
+          console.error("Error removing address:", error);
+          res.status(500).json({ message: "Server error" });
+        }
+      },
+    
+    //=================================================================>
 
     //load change password
     async loadChangePassword(req, res) {
