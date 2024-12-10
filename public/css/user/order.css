@@ -153,3 +153,41 @@
     padding: 2.5rem;
   }
 }
+/*========================================*/
+.section-title {
+  padding: 10px;
+  text-align: center;
+}
+
+@media (max-width: 320px) {
+  .table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .table thead th, .table td {
+    padding: 5px;
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 375px) and (max-width: 424px) {
+  .table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .table thead th, .table td {
+    padding: 8px;
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 425px) {
+  .table thead th, .table td {
+    padding: 10px;
+    font-size: 16px;
+  }
+}

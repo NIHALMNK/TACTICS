@@ -1,37 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tactics - Responsive Dashboard</title>
- 
+
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
- 
+
   <link rel="stylesheet" href="/css/user/profile.css">
 </head>
+
 <body>
- 
-    <!-------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
- <%- include('./layout/NAV.ejs') %>
- <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+  <!-------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+  <%- include('./layout/NAV.ejs') %>
+  <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
 
   <div class="profile-session-container">
     <div class="container-fluid">
       <div class="dashboard">
         <!-- Sidebar -->
         <div class="sidebar">
-            <a href="/dashboard" class="w-100">
-                <button class="nav-button w-100">dashboard</button>
-              </a>
+          <a href="/dashboard" class="w-100">
+            <button class="nav-button w-100">dashboard</button>
+          </a>
           <a href="/order" class="w-100">
             <button class="nav-button w-100">Orders</button>
           </a>
           <a href="/profile" class="w-100">
             <button class="nav-button active w-100">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
               </svg>
               Update Profile
             </button>
@@ -50,24 +51,87 @@
         <!-- Main Content -->
         <div class="main-content">
           <h2 class="section-title">Update Profile</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus quod autem repudiandae voluptatibus, officiis necessitatibus mollitia quia neque aliquid cupiditate, placeat impedit, fugit ipsam quaerat nesciunt debitis reiciendis libero hic.
-          </p>
+
+          <div class="mb-3">
+            <label for="name" class="form-label profile-label">NAME</label>
+            <div class="profile-value-container">
+              <div class="profile-value" id="nameValue"><%= user.name %></div>
+              <button class="edit-btn" data-field="name">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label profile-label">EMAIL</label>
+            <div class="profile-value-container">
+              <div class="profile-value" id="emailValue"><%= user.email %></div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label profile-label">PASSWORD</label>
+            <div class="profile-value-container">
+              <div class="profile-value" id="passwordValue">******</div>
+              <button class="edit-btn" data-field="password">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <button class="btn btn-custom">DONE</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Password Update Modal -->
+  <div class="password-modal" id="passwordModal">
+    <div class="password-modal-content">
+      <h3 class="text-center mb-4">Update Password</h3>
 
-   <!------footer------->
-    <%- include('./layout/FOOTER.ejs') %>
-      <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-      
+      <div class="password-input-group">
+        <label for="currentPassword" class="form-label">Current Password</label>
+        <input type="password" class="form-control" id="currentPassword" placeholder="Enter current password" name="CurrentPassword">
+        <div class="error-message" id="currentPasswordError">Current password is incorrect</div>
+      </div>
+
+      <div class="password-input-group">
+        <label for="newPassword" class="form-label">New Password</label>
+        <input type="password" class="form-control" id="newPassword" placeholder="Enter new password" name="NewPassword">
+        <div class="error-message" id="newPasswordError">Password must be at least 8 characters long</div>
+      </div>
+
+      <div class="password-input-group">
+        <label for="confirmPassword" class="form-label">Confirm New Password</label>
+        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm new password" name="ConfirmNewPassword">
+        <div class="error-message" id="confirmPasswordError">Passwords do not match</div>
+      </div>
+
+      <div class="text-center">
+        <button class="btn btn-custom" id="updatePasswordBtn">Update Password</button>
+        <button class="btn btn-secondary mt-2" id="cancelPasswordBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <!------footer------->
+  <%- include('./layout/FOOTER.ejs') %>
+  <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+
 
 
 
   <!-- Bootstrap JS and Dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+  <script src="/js/user/profile.js"></script>
+
 </body>
+
 </html>

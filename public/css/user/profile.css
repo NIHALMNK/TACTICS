@@ -153,3 +153,142 @@
     padding: 2.5rem;
   }
 }
+
+/*=========================================================*/
+.section-title {
+  color:#000;
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: bold;
+}
+
+.profile-label {
+  color: #000;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.profile-value {
+  background-color:  #b9e6e9;
+  border-radius: 10px;
+  padding: 10px;
+  color: #333;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.profile-value:hover {
+  background-color: #a5d6a7;
+}
+
+.btn-custom {
+  background-color: #4a90e2;
+  color: rgb(0, 0, 0);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.btn-custom:hover {
+  background-color: #357abd;
+  transform: scale(1.05);
+}
+@media screen and (max-width: 320px) {
+
+  .profile-value {
+      font-size: 14px;
+  }
+}
+
+/* Mobile Medium (375px) */
+@media screen and (min-width: 321px) and (max-width: 375px) {
+
+  .profile-value {
+      font-size: 15px;
+  }
+}
+
+/* Mobile Large (425px) */
+@media screen and (min-width: 376px) and (max-width: 425px) {
+
+  .profile-value {
+      font-size: 16px;
+  }
+}
+
+/* Tablet (786px) */
+@media screen and (min-width: 426px) and (max-width: 786px) {
+
+  .profile-value {
+      font-size: 17px;
+  }
+}
+
+/* Add these new styles */
+.profile-value-container {
+display: flex;
+align-items: center;
+gap: 10px;
+background-color: #b9e6e9;
+border-radius: 10px;
+}
+
+.edit-btn {
+background: none;
+border: none;
+color: #4a90e2;
+cursor: pointer;
+transition: color 0.3s ease;
+}
+
+.edit-btn:hover {
+color: #357abd;
+}
+
+.profile-input {
+padding: 10px;
+color: #333;
+font-weight: 500;
+border: 1px solid #4a90e2;
+width: 100%;
+}
+
+/* Modal Styles */
+.password-modal {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0,0,0,0.5);
+display: none;
+justify-content: center;
+align-items: center;
+z-index: 1100;
+}
+
+.password-modal-content {
+background: white;
+padding: 30px;
+border-radius: 10px;
+width: 100%;
+max-width: 500px;
+box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.password-modal.show {
+display: flex;
+}
+
+.password-input-group {
+margin-bottom: 15px;
+}
+
+.error-message {
+color: red;
+font-size: 0.9rem;
+margin-top: 5px;
+display: none;
+}

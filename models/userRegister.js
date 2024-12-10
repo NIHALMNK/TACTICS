@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
         district: { type: String },
         city: { type: String },
         houseNumber: { type: Number },
-        landMark: { type: String },
+        // landMark: { type: String },
         pinCode: { type: String },
     }],
     role: { type: String, default: "user" },
