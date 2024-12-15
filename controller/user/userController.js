@@ -292,8 +292,10 @@ async updatePassword(req, res) {
       async createAddress(req, res) {
         try {
           const userId = req.session.user.id;
+          
+          
           const { 
-            house, street, city, 
+            house, street, city,landmark, 
             district, state, country, pinCode 
           } = req.body;
     
@@ -303,8 +305,9 @@ async updatePassword(req, res) {
           }
     
           const newAddress = {
-            houseNumber: house,
+            house,
             street,
+            landmark,
             city,
             district,
             state,
@@ -315,10 +318,11 @@ async updatePassword(req, res) {
           user.address.push(newAddress);
           await user.save();
     
-          res.status(201).json({ 
+           res.status(201).json({ 
             message: "Address created successfully", 
             address: newAddress 
           });
+          console.log("creation of the address --------------------> Done!");
         } catch (error) {
           console.error("Error creating address:", error);
           res.status(500).json({ message: "Server error",error:error.message });
@@ -327,13 +331,12 @@ async updatePassword(req, res) {
     
       // Update Existing Address
       async updateAddress(req, res) {
-        console.log("fheufewiyvdvasufyakjhusfdsfhjsabkjsgiusaguskf");
         
         try {
           const userId = req.session.user.id;
           const { addressId } = req.params;
           const { 
-            house, street, city, 
+            house, street,landmark, city, 
             district, state, country, pinCode 
           } = req.body;
     
@@ -353,8 +356,9 @@ async updatePassword(req, res) {
           // Update address fields
           user.address[addressIndex] = {
             ...user.address[addressIndex],
-            houseNumber: house,
+            house: house,
             street,
+            landmark,
             city,
             district,
             state,
@@ -368,6 +372,8 @@ async updatePassword(req, res) {
             message: "Address updated successfully", 
             address: user.address[addressIndex] 
           });
+          console.log("updation of the address --------------------> Done!");
+          
         } catch (error) {
           console.error("Error updating address:", error);
           res.status(500).json({ message: "Server error" });

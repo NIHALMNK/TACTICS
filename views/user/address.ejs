@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tactics - Responsive Dashboard</title>
- 
+
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
- 
+
   <link rel="stylesheet" href="/css/user/address.css">
 </head>
+
 <body>
- 
+
   <div class="profile-session-container">
     <div class="container-fluid">
       <div class="dashboard">
@@ -23,7 +25,7 @@
           <a href="/order" class="w-100">
             <button class="nav-button w-100">Orders</button>
           </a>
-          
+
           <a href="/profile" class="w-100">
             <button class="nav-button w-100">Update Profile</button>
           </a>
@@ -31,8 +33,7 @@
           <a href="/address" class="w-100">
             <button class="nav-button active w-100">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
               </svg>
               Address
             </button>
@@ -50,119 +51,116 @@
           <h2 class="section-title">Address</h2>
           <div class="container mt-5">
             <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h2>Address Management</h2>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addressModal" onclick="prepareModal('create')">
-                                Create New Address
-                            </button>
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2>Address Management</h2>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addressModal" onclick="prepareModal('create')">
+                      Create New Address
+                    </button>
+                  </div>
+
+                  <!-- Address List (Pagination) -->
+                  <div class="card-body">
+                    <% if (addresses && addresses.length > 0) { %>
+                    <div class="row">
+                      <% addresses.forEach((address, index) => { %>
+                      <div class="col-12 mb-3 address-card">
+                        <div class="card">
+                          <div class="card-body">
+                            <p><strong>House:</strong> <%= address.house %></p>
+                            <p><strong>Street:</strong> <%= address.street %></p>
+                            <p><strong>landmark:</strong> <%= address.landmark %></p>
+                            <p><strong>City:</strong> <%= address.city %></p>
+                            <p><strong>District:</strong> <%= address.district %></p>
+                            <p><strong>State:</strong> <%= address.state %></p>
+                            <p><strong>Country:</strong> <%= address.country %></p>
+                            <p><strong>PIN Code:</strong> <%= address.pinCode %></p>
+                            <div class="d-flex justify-content-between">
+                              <button class="btn btn-warning" onclick="prepareModal('edit', <%= JSON.stringify(address) %>)">
+                                Edit
+                              </button>
+                              <button class="btn btn-danger" onclick="removeAddress('<%= address.id %>')">
+                                Remove
+                              </button>
+                            </div>
+                          </div>
                         </div>
-                        
-                        <!-- Address List (Pagination) -->
-                        <div class="card-body">
-                            <% if (addresses && addresses.length > 0) { %>
-                                <div class="row">
-                                    <% addresses.forEach((address, index) => { %>
-                                        <div class="col-12 mb-3 address-card">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">Address <%= index + 1 %></h5>
-                                                    <p><strong>House:</strong> <%= address.house %></p>
-                                                    <p><strong>Street:</strong> <%= address.street %></p>
-                                                    <p><strong>City:</strong> <%= address.city %></p>
-                                                    <p><strong>District:</strong> <%= address.district %></p>
-                                                    <p><strong>State:</strong> <%= address.state %></p>
-                                                    <p><strong>Country:</strong> <%= address.country %></p>
-                                                    <p><strong>PIN Code:</strong> <%= address.pinCode %></p>
-                                                    <div class="d-flex justify-content-between">
-                                                        <button class="btn btn-warning" onclick="prepareModal('edit', <%= JSON.stringify(address) %>)">
-                                                            Edit
-                                                        </button>
-                                                        <button class="btn btn-danger" onclick="removeAddress('<%= address.id %>')">
-                                                            Remove
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <% }); %>
-                                </div>
-    
-                                <!-- Pagination -->
-                                <nav aria-label="Address navigation">
-                                    <ul class="pagination justify-content-center">
-                                        <% for(let i = 1; i <= totalPages; i++) { %>
-                                            <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                                                <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-                                            </li>
-                                        <% } %>
-                                    </ul>
-                                </nav>
-                            <% } else { %>
-                                <p class="text-center">No addresses found. Click "Create New Address" to add one.</p>
-                            <% } %>
-                        </div>
+                      </div>
+                      <% }); %>
                     </div>
+
+                    <!-- Pagination -->
+                    <nav aria-label="Address navigation">
+                      <ul class="pagination justify-content-center">
+                        <% for(let i = 1; i <= totalPages; i++) { %>
+                        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                          <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                        </li>
+                        <% } %>
+                      </ul>
+                    </nav>
+                    <% } else { %>
+                    <p class="text-center">No addresses found. Click "Create New Address" to add one.</p>
+                    <% } %>
+                  </div>
                 </div>
+              </div>
             </div>
-    
+
             <!-- Address Modal -->
-<div class="modal fade" id="addressModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">Create/Update Address</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addressForm">
-                    <input type="hidden" id="addressId" name="id">
-                    <div class="mb-3">
+            <div class="modal fade" id="addressModal" tabindex="-1">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Create/Update Address</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form id="addressForm">
+                      <input type="hidden" id="addressId" name="id">
+                      <div class="mb-3">
                         <label for="houseInput" class="form-label">House</label>
-                        <input type="text" class="form-control" id="houseInput" name="house" 
-                               required autocomplete="street-address" aria-describedby="houseHelp">
-                    </div>
-                    <div class="mb-3">
+                        <input type="text" class="form-control" id="houseInput" name="house" required autocomplete="street-address" aria-describedby="houseHelp">
+                      </div>
+                      <div class="mb-3">
                         <label for="streetInput" class="form-label">Street</label>
-                        <input type="text" class="form-control" id="streetInput" name="street" 
-                               required autocomplete="street-address" aria-describedby="streetHelp">
-                    </div>
-                    <div class="mb-3">
+                        <input type="text" class="form-control" id="streetInput" name="street" required autocomplete="street-address" aria-describedby="streetHelp">
+                      </div>
+                      <div class="mb-3">
+                        <label for="landmarkInput" class="form-label">Landmark</label>
+                        <input type="text" class="form-control" id="landmarkInput" name="landmark" required autocomplete="address-line2" aria-describedby="landmarkHelp">
+                      </div>
+                      <div class="mb-3">
                         <label for="cityInput" class="form-label">City</label>
-                        <input type="text" class="form-control" id="cityInput" name="city" 
-                               required autocomplete="address-level2" aria-describedby="cityHelp">
-                    </div>
-                    <div class="mb-3">
+                        <input type="text" class="form-control" id="cityInput" name="city" required autocomplete="address-level2" aria-describedby="cityHelp">
+                      </div>
+                      <div class="mb-3">
                         <label for="districtInput" class="form-label">District</label>
-                        <input type="text" class="form-control" id="districtInput" name="district" 
-                               required autocomplete="address-level2" aria-describedby="districtHelp">
-                    </div>
-                    <div class="mb-3">
+                        <input type="text" class="form-control" id="districtInput" name="district" required autocomplete="address-level2" aria-describedby="districtHelp">
+                      </div>
+                      <div class="mb-3">
                         <label for="stateInput" class="form-label">State</label>
-                        <input type="text" class="form-control" id="stateInput" name="state" 
-                               required autocomplete="address-level1" aria-describedby="stateHelp">
-                    </div>
-                    <div class="mb-3">
+                        <input type="text" class="form-control" id="stateInput" name="state" required autocomplete="address-level1" aria-describedby="stateHelp">
+                      </div>
+                      <div class="mb-3">
                         <label for="countryInput" class="form-label">Country</label>
-                        <input type="text" class="form-control" id="countryInput" name="country" 
-                               required autocomplete="country" aria-describedby="countryHelp">
-                    </div>
-                    <div class="mb-3">
+                        <input type="text" class="form-control" id="countryInput" name="country" required autocomplete="country" aria-describedby="countryHelp">
+                      </div>
+                      <div class="mb-3">
                         <label for="pinCodeInput" class="form-label">PIN Code</label>
-                        <input type="text" class="form-control" id="pinCodeInput" name="pinCode" 
-                               required autocomplete="postal-code" aria-describedby="pinCodeHelp">
-                    </div>
-                </form>
+                        <input type="text" class="form-control" id="pinCodeInput" name="pinCode" required autocomplete="postal-code" aria-describedby="pinCodeHelp">
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveButton" onclick="saveAddress()">Save Address</button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="saveButton" onclick="saveAddress()">Save Address</button>
-            </div>
-        </div>
-    </div>
-</div>
-        </div>
+          </div>
 
 
         </div>
@@ -177,92 +175,97 @@
   <!-- Bootstrap JS and Dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 
 
-<script>
+  <script>
     document.addEventListener('DOMContentLoaded', function() {
-    const addressForm = document.getElementById('addressForm');
-    const saveButton = document.getElementById('saveButton');
+      const addressForm = document.getElementById('addressForm');
+      const saveButton = document.getElementById('saveButton');
 
-    function prepareModal(mode, addressData = null) {
+      function prepareModal(mode, addressData = null) {
         console.log('Prepare Modal Called', mode, addressData);
-    const modalTitle = document.getElementById('modalTitle');
-    const saveButton = document.getElementById('saveButton');
-    const modal = new bootstrap.Modal(document.getElementById('addressModal'));
+        const modalTitle = document.getElementById('modalTitle');
+        const saveButton = document.getElementById('saveButton');
+        const modal = new bootstrap.Modal(document.getElementById('addressModal'));
 
-    if (mode === 'create') {
-        modalTitle.textContent = 'Create New Address';
-        saveButton.textContent = 'Create Address';
-        resetForm();
-        modal.show();
-    } else if (mode === 'edit' && addressData) {
-        console.log('Edit mode', addressData);
-        modalTitle.textContent = 'Update Address';
-        saveButton.textContent = 'Update Address';
-        
-        // Parse the addressData if it's a string (from JSON.stringify)
-        const address = typeof addressData === 'string' 
-            ? JSON.parse(addressData) 
-            : addressData;
+        if (mode === 'create') {
+          modalTitle.textContent = 'Create New Address';
+          saveButton.textContent = 'Create Address';
+          resetForm();
+          modal.show();
+        } else if (mode === 'edit' && addressData) {
+          console.log('Edit mode', addressData);
+          modalTitle.textContent = 'Update Address';
+          saveButton.textContent = 'Update Address';
 
-        populateForm(address);
-        modal.show(); 
-    }
-}
+          // Parse the addressData if it's a string (from JSON.stringify)
+          const address = typeof addressData === 'string' ?
+            JSON.parse(addressData) :
+            addressData;
 
-function populateForm(addressData) {
-    console.log('Populating Form with:', addressData);
-    
-    document.getElementById('addressId').value = addressData._id || addressData.id || '';
-    document.getElementById('houseInput').value = addressData.houseNumber || addressData.house || '';
-    document.getElementById('streetInput').value = addressData.street || '';
-    document.getElementById('cityInput').value = addressData.city || '';
-    document.getElementById('districtInput').value = addressData.district || '';
-    document.getElementById('stateInput').value = addressData.state || '';
-    document.getElementById('countryInput').value = addressData.country || '';
-    document.getElementById('pinCodeInput').value = addressData.pinCode || '';
-}
+          populateForm(address);
+          modal.show();
+        }
+      }
 
-// Define validateForm function
-function validateForm() {
+      function populateForm(addressData) {
+        console.log('Populating Form with:', addressData);
+
+        document.getElementById('addressId').value = addressData._id || addressData.id || '';
+        document.getElementById('houseInput').value = addressData.house || addressData.house || '';
+        document.getElementById('streetInput').value = addressData.street || '';
+        document.getElementById('landmarkInput').value = addressData.landmark || '';
+        document.getElementById('cityInput').value = addressData.city || '';
+        document.getElementById('districtInput').value = addressData.district || '';
+        document.getElementById('stateInput').value = addressData.state || '';
+        document.getElementById('countryInput').value = addressData.country || '';
+        document.getElementById('pinCodeInput').value = addressData.pinCode || '';
+      }
+
+      // Define validateForm function
+      function validateForm() {
         const requiredFields = [
-            'houseInput', 'streetInput', 'cityInput', 
-            'districtInput', 'stateInput', 'countryInput', 'pinCodeInput'
+          'houseInput', 'streetInput', 'landmarkInput', 'cityInput',
+          'districtInput', 'stateInput', 'countryInput', 'pinCodeInput'
         ];
 
         for (let fieldId of requiredFields) {
-            const input = document.getElementById(fieldId);
-            if (!input.value.trim()) {
-                alert(`Please fill in the ${input.name} field`);
-                input.focus();
-                return false;
-            }
+          const input = document.getElementById(fieldId);
+          if (!input.value.trim()) {
+            // alert(`Please fill in the ${input.name} field`);
+            Swal.fire({
+              icon: 'error',
+              title: `Please fill in the<b> ${input.name} </b>field`,
+              text: 'fields are empty'
+            });
+            input.focus();
+            return false;
+          }
         }
 
         return true;
-    }
+      }
 
-function saveAddress() {
+
+//=================================================>
+
+async function saveAddress() {
     if (!validateForm()) return;
-
- 
-
 
     const formData = new FormData(addressForm);
     const addressData = Object.fromEntries(formData.entries());
     const addressId = addressData.id;
 
-    const url = addressId 
-        ? `/address/${addressId}` 
-        : '/address/create';
+    const url = addressId ? `/address/${addressId}` : '/address/create';
     const method = addressId ? 'PUT' : 'POST';
 
-    // Rename 'house' to 'houseNumber' to match controller
     const payload = {
-        houseNumber: addressData.house,
+        house: addressData.house,
         street: addressData.street,
+        landmark: addressData.landmark,
         city: addressData.city,
         district: addressData.district,
         state: addressData.state,
@@ -270,73 +273,111 @@ function saveAddress() {
         pinCode: addressData.pinCode
     };
 
-    console.log('saveAddress:',{
-    addressId:addressData.id,
-        url:url,
+    console.log('saveAddress:', {
+        addressId: addressData.id,
+        url: url,
         method: method,
         payload: payload,
-});
-    
+    });
 
-    fetch(url, {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload)
-    })
-    .then(response => {
+    try {
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
+
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        return response.json();
-    })
-    .then(data => {
-        alert(data.message);
-        location.reload(); // Reload to reflect changes
-    })
-    .catch(error => {
+
+        const data = await response.json();
+
+        // Show success message and wait for it to be closed
+        await Swal.fire({
+            icon: 'success',
+            title: data.message,
+            text: 'Done!',
+        });
+
+        // Reload the page after the modal is closed
+        location.reload();
+    } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred while saving the address');
-    });
+
+        // Show error message and wait for it to be closed
+        await Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'An error occurred while saving the address',
+        });
+    }
 }
 
-function removeAddress(addressId) {
-    if (!confirm('Are you sure you want to remove this address?')) return;
+     
 
-    fetch(`/address/${addressId}`, {
-        method: 'DELETE'
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        alert(data.message);
-        
-        // Get the current page from URL or default to 1
-        const currentUrl = new URL(window.location.href);
-        const currentPage = parseInt(currentUrl.searchParams.get('page') || '1');
-        
-        // Redirect to the same page or previous page
-        window.location.href = `/address?page=${currentPage}`;
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while removing the address');
+
+//==================================================>
+
+
+      function removeAddress(addressId) {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: 'Do you want to remove this address?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, remove it!',
+          cancelButtonText: 'Cancel'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Proceed with the backend request if confirmed
+            fetch(`/address/${addressId}`, {
+                method: 'DELETE'
+              })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('Network response was not ok');
+                }
+                return response.json();
+              })
+              .then(data => {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Deleted!',
+                  text: data.message,
+                }).then(() => {
+                  location.reload();
+                });
+              })
+              .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error!',
+                  text: 'An error occurred while removing the address.',
+                });
+              });
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire({
+              icon: 'info',
+              title: 'Cancelled',
+              text: 'The address was not removed.',
+            });
+          }
+        });
+      }
+
+
+      window.prepareModal = prepareModal;
+      window.saveAddress = saveAddress;
+      window.removeAddress = removeAddress;
     });
-}
-
-    // Attach global functions to window for inline usage
-    window.prepareModal = prepareModal;
-    window.saveAddress = saveAddress;
-    window.removeAddress = removeAddress;
-});
-</script>
+  </script>
 
 
 
 </body>
+
 </html>
