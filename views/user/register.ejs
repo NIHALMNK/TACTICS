@@ -117,10 +117,6 @@
                             <div class="form-floating password-field">
                                 <input type="password" class="form-control" id="confirmPassword" placeholder="Password" name="password" required minlength="8">
                                 <label for="passwordInput">conformPassword</label>
-
-                                <!-- <button type="button" class="password-toggle" aria-label="Toggle password visibility">
-                                    <i class="fas fa-eye"></i>
-                                </button> -->
                             </div>
 
                             <div class="form-check mb-4">
@@ -139,7 +135,8 @@
                             <div class="divider">or</div>
                             
                             <div class="row g-3 mb-4 justify-content-center">
-                                <!-- Google Sign-In Button -->
+                                
+                                
                                 <div class="col-md-4 col-sm-6">
                                     <form action="/auth/google">
                                         <button 
@@ -151,16 +148,6 @@
                                         </button>
                                     </form>
                                 </div>
-                                <!-- Facebook Sign-In Button -->
-                                <!-- <div class="col-md-4 col-sm-6">
-                                    <button 
-                                        type="button" 
-                                        class="social-button w-100 d-flex align-items-center justify-content-center gap-2" 
-                                        aria-label="Sign in with Facebook">
-                                        <img src="/images/logos/facebook.png" alt="Facebook Logo">
-                                        <span>Facebook</span>
-                                    </button>
-                                </div> -->
                             </div>
                             
                             
@@ -185,13 +172,11 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- <script src="/js/user/signup.js"></script> -->
      <script>
            document.getElementById('submit').addEventListener('click', formValidate)
 
            document.querySelectorAll(".password-toggle").forEach((toggleButton) => {
     toggleButton.addEventListener("click", () => {
-        // const input = toggleButton.previousElementSibling;
         const input = document.getElementById("password");
         const conforminput = document.getElementById("conforminput");
 
@@ -252,19 +237,19 @@ async function checkUser(name,email,phno,password) {
                 email: email,
                 phno: phno,
                 password: password
-            } )// Correcting email key
+            } )
         });
 
         const data = await response.json();
         if(!data.success) {
-            return data.success; // Returns true if user exists, false otherwise
+            return data.success; 
         }else{
-            return data.success; // Returns true if user exists, false otherwise
+            return data.success; 
         }
         console.log('data --> : ' + data);
     } catch (error) {
         console.error('Error checking user:', error);
-        return false; // Assume user does not exist if there's an error
+        return false; 
     }
 }
      </script>

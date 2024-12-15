@@ -44,7 +44,7 @@ module.exports = {
       },
 
 
-  // check User
+  
 
       async checkUser(req, res) {
         try {
@@ -62,22 +62,22 @@ module.exports = {
           
           req.session.user = { name, email, phno, password, verified: false };
     
-          // Generate OTP
+          
           const otp = otpGenerator.generate(6, {
             upperCaseAlphabets: false,
             lowerCaseAlphabets: false,
             specialChars: false,
           });
     
-          // Save OTP
+          
           await OTP.create({
             email,
             otp,
             createdAt: Date.now(),
-            expiresAt: new Date(Date.now() + 5 * 60 * 1000), // 5-minute expiry
+            expiresAt: new Date(Date.now() + 5 * 60 * 1000), 
           });
     
-          // Send OTP via email
+         
           sendEmail(email, otp);
     
           res.json({ success: true, message: "OTP sent successfully!" });
@@ -87,14 +87,14 @@ module.exports = {
         }
       },
 
-        // Resend OTP
+        
   async resendOTP(req, res) {
     try {
       const { email } = req.body;
       console.log("this is the resetOTP : " + email);
 
 
-      // Check if OTP exists
+    
       const existingOTP = await OTP.findOne({ email });
       if (!existingOTP) {
         return res
@@ -102,7 +102,6 @@ module.exports = {
           .json({ success: false, message: "No OTP found for this email." });
       }
 
-      // Generate and resend OTP
       const otp = otpGenerator.generate(6, {
         upperCaseAlphabets: false,
         lowerCaseAlphabets: false,
@@ -130,12 +129,12 @@ module.exports = {
   },
 
 
-  // Verify OTP and register user
+
   async verifyOTP(req, res) {
     try {
       const { email, otp } = req.body;
 
-      // Find OTP record
+      
       const otpRecord = await OTP.findOne({ email, otp });
       if (!otpRecord || otpRecord.expiresAt < Date.now()) {
         if (otpRecord) await OTP.deleteOne({ email, otp });
@@ -144,10 +143,10 @@ module.exports = {
           .json({ success: false, message: "Invalid or expired OTP." });
       }
 
-      // Hash the password before saving the user
+     
       const hashedPassword = await bcrypt.hash(req.session.user.password, 10);
 
-      // Save the user
+     
       const newUser = new User({
         name: req.session.user.name,
         email,
@@ -158,10 +157,10 @@ module.exports = {
       });
       const savedUser = await newUser.save();
 
-      // Remove OTP record
+     
       await OTP.deleteOne({ email, otp });
 
-      // Update session with full user details
+      
       req.session.user = {
         id: savedUser._id,
         name: savedUser.name,
@@ -181,7 +180,7 @@ module.exports = {
     }
   },
 
-       // User login
+     
   async checkLogin(req, res) {
     try {
       const { email, password } = req.body;
@@ -222,7 +221,6 @@ module.exports = {
   }, 
 
 
-    //logout: 
     async logout(req, res) {
         try {
           req.session.destroy();

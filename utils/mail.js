@@ -8,7 +8,7 @@ let transporter = nodemailer.createTransport({
   secure: true,  
   auth: {
     user: process.env.USER_EMAIL,
-    pass: "wpgl cphq vbtn uxgn",
+    pass: process.env.USER_PASSWORD,
   }, tls: {
     rejectUnauthorized: false
 }
@@ -16,7 +16,7 @@ let transporter = nodemailer.createTransport({
 
 const sendEmail = async (email,otp)=> {
   let mailOptions = {
-    from: 'keedathnihal@gmail.com',
+    from: process.env.USER_EMAIL,
     to: email,
     subject: 'OTP Verification',
     text: `Your One-Time Password (OTP) is: ${otp}`
