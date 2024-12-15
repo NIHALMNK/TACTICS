@@ -13,24 +13,24 @@
     <style>
         
 .swal-modal {
-    border-radius: 10px; /* Rounded corners for the modal */
-    background-color: #f0f0f0; /* Custom background color */
+    border-radius: 10px; 
+    background-color: #f0f0f0;
     font-family: Arial, sans-serif;
 }
 
 .swal-title {
-    color: #333; /* Custom color for the title */
+    color: #333; 
     font-size: 20px;
     font-weight: bold;
 }
 
 .swal-text {
-    color: #666; /* Custom color for the text */
+    color: #666; 
     font-size: 16px;
 }
 
 .swal-button {
-    background-color: #4CAF50; /* Green background for the button */
+    background-color: #4CAF50; 
     color: white;
     border: none;
     padding: 10px 20px;
@@ -41,7 +41,7 @@
 }
 
 .swal-button:hover {
-    background-color: #45a049;  /*Darker green on hover */
+    background-color: #45a049;  
 } 
     </style>
 
@@ -107,7 +107,7 @@
                                 <input type="password" class="form-control" id="password" placeholder="Password" name="password" required minlength="8">
                                 <label for="passwordInput">Password</label>
                                 <button type="button" class="password-toggle" aria-label="Toggle password visibility">
-                                    <i class="fas fa-eye"></i>
+                                    <i class="fas fa-eye-slash"></i>
                                 </button>
                                 <div class="invalid-feedback">
                                     Password must be at least 8 characters long
@@ -117,9 +117,10 @@
                             <div class="form-floating password-field">
                                 <input type="password" class="form-control" id="confirmPassword" placeholder="Password" name="password" required minlength="8">
                                 <label for="passwordInput">conformPassword</label>
-                                <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+
+                                <!-- <button type="button" class="password-toggle" aria-label="Toggle password visibility">
                                     <i class="fas fa-eye"></i>
-                                </button>
+                                </button> -->
                             </div>
 
                             <div class="form-check mb-4">
@@ -188,6 +189,27 @@
      <script>
            document.getElementById('submit').addEventListener('click', formValidate)
 
+           document.querySelectorAll(".password-toggle").forEach((toggleButton) => {
+    toggleButton.addEventListener("click", () => {
+        // const input = toggleButton.previousElementSibling;
+        const input = document.getElementById("password");
+        const conforminput = document.getElementById("conforminput");
+
+        const icon = toggleButton.querySelector("i");
+
+        if (input.type === "password") {
+            input.type = "text";
+            
+            icon.classList.replace("fa-eye-slash", "fa-eye");
+
+        } else {
+            input.type = "password";
+            
+            icon.classList.replace("fa-eye", "fa-eye-slash");
+
+        }
+    });
+});
 
 async function formValidate(e) {
     e.preventDefault();
@@ -199,15 +221,14 @@ async function formValidate(e) {
     var termsChecked = document.getElementById('terms').checked;
 
     const userExists = await checkUser(name,email,phno,password);
-    if (!userExists) {
+    if(name==""||email==""||phno==""||confirmPassword==""||password==""){
         Swal.fire({
             icon: 'error',
             title: 'Error!',
-            text: 'User already exists'
+            text: 'fields are empty'
         });
-    
-        return false;
-    } else {
+    }
+  if(userExists) {
         Swal.fire({
             icon:'success',
             title: 'Success!',

@@ -22,7 +22,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/home">Home</a></li>
-                <li class="breadcrumb-item"><a href="/shop"><%= product.category.name %></a></li> <!-- Access the name property -->
+                <li class="breadcrumb-item"><a href="/shop"><%= product.category.name %></a></li> 
                 <li class="breadcrumb-item active" aria-current="page"><%= product.name %></li>
             </ol>
         </nav>
@@ -54,7 +54,6 @@
             </div>
 
             <!-- Product Details -->
-            <!-- Product Details -->
 <div class="col-md-6">
     <h1 class="product-title mb-3"><%= product.title %></h1>
     <div class="d-flex align-items-center mb-3">
@@ -72,14 +71,14 @@
     <div class="mb-3">
         <% if (product.offerPrice && product.offerPrice < product.price) { %>
             <h2 class="h4 text-danger">
-                $<%= product.offerPrice.toFixed(2) %> <!-- Offer Price -->
+                ₹<%= product.offerPrice.toFixed(2) %> 
             </h2>
             <h4 class="text-muted text-decoration-line-through">
-                $<%= product.price.toFixed(2) %> <!-- Original Price -->
+                ₹<%= product.price.toFixed(2) %> 
             </h4>
         <% } else { %>
             <h2 class="h4">
-                $<%= product.price.toFixed(2) %> <!-- Regular Price -->
+                ₹<%= product.price.toFixed(2) %> 
             </h2>
         <% } %>
     </div>
@@ -133,6 +132,7 @@
 
             <!-- Buy Now Button -->
             <button class="btn btn-success" id="buyNowBtn">Buy Now</button>
+            <button class="btn btn-success" id="buyNowBtn">Add To Cart</button>
         </div>
     </div>
 </div>    
@@ -202,7 +202,7 @@
                             <h5 class="card-title"><%= related.name %></h5>
                             <div class="d-flex justify-content-between">
                                 <span class="text-danger fw-bold">
-                                    $<%= (related.offerPrice || related.price).toFixed(2) %>
+                                    ₹<%= (related.offerPrice || related.price).toFixed(2) %>
                                 </span>
                                 
                                 <% if (related.price) { %>
@@ -223,7 +223,9 @@
 
 
     <!-- Footer -->
+
     <%- include('./layout/FOOTER.ejs') %>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
@@ -275,27 +277,26 @@
         const glassHalfWidth = magnifierGlass.offsetWidth / 2;
         const glassHalfHeight = magnifierGlass.offsetHeight / 2;
 
-        // Calculate magnifier position
+       
         let posX = x - glassHalfWidth;
         let posY = y - glassHalfHeight;
 
-        // Constrain within image bounds
+      
         posX = Math.max(0, Math.min(posX, productImage.width - magnifierGlass.offsetWidth));
         posY = Math.max(0, Math.min(posY, productImage.height - magnifierGlass.offsetHeight));
 
         magnifierGlass.style.left = `${posX}px`;
         magnifierGlass.style.top = `${posY}px`;
 
-        // Calculate background position
+     
         const bgPosX = -(x * zoomLevel - glassHalfWidth);
         const bgPosY = -(y * zoomLevel - glassHalfHeight);
 
         magnifierGlass.style.backgroundPosition = `${bgPosX}px ${bgPosY}px`;
     }
 
-    // Initialize magnifier once the product image has loaded
     productImage.addEventListener('load', setupMagnifier);
-    setupMagnifier(); // Call it for the initial load
+    setupMagnifier(); 
 });
 //-------------------------------------------------------------->
 
@@ -304,18 +305,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const increaseBtn = document.getElementById('increase');
     const decreaseBtn = document.getElementById('decrease');
 
-    // Get the stock limit from the input's "max" attribute
     const maxStock = parseInt(quantityInput.getAttribute('max'));
 
-    // Handle "Increase" button click
     increaseBtn.addEventListener('click', () => {
         let currentValue = parseInt(quantityInput.value);
 
-        // Increase the value only if it's below the stock limit
-        if (currentValue < maxStock) {
-            quantityInput.value = currentValue + 1;
+        if (currentValue <= maxStock) {
+            // quantityInput.value = currentValue * 1;
         } else {
-            alert('Cannot exceed available stock!');
+            Swal.fire('wait!', 'Cannot exceed available stock!', 'failed');
             quantityInput.value = currentValue - 1;
         }
     });
@@ -324,27 +322,13 @@ document.addEventListener('DOMContentLoaded', () => {
     decreaseBtn.addEventListener('click', () => {
         let currentValue = parseInt(quantityInput.value);
 
-        // Decrease the value only if it's above the minimum (1)
         if (currentValue > 1) {
             quantityInput.value = currentValue - 1;
         } else {
-            alert('Quantity cannot be less than 1!');
+            swal.fire('Wait!',"cannot decrease !","failed");
         }
     });
 
-    // Prevent manual input outside valid range
-    quantityInput.addEventListener('input', () => {
-        let currentValue = parseInt(quantityInput.value);
-
-        // Check and enforce limits
-        if (currentValue > maxStock) {
-            quantityInput.value = maxStock;
-            alert('Quantity cannot exceed available stock!');
-        } else if (currentValue < 1) {
-            quantityInput.value = 1;
-            alert('Quantity cannot be less than 1!');
-        }
-    });
 });
 
 //======================================>
