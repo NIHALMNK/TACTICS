@@ -257,7 +257,7 @@ async updatePassword(req, res) {
       async loadAddress(req, res) {
         try {
           const userId = req.session.user.id;
-          console.log("the error is this -------->"+req.session.user);
+          // console.log("the error is this -------->"+req.session.user);
           
           const user = await User.findById(userId);
       

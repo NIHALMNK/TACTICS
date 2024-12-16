@@ -15,17 +15,26 @@ document.addEventListener('DOMContentLoaded', () => {
         case 'name':
           // Example validations
           if (value.trim().length < 2) {
-            alert('Name must be at least 2 characters long');
+            // alert('Name must be at least 2 characters long');
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'Name must be at least 2 characters long'
+          });
             return false;
           }
           if (!/^[a-zA-Z\s]+$/.test(value)) {
-            alert('Name can only contain letters and spaces');
+            // alert('Name can only contain letters and spaces');
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'Name can only contain letters and spaces'
+          });
             return false;
           }
           return true;
   
         case 'password':
-          // Validation handled in password modal
           return true;
   
         default:
@@ -207,17 +216,32 @@ document.addEventListener('DOMContentLoaded', () => {
               nameChanged = false;
               passwordChanged = false;
   
-              alert('Profile updated successfully');
+              // alert('Profile updated successfully');
+              Swal.fire({
+                icon: 'success',
+                title: 'success',
+                text: 'Profile updated successfully'
+            });
             } else {
               alert(data.message);
             }
           })
           .catch(error => {
             console.error('Error:', error);
-            alert('An error occurred while updating profile');
+            // alert('An error occurred while updating profile');
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'An error occurred while updating profile'
+          });
           });
       } else {
-        alert('No changes to save');
+        // alert('No changes to save');
+        Swal.fire({
+          icon: 'success',
+          title: 'success',
+          text: 'No changes to save'
+      });
       }
     });
   });
