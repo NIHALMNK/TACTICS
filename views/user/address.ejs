@@ -114,7 +114,7 @@
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title" id="modalTitle">Create/Update Address</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close"  onclick="cancelButton()" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
                     <form id="addressForm">
@@ -154,7 +154,7 @@
                     </form>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" id="cancelButton" data-bs-dismiss="modal" onclick="cancelButton()">Cancel</button>
                     <button type="button" class="btn btn-primary" id="saveButton" onclick="saveAddress()">Save Address</button>
                   </div>
                 </div>
@@ -194,7 +194,7 @@
         if (mode === 'create') {
           modalTitle.textContent = 'Create New Address';
           saveButton.textContent = 'Create Address';
-          resetForm();
+        //   resetForm();
           modal.show();
         } else if (mode === 'edit' && addressData) {
           console.log('Edit mode', addressData);
@@ -227,6 +227,9 @@
 
       // Define validateForm function
       function validateForm() {
+       
+        
+
         const requiredFields = [
           'houseInput', 'streetInput', 'landmarkInput', 'cityInput',
           'districtInput', 'stateInput', 'countryInput', 'pinCodeInput'
@@ -235,7 +238,6 @@
         for (let fieldId of requiredFields) {
           const input = document.getElementById(fieldId);
           if (!input.value.trim()) {
-            // alert(`Please fill in the ${input.name} field`);
             Swal.fire({
               icon: 'error',
               title: `Please fill in the<b> ${input.name} </b>field`,
@@ -252,6 +254,13 @@
 
 //=================================================>
 
+function cancelButton(){
+    window.location.reload();
+    console.log("cancel button------------------------------------------->");
+}
+
+
+//================================>
 async function saveAddress() {
     if (!validateForm()) return;
 
@@ -369,7 +378,7 @@ async function saveAddress() {
         });
       }
 
-
+      window.cancelButton=cancelButton;
       window.prepareModal = prepareModal;
       window.saveAddress = saveAddress;
       window.removeAddress = removeAddress;
