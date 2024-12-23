@@ -9,32 +9,26 @@ const upload = require("../../utils/productMulter.js");
 
 //====product==================================================>
 
-    router.get("/productManagement", productController.loadProductManagement);
+ // Product Management Routes
+router.get("/productManagement", productController.loadProductManagement);
+router.get("/productManagement/add", productController.loadAddProductsPage);
+router.post("/productManagement/add",upload.fields([
+        { name: "productImages1", maxCount: 1 },
+        { name: "productImages2", maxCount: 1 },
+        { name: "productImages3", maxCount: 1 },
+        { name: "productImages4", maxCount: 1 },
+    ]),productController.postAddProductsPage);
 
-    router.get("/productManagement/add", productController.loadAddProductsPage);
-
-    router.post(
-      "/productManagement/add",
-      upload.fields([
-        { name: "productImage1", maxCount: 1 },
-        { name: "productImage2", maxCount: 1 },
-        { name: "productImage3", maxCount: 1 },
-        { name: "productImage4", maxCount: 1 },
-      ]),
-      productController.postAddProductsPage
-    );
-    
     router.get("/productManagement/update/:id", productController.loadUpdateProduct);
+router.put("/productManagement/update/:id", upload.fields([
+    { name: "productImages1", maxCount: 1 },
+    { name: "productImages2", maxCount: 1 },
+    { name: "productImages3", maxCount: 1 },
+    { name: "productImages4", maxCount: 1 },
+]), productController.postUpdateProduct);
+
+
     
-    router.put("/productManagement/update/:id",
-      upload.fields([
-        { name: "productImage0", maxCount: 1 },
-        { name: "productImage1", maxCount: 1 },
-        { name: "productImage2", maxCount: 1 },
-        { name: "productImage3", maxCount: 1 },
-      ]),
-      productController.updateProduct
-    );
     
     router.get('/productManagement/deleted', productController.loadDelProductPage);
 

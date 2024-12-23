@@ -67,8 +67,10 @@ app.get('/*',(req,res)=>{
     res.render('error/erroralert')
   })
 
+const PORT=process.env.PORT || 3000;
 
-app.listen(3000, () =>{ 
-    console.log('Server running on http://localhost:3000/home')
-    console.log('Server running on http://localhost:3000/admin/login')
+
+app.listen(PORT, () =>{ 
+    console.log(`Server running on http://localhost:${PORT}/home`)
+    console.log(`Server running on http://localhost:${PORT}/admin/login`)
 });

@@ -115,3 +115,83 @@ select, textarea {
         width: 100% !important;
     }
 }
+/* Enhanced Image Upload Section Styles */
+.round-preview-container {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.image-upload-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.image-upload-circle {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.upload-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-upload-circle:hover .upload-overlay {
+  opacity: 1;
+}
+
+.upload-label {
+  color: white;
+  text-align: center;
+  cursor: pointer;
+}
+
+.upload-label i {
+  font-size: 24px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .image-upload-circle {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .image-upload-circle {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+@media (max-width: 576px) {
+  .image-upload-circle {
+    width: 120px;
+    height: 120px;
+  }
+}

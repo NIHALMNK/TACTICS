@@ -113,9 +113,11 @@ async loadShop(req, res) {
       const product = await productModel
         .findById(productId)
         .populate("category");
-      if (!product) {
-        return res.status(404).send("Product not found");
-      }
+
+        if (!product) {
+          return res.status(404).send("Product not found");
+        }
+        // console.log("HEI"+product)
 
      
       const productAll = await productModel.find({ isDeleted: false });

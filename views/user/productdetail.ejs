@@ -65,7 +65,8 @@
                 <i class="far fa-star"></i>
             <% } %>
         </div>
-        <span class="text-muted">(<%= product.reviews.length %> Reviews)</span>
+        <!---threr is somthing to be added here from the notepad-->
+        <span class="text-muted">(Reviews)  </span>
     </div>
 
     <div class="mb-3">
@@ -83,49 +84,63 @@
         <% } %>
     </div>
     
-
+<!---------total stock----------->
     <p class="availability mb-3">
-        <i class="fas fa-check-circle"></i> <%= product.stock %> Items in Stock
+        <i class="fas fa-check-circle"></i>
+        <span id="totalStock">
+            <%= product.stockManagement.reduce((total, item) => total + item.quantity, 0) %>
+        </span>
+        Items in Stock
     </p>
     
-    <!-- Description -->
-    <p class="product-description"><%= product.description %></p>
 
-    <!-- Wishlist Icon -->
-    <button class="btn btn-light mb-3" id="wishlistBtn">
-        <i class="fas fa-heart"></i> Add to Wishlist
-    </button>
 
-    <!-- Size Selector -->
-    <div class="mb-4">
-        <h3 class="h5">Select Size:</h3>
-        <div class="btn-group" role="group">
-            <% product.sizes.forEach(size => { %>
-                <input type="radio" class="btn-check" name="size" id="size-<%= size %>" autocomplete="off">
-                <label class="btn btn-outline-secondary" for="size-<%= size %>"><%= size %></label>
-            <% }) %>
+
+<!-- Description -->
+<p class="product-description"><%= product.description %></p>
+
+<!-- Wishlist Icon -->
+<button class="btn btn-light mb-3" id="wishlistBtn">
+    <i class="fas fa-heart"></i> Add to Wishlist
+</button>
+
+<!-- Size Selector -->
+<div class="btn-group" role="group">
+    <% product.stockManagement.forEach(stock => { %>
+        <input 
+            type="radio" 
+            class="btn-check" 
+            name="size" 
+            id="size-<%= stock.size %>" 
+            autocomplete="off" 
+            data-stock="<%= stock.quantity %>" 
+        >
+        <label class="btn btn-outline-secondary" for="size-<%= stock.size %>"><%= stock.size %></label>
+    <% }) %>
+</div>
+
+<!-- Quantity Selector -->
+<div class="mb-4">
+    <h3 class="h5">Quantity:</h3>
+    <div class="d-flex align-items-center">
+        <div class="input-group me-3" style="width: 130px;">
+            <button class="btn btn-outline-secondary" type="button" id="decrease">-</button>
+            <input 
+                type="number" 
+                class="form-control text-center" 
+                value="1" 
+                min="1" 
+                id="quantity" 
+                readonly>
+            <button class="btn btn-outline-secondary" type="button" id="increase">+</button>
         </div>
+        <span class="text-muted">
+            Available: <span id="currentStock">0</span> in stock
+        </span>
     </div>
+</div>
 
-    <!-- Quantity Selector -->
-    <div class="mb-4">
-        <h3 class="h5">Quantity:</h3>
-        <div class="d-flex align-items-center">
-            <div class="input-group me-3" style="width: 130px;">
-                <button class="btn btn-outline-secondary" type="button" id="decrease">-</button>
-                <input 
-                    type="number" 
-                    class="form-control text-center" 
-                    value="1" 
-                    min="1" 
-                    max="<%= product.stock %>" 
-                    id="quantity" 
-                    readonly>
-                <button class="btn btn-outline-secondary" type="button" id="increase">+</button>
-            </div>
-            <span class="text-muted">Available: <%= product.stock %> in stock</span>
-        </div>
-    </div>
+
     
     
     
@@ -140,33 +155,6 @@
         <div class="row mt-5">
             <div class="col-12">
                 <h3 class="mb-4 text-center">Customer Reviews</h3>
-        
-                <% if (product.reviews && product.reviews.length > 0) { %>
-                    <% product.reviews.forEach(review => { %>
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <div class="d-flex mb-3">
-                                    <img src="<%= review.avatar %>" alt="Avatar" class="review-avatar me-3">
-                                    <div>
-                                        <h6 class="mb-1"><%= review.name %></h6>
-                                        <div class="rating mb-1">
-                                            <% for (let i = 0; i < review.rating; i++) { %>
-                                                <i class="fas fa-star"></i>
-                                            <% } %>
-                                            <% for (let i = review.rating; i < 5; i++) { %>
-                                                <i class="far fa-star"></i>
-                                            <% } %>
-                                        </div>
-                                        <p class="review-date"><%= review.date %></p>
-                                    </div>
-                                </div>
-                                <p class="mb-0"><%= review.comment %></p>
-                            </div>
-                        </div>
-                    <% }) %>
-                <% } else { %>
-                    <p class="text-center text-muted">No reviews available.</p>
-                <% } %>
             </div>
         </div>
         
@@ -231,17 +219,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-    // Quantity input handlers
-    const quantityInput = document.getElementById('quantity');
-    document.getElementById('increase').addEventListener('click', () => {
-        quantityInput.value = parseInt(quantityInput.value) + 1;
-    });
-
-    document.getElementById('decrease').addEventListener('click', () => {
-        if (parseInt(quantityInput.value) > 1) {
-            quantityInput.value = parseInt(quantityInput.value) - 1;
-        }
-    });
+   
 
     // Thumbnail click handler
     document.querySelectorAll('.thumbnail').forEach(thumb => {
@@ -253,7 +231,7 @@
     // Magnifier functionality
     const productImage = document.getElementById('productImage');
     const magnifierGlass = document.querySelector('.img-magnifier-glass');
-    const zoomLevel = 3;
+    const zoomLevel = 2;
 
     function setupMagnifier() {
         magnifierGlass.style.backgroundImage = `url('${productImage.src}')`;
@@ -308,15 +286,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const maxStock = parseInt(quantityInput.getAttribute('max'));
 
     increaseBtn.addEventListener('click', () => {
-        let currentValue = parseInt(quantityInput.value);
+    const maxStock = parseInt(quantityInput.getAttribute('max'));
+    const currentValue = parseInt(quantityInput.value);
 
-        if (currentValue <= maxStock) {
-            // quantityInput.value = currentValue * 1;
-        } else {
-            Swal.fire('wait!', 'Cannot exceed available stock!', 'failed');
-            quantityInput.value = currentValue - 1;
-        }
-    });
+    if (currentValue < maxStock) {
+        // Increment the value only if it's less than maxStock
+        quantityInput.value = currentValue+1 ;
+    } else {
+        // Show SweetAlert if trying to exceed max stock
+        Swal.fire('Wait!', 'Cannot exceed available stock!', 'error');
+
+    }
+});
 
     // Handle "Decrease" button click
     decreaseBtn.addEventListener('click', () => {
@@ -325,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentValue > 1) {
             quantityInput.value = currentValue - 1;
         } else {
-            swal.fire('Wait!',"cannot decrease !","failed");
+            Swal.fire('Wait!',"cannot decrease !","failed");
         }
     });
 
@@ -344,6 +325,59 @@ document.querySelectorAll('.related-cart-icon').forEach(icon => {
         alert('Added to cart!');
     });
 });
+
+//======================================>
+//======================================>
+document.addEventListener('DOMContentLoaded', () => {
+    const sizeInputs = document.querySelectorAll('input[name="size"]');
+    const currentStockElement = document.getElementById('currentStock');
+    const quantityInput = document.getElementById('quantity');
+
+    // Initialize stock and quantity
+    let selectedStock = 0;
+    quantityInput.setAttribute('max', '1');
+    quantityInput.value = 1;
+
+    sizeInputs.forEach(input => {
+        input.addEventListener('change', () => {
+            selectedStock = parseInt(input.getAttribute('data-stock'));
+
+            // Update stock display
+            currentStockElement.textContent = selectedStock;
+
+            // Update max quantity
+            quantityInput.setAttribute('max', selectedStock);
+            quantityInput.value = Math.min(quantityInput.value, selectedStock);
+        });
+    });
+
+    // Quantity increase/decrease logic
+    const increaseBtn = document.getElementById('increase');
+    const decreaseBtn = document.getElementById('decrease');
+
+    increaseBtn.addEventListener('click', () => {
+        const currentValue = parseInt(quantityInput.value);
+
+        if (currentValue < selectedStock) {
+            quantityInput.value = currentValue + 1;
+        } else {
+            Swal.fire('Wait!', 'Cannot exceed available stock!', 'error');
+        }
+    });
+
+    decreaseBtn.addEventListener('click', () => {
+        let currentValue = parseInt(quantityInput.value);
+
+        if (currentValue > 1) {
+            quantityInput.value = currentValue - 1;
+        } else {
+            Swal.fire('Wait!', "Cannot decrease!", "error");
+        }
+    });
+});
+
+
+
 
 
    </script>

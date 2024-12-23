@@ -43,13 +43,25 @@ module.exports = {
 
 
 //------addProduct--------------------->
-async loadAddProductsPage (req, res){
+async loadAddProductsPage(req, res) {
     try {
+        if (!req.session.admin) {
+            return res.status(200).render('admin/login', { message: "" });
+        }
+
+        // Fetch categories for the dropdown
         const categories = await Category.find({ isDeleted: false });
-        res.render('admin/productAdd', { categories: categories ,});
+        
+        // Render the product add page with categories
+        return res.status(200).render('admin/productAdd', { 
+            categories,
+            message: ''
+        });
     } catch (error) {
-        console.error('Error loading product adding page:', error);
-        res.status(500).json({ message: 'Error loading product adding page' });
+        console.error('Error loading add products page ➡️', error);
+        return res.status(500).render('error/erroralert', { 
+            message: 'Error loading add product page'
+        });
     }
 },
 
@@ -63,16 +75,16 @@ async postAddProductsPage(req, res) {
             productDescription,
             productPrice,
             productOfferPrice,
-            productStock,
+            productStockManagement, 
             productTags,
-            productSizes,
-            productColors,
             productBrand,
             productCashOnDelivery,
             productWarranty,
             productReturnPolicy,
             productCategory,
         } = req.body;
+
+        
 
         // Validate required fields
         if (!productName || !productDescription || !productPrice || !productCategory) {
@@ -90,132 +102,177 @@ async postAddProductsPage(req, res) {
             });
         }
 
-        // Process images
         const imagePaths = Object.values(req.files)
             .flat()
-            .map(file => file.path.split('public')[1]); // Extract relative paths
+            .map(file => file.path.split('public')[1]);
 
+     
+        let stockManagement = {};
+        
+        
+        if (productStockManagement) {
+            try {
+                stockManagement = JSON.parse(productStockManagement);
+                
+            } catch (error) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid stock management format.',
+                });
+            }
+        }
+
+        const parsedSizes = stockManagement || [];
         // Create product object
         const newProduct = new Products({
             name: productName,
             description: productDescription,
-            price: parseFloat(productPrice), // Ensure price is a valid number
+            price: parseFloat(productPrice),
             offerPrice: productOfferPrice
                 ? parseFloat(productOfferPrice)
-                : parseFloat(productPrice), // Default offerPrice to productPrice if not provided
+                : parseFloat(productPrice),
+            stockManagement: parsedSizes,
             images: imagePaths,
-            stock: productStock ? parseInt(productStock, 10) : 0, // Default stock to 0 if not provided
-            tags: productTags ? productTags.split(',') : [], // Convert tags to an array
-            sizes: productSizes ? productSizes.split(',') : [], // Convert sizes to an array
-            colors: productColors ? productColors.split(',') : [], // Convert colors to an array
-            brand: productBrand || null, // Allow brand to be nullable
-            cashOnDelivery: productCashOnDelivery === 'Yes', // Convert to boolean
-            warranty: productWarranty || null, // Allow warranty to be nullable
-            returnPolicy: productReturnPolicy || null, // Allow returnPolicy to be nullable
-            category: productCategory, // Required field
-            isDeleted: false, // Set default as false
+            tags: productTags ? productTags.split(',') : [],
+            brand: productBrand || null,
+            cashOnDelivery: productCashOnDelivery === 'Yes',
+            warranty: productWarranty || null,
+            returnPolicy: productReturnPolicy || null,
+            category: productCategory,
+            isDeleted: false,
             createdAt: Date.now(),
             updatedAt: Date.now(),
         });
 
+        
         // Save product to the database
         await newProduct.save();
 
         // Redirect or respond with success
         return res.redirect('/admin/productManagement');
     } catch (error) {
-        console.error('Error posting product:', error);
-
-        // Respond with an error
+        // console.error(':', error);
         res.status(500).json({
             success: false,
             message: 'Error posting product. Please try again later.',
         });
     }
 },
-
 //------updateProduct--------------------->
 
-async loadUpdateProduct (req, res) {
-    const productId = req.params.id; // Get productId from URL parameter
-    // console.log(productId);
-
+async loadUpdateProduct(req, res) {
     try {
-        const product = await Products.findById(productId).populate('category'); // Find product by ID
-        const categories = await Category.find();
-        if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
+        if (!req.session.admin) {
+            return res.status(200).render('admin/login', { message: "" });
         }
 
-        // Render the update page with the product data
-        res.render('admin/productUpdate', { product, categories });
+        const productId = req.params.id;
+        if (!productId) {
+            return res.status(400).render('error/erroralert', { 
+                message: 'Product ID is required' 
+            });
+        }
+
+        const [product, categories] = await Promise.all([
+            Products.findById(productId).populate('category'),
+            Category.find({ isDeleted: false })
+        ]);
+
+        if (!product) {
+            return res.status(404).render('error/erroralert', { 
+                message: 'Product not found' 
+            });
+        }
+
+        return res.status(200).render('admin/productUpdate', {
+            product,
+            categories,
+            message: ''
+        });
+
     } catch (error) {
-        console.error('Error loading product update page:', error);
-        res.status(500).json({ message: 'Error loading product update page' });
+        console.error('Error loading update product page ➡️', error);
+        return res.status(500).render('error/erroralert', { 
+            message: 'Error loading update product page' 
+        });
     }
 },
 
-async updateProduct(req, res) {
-    const productId = req.params.id;
-    console.log("the product id ---->>>" + productId);
-    // console.log(req.body);
-    
-    const {
-        productName,
-        productDescription,
-        productPrice,
-        productOfferPrice,
-        productStock,
-        productCategory,
-    } = req.body;
-
-    // Check if files were uploaded
-    if (!req.files) {
-        return res.status(404).json({ message: "No images uploaded" });
-    }
-    
-    // console.log("the req . file is this >>>>" + req.files); // Log the files for debugging
-
+async postUpdateProduct(req, res) {
     try {
-        const product = await Products.findById(productId);
-
-        if (!product) {
-            return res.status(404).json({ success: false, message: 'Product not found' });
+        const productId = req.params.id;
+        const existingProduct = await Products.findById(productId);
+        if (!existingProduct) {
+            return res.status(404).json({
+                success: false,
+                message: 'Product not found'
+            });
         }
 
-        // Update product fields
-        product.name = productName;
-        product.description = productDescription;
-        product.price = parseFloat(productPrice);
-        product.offerPrice = parseFloat(productOfferPrice);
-        product.stock = parseInt(productStock, 10);
-        product.category = productCategory;
-        product.updatedAt = Date.now();
+        // Get existing images
+        let updatedImages = [...existingProduct.images];
 
-        // Handle uploaded images if they exist
-        const imagePaths = [];
-        for (const key in req.files) {
-            if (Object.prototype.hasOwnProperty.call(req.files, key)) {
-                req.files[key].forEach((file) => {
-                    const relativePath = file.path.replace(/\\/g, '/').split('public')[1]; // Ensure consistent path formatting
-                    imagePaths.push(relativePath);
-                });
-            }
+        // Handle new image uploads
+        if (req.files) {
+            Object.keys(req.files).forEach((key, index) => {
+                const file = req.files[key][0];
+                const imagePath = file.path.split('public')[1];
+                // Replace image at corresponding index
+                updatedImages[index] = imagePath;
+            });
         }
 
-        // If new images were uploaded, update the product images
-        if (imagePaths.length > 0) {
-            product.images = imagePaths; // Update images if new ones are uploaded
+        // Parse stock management data
+        let parsedStockManagement = [];
+        try {
+            const stockData = JSON.parse(req.body.productStockManagement || '[]');
+            parsedStockManagement = stockData.map(item => ({
+                size: item.size,
+                quantity: parseInt(item.quantity) || 0
+            }));
+        } catch (error) {
+            console.error('Stock parsing error:', error);
+            parsedStockManagement = existingProduct.stockManagement;
         }
 
-        await product.save();
-        res.status(200).json({ success: true, message: 'Successfully updated product', product });
+        // Update product with all fields
+        const updatedProduct = await Products.findByIdAndUpdate(
+            productId,
+            {
+                $set: {
+                    name: req.body.productName,
+                    description: req.body.productDescription,
+                    price: parseFloat(req.body.productPrice),
+                    offerPrice: req.body.productOfferPrice ? 
+                              parseFloat(req.body.productOfferPrice) : 
+                              parseFloat(req.body.productPrice),
+                    stockManagement: parsedStockManagement,
+                    images: updatedImages,
+                    tags: req.body.productTags ? req.body.productTags.split(',') : [],
+                    brand: req.body.productBrand,
+                    warranty: req.body.productWarranty,
+                    returnPolicy: req.body.productReturnPolicy,
+                    category: req.body.productCategory,
+                    updatedAt: Date.now()
+                }
+            },
+            { new: true, runValidators: true }
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: 'Product updated successfully',
+            product: updatedProduct
+        });
+
     } catch (error) {
         console.error('Error updating product:', error);
-        res.status(500).json({ success: false, message: 'Error updating product' });
+        return res.status(500).json({
+            success: false,
+            message: 'Error updating product'
+        });
     }
 },
-
 //---------delete product----------------->
 async loadDelProductPage (req, res){
     try {

@@ -1,194 +1,168 @@
-document.addEventListener("DOMContentLoaded", () => {
-    let cropper;
-    let currentImageIndex;
+// Existing cropper.js functionality (unchanged)
+const cropperInstances = [];
+const croppedImages = [];
 
-    const previewImage = (input, previewId) => {
-        const file = input.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                document.getElementById(previewId).src = e.target.result;
-                openCropModal(e.target.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
+function previewAndCrop(event, index) {
+    const file = event.target.files[0];
+    if (!file) return;
 
-    function openCropModal(imageSrc) {
-        const imageToCrop = document.getElementById('imageToCrop');
-        imageToCrop.src = imageSrc;
-
-        const cropImageModal = new bootstrap.Modal(document.getElementById('cropImageModal'));
-        cropImageModal.show();
-
-        if (cropper) {
-            cropper.destroy();
-        }
-        cropper = new Cropper(imageToCrop, {
-            aspectRatio: 1,
-            viewMode: 1,
-            autoCropArea: 1,
-        });
+    // Check if the uploaded file is an image
+    if (!file.type.startsWith("image/")) {
+        Swal.fire("Invalid File", "Please upload a valid image file.", "error");
+        event.target.value = ""; // Clear the file input
+        return;
     }
 
-    document.getElementById('cropButton').addEventListener('click', () => {
-        const canvas = cropper.getCroppedCanvas();
-        canvas.toBlob((blob) => {
-            const file = new File([blob], "croppedImage.png", {
-                type: "image/png",
-                lastModified: Date.now(),
-            });
+    // Create modal for cropping
+    const modal = `
+        <div class="modal fade" id="cropModal${index}" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Crop Image</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <img id="cropPreview${index}" style="max-width: 100%" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" onclick="startCropping(${index})">Crop</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modal);
 
-            const previewId = `roundPreview${currentImageIndex}`;
-            document.getElementById(previewId).src = canvas.toDataURL();
+    const cropPreview = document.getElementById(`cropPreview${index}`);
+    const cropModal = new bootstrap.Modal(document.getElementById(`cropModal${index}`));
 
-            const cropImageModal = bootstrap.Modal.getInstance(document.getElementById('cropImageModal'));
-            cropImageModal.hide();
+    // Set the cropping preview
+    cropPreview.src = URL.createObjectURL(file);
+    cropModal.show();
 
-            const formData = new FormData();
-            formData.append("productImages[]", file);
-        }, "image/png");
+    // Initialize or reinitialize the cropper
+    if (cropperInstances[index]) {
+        cropperInstances[index].destroy();
+    }
+    cropperInstances[index] = new Cropper(cropPreview, {
+        aspectRatio: 3 / 4,
+        viewMode: 1,
+        autoCropArea: 1,
+        scalable: true,
+        zoomable: true,
+        movable: true,
+    });
+}
+
+function startCropping(index) {
+    const cropper = cropperInstances[index];
+    if (!cropper) return;
+
+    // Crop the image and convert it to a Blob
+    cropper.getCroppedCanvas().toBlob((blob) => {
+        croppedImages[index] = blob;
+
+        const roundPreview = document.getElementById(`roundPreview${index}`);
+        const fileInput = document.getElementById(`productImage${index + 1}`);
+
+        // Update the round preview with the cropped image
+        roundPreview.src = URL.createObjectURL(blob);
+        roundPreview.style.display = "block";
+
+        // Update the corresponding file input with the cropped image Blob
+        const dataTransfer = new DataTransfer();
+        const croppedFile = new File([blob], fileInput.files[0].name, { type: 'image/png' });
+        dataTransfer.items.add(croppedFile);
+        fileInput.files = dataTransfer.files;
+
+        // Close the modal
+        const cropModal = bootstrap.Modal.getInstance(document.getElementById(`cropModal${index}`));
+        cropModal.hide();
+        document.getElementById(`cropModal${index}`).remove();
+    });
+}
+
+// New validation logic
+document.getElementById("productForm").addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevent default form submission
+
+    // Clear previous error messages
+    const errorMessages = document.querySelectorAll(".error-message");
+    errorMessages.forEach((msg) => msg.remove());
+
+    // Get form values
+    const productName = document.getElementById("productName").value.trim();
+    const productPrice = parseFloat(document.getElementById("productPrice").value);
+    const offerPriceInput = document.getElementById("offerPrice");
+    const offerPrice = parseFloat(offerPriceInput.value) || null;
+    const productDescription = document.getElementById("productDescription").value.trim();
+    const productImages = [...document.querySelectorAll(".product-image")];
+
+    let hasError = false;
+
+    // Helper function to add error messages
+    function showError(inputId, message) {
+        const inputElement = document.getElementById(inputId);
+        const error = document.createElement("p");
+        error.classList.add("text-danger", "error-message");
+        error.textContent = message;
+        inputElement.parentElement.appendChild(error);
+        hasError = true;
+    }
+
+    // Validate fields
+    if (!productName) {
+        showError("productName", "Product name is required.");
+    }
+
+    if (isNaN(productPrice) || productPrice <= 0) {
+        showError("productPrice", "Please enter a valid price greater than zero.");
+    }
+
+    if (offerPrice !== null && (isNaN(offerPrice) || offerPrice >= productPrice)) {
+        showError("offerPrice", "Offer price must be less than the original price.");
+    }
+
+    if (!productDescription) {
+        showError("productDescription", "Product description is required.");
+    }
+
+    // Validate image uploads
+    let imageUploaded = false;
+    productImages.forEach((input) => {
+        if (input.files.length > 0) {
+            imageUploaded = true;
+
+            // Check file type
+            const file = input.files[0];
+            if (!file.type.startsWith("image/")) {
+                showError(input.id, "Only image files are allowed.");
+            }
+        }
     });
 
-    for (let i = 0; i < 4; i++) {
-        const fileInput = document.getElementById(`image${i}`);
-        if (fileInput) {
-            fileInput.addEventListener("change", (event) => {
-                currentImageIndex = i;
-                const file = event.target.files[0];
-                if (file && !file.type.startsWith('image/')) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Non-Image File Detected',
-                        text: 'The selected file is not an image. Cropping session will start.',
-                    }).then(() => {
-                        previewImage(event.target, `roundPreview${i}`);
-                        document.getElementById(`imageError${i}`).style.display = "block";
-                    });
-                } else {
-                    previewImage(event.target, `roundPreview${i}`);
-                    document.getElementById(`imageError${i}`).style.display = "none";
-                }
-            });
+    if (!imageUploaded) {
+        showError("productImage1", "Please upload at least one product image.");
+    }
+
+    // If there are errors, return early
+    if (hasError) {
+        Swal.fire("Error", "Please fix the highlighted errors.", "error");
+        return;
+    }
+
+    // Confirm submission if no errors
+    Swal.fire({
+        title: "Are you sure?",
+        text: "Do you want to add this product?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, add it!",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            event.target.submit(); // Submit the form
         }
-    }
-
-    const form = document.querySelector(".updatePdt");
-    if (form) {
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
-
-            // Reset previous error messages
-            document.querySelectorAll('.text-danger').forEach((el) => {
-                el.style.display = 'none';
-            });
-
-            let isValid = true;
-            const productName = document.getElementById("productName").value.trim();
-            const productPrice = document.getElementById("productPrice").value.trim();
-            const productDescription = document.getElementById("productDescription").value.trim();
-            const productStock = document.getElementById("productStock").value.trim();
-            const productCategory = document.getElementById("productCategory").value;
-            const productOfferPrice = document.getElementById("productOfferPrice").value.trim();
-
-            // Check required fields
-            if (!productName) {
-                document.getElementById('productNameError').style.display = 'block';
-                isValid = false;
-            }
-            if (!productPrice) {
-                document.getElementById('productPriceError').style.display = 'block';
-                isValid = false;
-            }
-            if (!productDescription) {
-                document.getElementById('productDescriptionError').style.display = 'block';
-                isValid = false;
-            }
-            if (!productStock) {
-                document.getElementById('productStockError').style.display = 'block';
-                isValid = false;
-            }
-            if (!productCategory) {
-                document.getElementById('productCategoryError').style.display = 'block';
-                isValid = false;
-            }
-
-            // Offer price validation
-            if (productOfferPrice && parseFloat(productOfferPrice) > parseFloat(productPrice)) {
-                document.getElementById('productOfferPriceError').style.display = 'block';
-                isValid = false;
-            }
-
-            // Image validation
-            let imageFilesValid = true;
-            for (let i = 0; i < 4; i++) {
-                const fileInput = document.getElementById(`image${i}`);
-                if (fileInput && fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    if (!file.type.startsWith('image/')) {
-                        imageFilesValid = false;
-                        document.getElementById(`imageError${i}`).style.display = 'block';
-                    }
-                }
-            }
-
-            if (!imageFilesValid) {
-                isValid = false;
-            }
-
-            if (!isValid) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Validation Error',
-                    text: 'Please fix the highlighted errors.',
-                });
-                return;
-            }
-
-            // Proceed with form submission
-            const formData = new FormData();
-            formData.append("productName", productName);
-            formData.append("productDescription", productDescription);
-            formData.append("productPrice", productPrice);
-            formData.append("productOfferPrice", productOfferPrice);
-            formData.append("productStock", productStock);
-            formData.append("productCategory", productCategory);
-            formData.append("productId", document.getElementById("productId").value);
-
-            for (let i = 0; i < 4; i++) {
-                const fileInput = document.getElementById(`image${i}`);
-                if (fileInput && fileInput.files.length > 0) {
-                    formData.append(`productImage${i}`, fileInput.files[0]);
-                }
-            }
-
-            try {
-                const response = await fetch(`/admin/productManagement/update/${document.getElementById("productId").value}`, {
-                    method: "PUT",
-                    body: formData,
-                });
-
-                if (response.ok) {
-                    const result = await response.json();
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Product Updated',
-                        text: result.message || "Product updated successfully!",
-                    }).then(() => {
-                        window.location.href = "/admin/productManagement";
-                    });
-                } else {
-                    const errorResult = await response.json();
-                    throw new Error(errorResult.message || "Failed to update the product");
-                }
-            } catch (error) {
-                console.error("Error updating product:", error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: "An error occurred while updating the product. Please try again.",
-                });
-            }
-        });
-    }
+    });
 });

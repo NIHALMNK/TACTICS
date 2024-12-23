@@ -1,179 +1,429 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Product Management Panel</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Cropper.js CSS -->
-    <link href="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/admin/productAdd.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Product Management Panel</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Cropper.js CSS -->
+  <link href="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin/productAdd.css">
 </head>
+
 <body>
-       <!-- Include Sidebar (similar to reference code) -->
+  <!-- Include Sidebar (similar to reference code) -->
   <%- include('./layout/aside.ejs') %>
 
-  
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10">
-                <div class="product-form-container">
-                    <h2 class="text-center mb-4">Add New Product</h2>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+        <div class="product-form-container">
+          <h2 class="text-center mb-4">Add New Product</h2>
 
-                    <form id="productForm" action="/admin/productManagement/add" method="post" enctype="multipart/form-data">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="productName" class="form-label">Product Name</label>
-                                    <input type="text" class="form-control" id="productName" name="productName" >
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="productPrice" class="form-label">Price</label>
-                                    <input type="number" class="form-control" id="productPrice" name="productPrice" >
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="offerPrice" class="form-label">Offer Price</label>
-                                    <input type="number" class="form-control" id="offerPrice" name="productOfferPrice">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="productStock" class="form-label">Stock</label>
-                                    <input type="number" class="form-control" id="productStock" name="productStock">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Product Images</label>
-                            <div class="row">
-                                <div class="col-md-6 col-lg-3 text-center">
-                                    <img id="roundPreview0" alt="Preview" style="display: none;" class="round-preview" />
-                                    <input type="file" class="form-control product-image" id="productImage1"
-                                        accept="image/*" onchange="previewAndCrop(event, 0)" name="productImage1" />
-                                </div>
-                                <div class="col-md-6 col-lg-3 text-center">
-                                    <img id="roundPreview1" alt="Preview" style="display: none;" class="round-preview" />
-                                    <input type="file" class="form-control product-image" id="productImage2"
-                                        accept="image/*" onchange="previewAndCrop(event, 1)" name="productImage2" />
-                                </div>
-                                <div class="col-md-6 col-lg-3 text-center">
-                                    <img id="roundPreview2" alt="Preview" style="display: none;" class="round-preview" />
-                                    <input type="file" class="form-control product-image" id="productImage3"
-                                        accept="image/*" onchange="previewAndCrop(event, 2)" name="productImage3" />
-                                </div>
-                                <div class="col-md-6 col-lg-3 text-center">
-                                    <img id="roundPreview3" alt="Preview" style="display: none;" class="round-preview" />
-                                    <input type="file" class="form-control product-image" id="productImage4"
-                                        accept="image/*" onchange="previewAndCrop(event, 3)" name="productImage4" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="productDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="productDescription" name="productDescription" rows="4" ></textarea>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="productTags" class="form-label">Tags</label>
-                                    <input type="text" class="form-control" id="productTags" name="productTags" placeholder="Comma separated">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="productSizes" class="form-label">Sizes</label>
-                                    <input type="text" class="form-control" id="productSizes" name="productSizes" placeholder="Comma separated">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="productColors" class="form-label">Colors</label>
-                                    <input type="text" class="form-control" id="productColors" name="productColors" placeholder="Comma separated">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="productBrand" class="form-label">Brand</label>
-                                    <input type="text" class="form-control" id="productBrand" name="productBrand" >
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="cashOnDelivery">Cash on Delivery</label>
-                                    <div>
-                                        <label>
-                                            <input type="radio" name="productCashOnDelivery" value="Yes" > Yes
-                                        </label>
-                                        <label>
-                                            <input type="radio" name="productCashOnDelivery" value="No"> No
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="productWarranty" class="form-label">Warranty</label>
-                                    <input type="text" class="form-control" id="productWarranty" name="productWarranty" placeholder="e.g., 1 year">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="productReturnPolicy" class="form-label">Return Policy</label>
-                                    <input type="text" class="form-control" id="productReturnPolicy" name="productReturnPolicy" placeholder="e.g., 30 days">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- <div class="form-group">
-                            <label for="productCategory" class="form-label">Category</label>
-                            <input type="text" class="form-control" id="productCategory" name="productCategory" placeholder="e.g., Electronics">
-                        </div> -->
-                        <div class="form-group">
-                            <label for="productCategory" class="form-label">Category</label>
-                            <select class="form-control" id="productCategory" name="productCategory" >
-                                <% categories.forEach(category => { %>
-                                    <option value="<%= category._id %>"><%= category.name %></option>
-                                <% }) %>
-                            </select>
-                        </div>
-
-                        <!-- add *001 (on text) -->
-                      
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary btn-submit mt-3 w-50">
-                                Add Product
-                            </button>
-                        </div>
-                    </form>
+          <form id="productForm" action="/admin/productManagement/add" method="post" enctype="multipart/form-data">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="productName" class="form-label">Product Name</label>
+                  <input type="text" class="form-control" id="productName" name="productName">
+                  <p id="productNameError" class="text-danger" style="display:none;">Please enter a valid product name.</p>
                 </div>
+              </div>
             </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="productPrice" class="form-label">Price</label>
+                  <input type="number" class="form-control" id="productPrice" name="productPrice">
+                  <p id="productPriceError" class="text-danger" style="display:none;">Please enter a valid price.</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="offerPrice" class="form-label">Offer Price</label>
+                  <input type="number" class="form-control" id="offerPrice" name="productOfferPrice">
+                  <p id="offerPriceError" class="text-danger" style="display:none;">Please enter a valid price.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Image Upload Section -->
+            <div class="form-group">
+              <label class="form-label">Product Images</label>
+              <div class="round-preview-container">
+                <% for (let i = 0; i < 4; i++) { %>
+                <div class="image-upload-wrapper">
+                  <img id="roundPreview<%= i %>" class="round-preview" src="/default-image.png" alt="Preview <%= i + 1 %>" />
+                  <input type="file" class="form-control productImagesAdd" id="image<%= i %>"   name="productImages<%= i+1 %>" accept="image/*" />
+                  <p id="imageError<%= i %>" class="text-danger" style="display:none;">Please select a valid image file.</p>
+                </div>
+                <% } %>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="productDescription" class="form-label">Description</label>
+              <textarea class="form-control" id="productDescription" name="productDescription" rows="3"></textarea>
+              <p id="productDescriptionError" class="text-danger" style="display:none;">Please enter a product description.</p>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="productTags" class="form-label">Tags</label>
+                  <input type="text" class="form-control" id="productTags" name="productTags" placeholder="Comma separated">
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="productBrand" class="form-label">Brand</label>
+                  <input type="text" class="form-control" id="productBrand" name="productBrand">
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="productWarranty" class="form-label">Warranty</label>
+                  <input type="text" class="form-control" id="productWarranty" name="productWarranty" placeholder="e.g., 1 year">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="productReturnPolicy" class="form-label">Return Policy</label>
+                  <input type="text" class="form-control" id="productReturnPolicy" name="productReturnPolicy" placeholder="e.g., 30 days">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="productCategory" class="form-label">Category</label>
+              <select class="form-control" id="productCategory" name="productCategory">
+                <% categories.forEach(category => { %>
+                <option value="<%= category._id %>"><%= category.name %></option>
+                <% }) %>
+              </select>
+              <p id="productCategoryError" class="text-danger" style="display:none;">Please select a product category.</p>
+            </div>
+
+            <!-- Stock Management -->
+            <div class="row mt-3">
+              <div class="col-12">
+                <div class="form-group">
+                  <label class="form-label">Stock Management</label>
+                  <div id="stockManagementContainer" class="row g-3">
+                    <!-- Stock inputs will be dynamically added here -->
+                  </div>
+                  <input type="hidden" name="productStockManagement" id="productStockManagement" value="[]">
+                </div>
+              </div>
+            </div>
+
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary btn-submit mt-3 w-50">
+                Add Product
+              </button>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Crop Image Modal -->
+    <div class="modal fade" id="cropImageModal" tabindex="-1" aria-labelledby="cropImageModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cropImageModalLabel">Crop Image</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <img id="imageToCrop" src="" alt="Image to crop" style="max-width: 100%;" />
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" id="cropButton" class="btn btn-primary">Crop Image</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <!-- Cropper.js and Supporting Scripts -->
-    <script src="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/admin/productAdd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Image Cropping Logic
+    let cropper;
+    let currentInput;
+
+    // Trigger cropping modal on image selection
+    document.querySelectorAll(".productImagesAdd").forEach((input, index) => {
+      input.addEventListener("change", function(event) {
+        const file = event.target.files[0];
+        if (file && file.type.startsWith("image/")) {
+          currentInput = event.target;
+
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const imageToCrop = document.getElementById("imageToCrop");
+            imageToCrop.src = e.target.result;
+
+            if (cropper) cropper.destroy();
+            cropper = new Cropper(imageToCrop, {
+              aspectRatio: 1,
+              viewMode: 1,
+              autoCropArea: 0.8,
+            });
+
+            const cropImageModal = new bootstrap.Modal(document.getElementById("cropImageModal"));
+            cropImageModal.show();
+          };
+          reader.readAsDataURL(file);
+        } else {
+          alert("Please select a valid image file.");
+        }
+      });
+    });
+
+    // Handle cropping
+    document.getElementById("cropButton").addEventListener("click", function() {
+      if (cropper) {
+        const croppedCanvas = cropper.getCroppedCanvas();
+        const croppedImage = croppedCanvas.toDataURL("image/jpeg");
+
+        const previewId = currentInput.id.replace("image", "roundPreview");
+        document.getElementById(previewId).src = croppedImage;
+
+        const blob = dataURLToBlob(croppedImage);
+        const croppedFile = new File([blob], "cropped-image.jpg", {
+          type: "image/jpeg"
+        });
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(croppedFile);
+        currentInput.files = dataTransfer.files;
+
+        const cropImageModal = bootstrap.Modal.getInstance(document.getElementById("cropImageModal"));
+        cropImageModal.hide();
+      }
+    });
+
+    // Utility: Convert data URL to Blob
+    function dataURLToBlob(dataURL) {
+      const parts = dataURL.split(",");
+      const mime = parts[0].match(/:(.*?);/)[1];
+      const binary = atob(parts[1]);
+      const array = [];
+      for (let i = 0; i < binary.length; i++) {
+        array.push(binary.charCodeAt(i));
+      }
+      return new Blob([new Uint8Array(array)], {
+        type: mime
+      });
+    }
+
+    // Stock Management Logic
+    document.addEventListener('DOMContentLoaded', function() {
+      const categorySelect = document.getElementById('productCategory');
+      const stockContainer = document.getElementById('stockManagementContainer');
+      const stockManagementInput = document.getElementById('productStockManagement');
+
+      // Size configurations
+      const sizeConfigs = {
+        'pants': Array.from({length: 9}, (_, i) => (28 + (i * 2)).toString()),
+        'shirt': ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']
+      };
+
+      // Function to create stock input fields
+      function createStockFields(category) {
+        const categoryName = category.options[category.selectedIndex].text.toLowerCase();
+        const sizes = sizeConfigs[categoryName] || [];
+
+        stockContainer.innerHTML = '';
+        sizes.forEach(size => {
+          const col = document.createElement('div');
+          col.className = 'col-md-3 mb-3';
+          col.innerHTML = `
+            <div class="input-group">
+              <span class="input-group-text">${size}</span>
+              <input 
+                type="number" 
+                class="form-control stock-input" 
+                data-size="${size}" 
+                value="0"
+                min="0"
+                placeholder="Quantity"
+              >
+            </div>
+          `;
+          stockContainer.appendChild(col);
+        });
+
+        document.querySelectorAll('.stock-input').forEach(input => {
+          input.addEventListener('change', updateStockManagement);
+        });
+
+        updateStockManagement();
+      }
+
+      // Function to update hidden stock management input
+      function updateStockManagement() {
+    const stockData = [];
+    document.querySelectorAll('.stock-input').forEach(input => {
+        const quantity = parseInt(input.value) || 0;
+        if (quantity >= 0) {
+            stockData.push({
+                size: input.dataset.size,
+                quantity: quantity
+            });
+        }
+    });
+    stockManagementInput.value = JSON.stringify(stockData); // Ensure this is correctly serialized
+}
+
+
+      // Listen for category changes
+      categorySelect.addEventListener('change', function() {
+        createStockFields(this);
+      });
+
+      // Initialize stock fields with current category
+      createStockFields(categorySelect);
+    });
+
+    // Form Validation
+    document.getElementById("productForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const errorMessages = document.querySelectorAll(".error-message");
+      errorMessages.forEach((msg) => msg.remove());
+
+      const productName = document.getElementById("productName").value.trim();
+      const productPrice = parseFloat(document.getElementById("productPrice").value);
+      const offerPrice = parseFloat(document.getElementById("offerPrice").value) || null;
+      const productDescription = document.getElementById("productDescription").value.trim();
+      const productTags = document.getElementById("productTags").value.trim();
+      const productBrand = document.getElementById("productBrand").value.trim();
+      const productWarranty = document.getElementById("productWarranty").value.trim();
+      const productReturnPolicy = document.getElementById("productReturnPolicy").value.trim();
+      const productCategory = document.getElementById("productCategory").value;
+      const productStockManagement = document.getElementById("productStockManagement").value;
+      const productImages = [...document.querySelectorAll(".productImagesAdd")];
+
+      let hasError = false;
+
+      function showError(inputId, message) {
+        const inputElement = document.getElementById(inputId);
+        const error = document.createElement("p");
+        error.classList.add("text-danger", "error-message");
+        error.textContent = message;
+        inputElement.parentElement.appendChild(error);
+        hasError = true;
+      }
+
+      if (!productName) {
+        showError("productName", "Product name is required.");
+      }
+
+      if (isNaN(productPrice) || productPrice <= 0) {
+        showError("productPrice", "Please enter a valid price greater than zero.");
+      }
+
+      if (offerPrice !== null && (isNaN(offerPrice) || offerPrice >= productPrice)) {
+        showError("offerPrice", "Offer price must be less than the original price.");
+      }
+
+      if (!productDescription) {
+        showError("productDescription", "Product description is required.");
+      }
+
+      if (!productCategory) {
+        showError("productCategory", "Please select a product category.");
+      }
+
+      if (productTags && productTags.split(",").length > 10) {
+        showError("productTags", "You can add up to 10 tags only.");
+      }
+
+      if (productBrand && productBrand.length > 50) {
+        showError("productBrand", "Brand name cannot exceed 50 characters.");
+      }
+
+      if (productWarranty && !/^\d+\s*(year|month)s?$/.test(productWarranty)) {
+        showError("productWarranty", "Warranty must be in the format (e.g., 1 year, 6 months).");
+      }
+
+      if (productReturnPolicy && !/^\d+\s*(day|month)s?$/.test(productReturnPolicy)) {
+        showError("productReturnPolicy", "Return policy must be in the format (e.g., 30 days, 1 month).");
+      }
+
+      // Validate stock management
+      if (productStockManagement) {
+        try {
+          const stockData = JSON.parse(productStockManagement);
+          if (!Array.isArray(stockData)) {
+            throw new Error();
+          }
+          stockData.forEach((item) => {
+            if (!item.size || !item.quantity || item.quantity < 0) {
+              throw new Error();
+            }
+          });
+        } catch {
+          showError("productStockManagement", "Invalid stock management data. Please check your inputs.");
+        }
+      }
+
+      // Validate image uploads
+      let imageUploaded = false;
+      productImages.forEach((input, index) => {
+        if (input.files.length > 0) {
+          imageUploaded = true;
+
+          // Check file type
+          const file = input.files[0];
+          if (!file.type.startsWith("image/")) {
+            showError(`image${index}`, `Image ${index + 1} must be a valid image file.`);
+          }
+        }
+      });
+
+      if (!imageUploaded) {
+        showError("image0", "Please upload at least one product image.");
+      }
+
+      // If there are errors, return early
+      if (hasError) {
+        Swal.fire({
+          icon: "error",
+          title: "Validation Error",
+          text: "Please fix the highlighted errors before submitting.",
+        });
+        return;
+      }
+
+      // If validation passes, show confirmation dialog
+      Swal.fire({
+        title: "Add Product",
+        text: "Are you sure you want to add this product?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, add it!",
+        cancelButtonText: "Cancel"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Submit the form
+          this.submit();
+        }
+      });
+    });
+    </script>
 </body>
 </html>
