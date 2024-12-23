@@ -136,7 +136,7 @@
                 <div class="form-group">
                   <label class="form-label">Stock Management</label>
                   <div id="stockManagementContainer" class="row g-3">
-                    <!-- Stock inputs will be dynamically generated here -->
+                    
                   </div>
                   <input type="hidden" name="productStockManagement" id="productStockManagement" 
                          value="<%= JSON.stringify(product.stockManagement || []) %>">
@@ -202,42 +202,14 @@
     const productReturnPolicy = document.getElementById("productReturnPolicy").value.trim();
     const productCategory = document.getElementById("productCategory").value;
     const productStockManagement = document.getElementById("productStockManagement").value;
-    // const productImages = [...document.querySelectorAll("[name='productImages[]']")];
-    const productImages = [...document.querySelectorAll('input[type="file"]')];
-      
-    console.log("checking1: productImages:--->"+productImages);
-      
-    // const productImages = document.querySelectorAll('input[type="file"][name="productImages[]"]');
-    const productImagesArray = Array.from(productImages);
-    console.log("check2:productImagesArray:---->"+productImagesArray);
     
     
     let hasError = false;
 
-
-    productImagesArray.forEach((input, index) => {
-    console.log(`check 3:Input----> ${index + 1}:<==>`, input); 
-
-    if (input && input.files) {
-        const files = input.files;
-        if (files.length > 0) {
-            console.log(`check 4: Files for input:----> ${index + 1}<====>:`, files);  
-        } else {
-            console.log(`No files selected for input ${index + 1}`);
-        }
-    } else {
-        console.log(`Input ${index + 1} is not found or does not support files.`);
-        hasError = true;
-    }
-});
-
-
-  
-
    
     function showError(inputId, message) {
         const inputElement = document.getElementById(inputId);
-        console.log("check 5: inputId:------>"+inputElement);
+       
         
         if (!inputElement) {
         console.error(`Element with id "${inputId}" not found.`);
@@ -284,7 +256,7 @@
         showError("productBrand", "Brand name cannot exceed 50 characters.");
     }
 
-    if (productWarranty && !/^\d+\s*(year|month)s?$/i.test(productWarranty)) {
+    if (productWarranty && !/^\d+\s*(day|year|month)s?$/i.test(productWarranty)) {
         showError("productWarranty", "Warranty must be in the format (e.g., 1 year, 6 months).");
     }
 
@@ -309,55 +281,36 @@
         }
     }
 
-    // Validate image uploads
-    let imageUploaded = false;
-
-    productImages.forEach((input, index) => {
-      const fileInput = document.getElementById(`productImages${index }`);
-      const files = fileInput.files; 
-      console.log(`this is the image.id:-->${input.id}`);
-      
-
-      console.log(":::::::::::=>"+files);
-        if (files.length > 0) {
-            imageUploaded = true;
-            const file = input.files[0];
-            if (!file.type.startsWith("image/")) {
-                showError(input.id, `Image ${index + 1} must be a valid image file.`);
-            }
-        }
-    });
-
-    if (!imageUploaded) {
-        showError("image0", "Please upload at least one product image.");
-    }
-    // If there are errors, return early
     if (hasError) {
         Swal.fire("Error", "Please fix the highlighted errors.", "error");
         return;
     }
 
+
     try {
         const response = await fetch(`/admin/productManagement/update/${productId}`, {
             method: 'PUT',
-            body: JSON.srtingify({
-              name: product.name,
-              description: product.description,
-              price: product.price,
-              offerPrice: product.offerPrice,
-              categoryId: product.categoryId,
-              tags: product.tags,
-              brand: product.brand,
-              stockManagement: productStockManagement,
-              images: Array.from(productImages, (input) => input.files.map((file) => file.name))
-
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              productName,
+              productPrice,
+              offerPrice,
+              productDescription,
+              productTags,
+              productBrand,
+              productCategory,
+              productStockManagement,
+              productWarranty,
+              productReturnPolicy,
             })
-
+            
+            
             
           });
-          console.log("^^^^^^^^^^^^^^^^"+images)
 
-        const result = await response.json();
+    const result = await response.json();
+        
+        
 
         if (result.success) {
           Swal.fire({
@@ -538,6 +491,9 @@ document.addEventListener('DOMContentLoaded', function() {
   function createStockFields(category) {
     // Get the category name
     const categoryName = category.options[category.selectedIndex].text.toLowerCase();
+
+    
+    
     
     // Get appropriate sizes
     const sizes = sizeConfigs[categoryName] || [];
@@ -613,13 +569,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-
-
-// document.getElementById('productForm').addEventListener('submit', async function(e) {
-//     e.preventDefault();
-    
-    
-// });
   </script>
 </body>
 </html>

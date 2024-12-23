@@ -20,12 +20,18 @@ router.post("/productManagement/add",upload.fields([
     ]),productController.postAddProductsPage);
 
     router.get("/productManagement/update/:id", productController.loadUpdateProduct);
-router.put("/productManagement/update/:id", upload.fields([
-    { name: "productImages1", maxCount: 1 },
-    { name: "productImages2", maxCount: 1 },
-    { name: "productImages3", maxCount: 1 },
-    { name: "productImages4", maxCount: 1 },
-]), productController.postUpdateProduct);
+// router.put("/productManagement/update/:id", productController.postUpdateProduct);
+router.put(
+    "/productManagement/update/:id",
+    upload.fields([
+        { name: "productImages1", maxCount: 1 },
+        { name: "productImages2", maxCount: 1 },
+        { name: "productImages3", maxCount: 1 },
+        { name: "productImages4", maxCount: 1 },
+    ]),
+    productController.postUpdateProduct
+);
+
 
 
     

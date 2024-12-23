@@ -201,6 +201,8 @@ async loadUpdateProduct(req, res) {
 async postUpdateProduct(req, res) {
     try {
         const productId = req.params.id;
+        console.log(productId);
+        
         const existingProduct = await Products.findById(productId);
         if (!existingProduct) {
             return res.status(404).json({
@@ -209,18 +211,9 @@ async postUpdateProduct(req, res) {
             });
         }
 
-        // Get existing images
-        let updatedImages = [...existingProduct.images];
+      
 
-        // Handle new image uploads
-        if (req.files) {
-            Object.keys(req.files).forEach((key, index) => {
-                const file = req.files[key][0];
-                const imagePath = file.path.split('public')[1];
-                // Replace image at corresponding index
-                updatedImages[index] = imagePath;
-            });
-        }
+        
 
         // Parse stock management data
         let parsedStockManagement = [];
@@ -235,7 +228,7 @@ async postUpdateProduct(req, res) {
             parsedStockManagement = existingProduct.stockManagement;
         }
 
-        // Update product with all fields
+       
         const updatedProduct = await Products.findByIdAndUpdate(
             productId,
             {
@@ -243,11 +236,11 @@ async postUpdateProduct(req, res) {
                     name: req.body.productName,
                     description: req.body.productDescription,
                     price: parseFloat(req.body.productPrice),
-                    offerPrice: req.body.productOfferPrice ? 
-                              parseFloat(req.body.productOfferPrice) : 
-                              parseFloat(req.body.productPrice),
+                    offerPrice: req.body.offerPrice ? 
+                              parseInt(req.body.offerPrice) : 
+                              parseInt(req.body.productPrice),
                     stockManagement: parsedStockManagement,
-                    images: updatedImages,
+                   
                     tags: req.body.productTags ? req.body.productTags.split(',') : [],
                     brand: req.body.productBrand,
                     warranty: req.body.productWarranty,
@@ -259,6 +252,9 @@ async postUpdateProduct(req, res) {
             { new: true, runValidators: true }
         );
 
+        console.log("the product updatedProduct:----> " + updatedProduct);
+        
+
         return res.status(200).json({
             success: true,
             message: 'Product updated successfully',
@@ -266,7 +262,7 @@ async postUpdateProduct(req, res) {
         });
 
     } catch (error) {
-        console.error('Error updating product:', error);
+        console.error('Error updating product:', error.message);
         return res.status(500).json({
             success: false,
             message: 'Error updating product'
