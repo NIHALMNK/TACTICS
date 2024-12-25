@@ -15,6 +15,7 @@ const stockSchema = new mongoose.Schema({
     }
 });
 
+// Main schema for product
 const productSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -51,7 +52,11 @@ const productSchema = new mongoose.Schema({
             message: 'At least one stock entry is required.'
         }
     },
-    images: [{ type: String }],
+    images: [
+        {
+            type: String
+        }
+    ],
     tags: {
         type: [String],
         default: [],
@@ -66,6 +71,11 @@ const productSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
         required: [true, 'Category is required.']
+    },
+    type: {
+        type: String,
+        required: [true, 'Product type is required.'],
+        enum: ['TopWare', 'BottomWare']
     },
     brand: {
         type: String,

@@ -70,6 +70,9 @@ async loadAddProductsPage(req, res) {
 
 async postAddProductsPage(req, res) {
     try {
+        
+        console.log( req.body);
+        
         const {
             productName,
             productDescription,
@@ -78,16 +81,32 @@ async postAddProductsPage(req, res) {
             productStockManagement, 
             productTags,
             productBrand,
-            productCashOnDelivery,
             productWarranty,
             productReturnPolicy,
             productCategory,
+            productType,
         } = req.body;
 
+       console.log("productName====>"+productName);
+       console.log("productDescription====>"+productDescription);
+         console.log("productPrice====>"+productPrice);
+            console.log("productOfferPrice====>"+productOfferPrice);
+            console.log("productStockManagement====>"+productStockManagement);
+            console.log("productTags====>"+productTags);
+            console.log("productBrand====>"+productBrand);
+            console.log("productWarranty====>"+productWarranty);
+            console.log("productReturnPolicy====>"+productReturnPolicy);
+            console.log("productCategory====>"+productCategory);
+            console.log("productTypes====>"+productType);
+
+       
+       
+        
         
 
         // Validate required fields
-        if (!productName || !productDescription || !productPrice || !productCategory) {
+        if (!productName || !productDescription || !productPrice || !productCategory|| !productType) {
+
             return res.status(400).json({
                 success: false,
                 message: 'Please fill in all required fields.',
@@ -135,10 +154,10 @@ async postAddProductsPage(req, res) {
             images: imagePaths,
             tags: productTags ? productTags.split(',') : [],
             brand: productBrand || null,
-            cashOnDelivery: productCashOnDelivery === 'Yes',
             warranty: productWarranty || null,
             returnPolicy: productReturnPolicy || null,
             category: productCategory,
+            type: productType,
             isDeleted: false,
             createdAt: Date.now(),
             updatedAt: Date.now(),
@@ -151,7 +170,7 @@ async postAddProductsPage(req, res) {
         // Redirect or respond with success
         return res.redirect('/admin/productManagement');
     } catch (error) {
-        // console.error(':', error);
+        console.error(':', error);
         res.status(500).json({
             success: false,
             message: 'Error posting product. Please try again later.',
@@ -246,6 +265,7 @@ async postUpdateProduct(req, res) {
                     warranty: req.body.productWarranty,
                     returnPolicy: req.body.productReturnPolicy,
                     category: req.body.productCategory,
+                    type: req.body.productType,
                     updatedAt: Date.now()
                 }
             },

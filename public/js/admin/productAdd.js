@@ -1,168 +1,276 @@
-// Existing cropper.js functionality (unchanged)
-const cropperInstances = [];
-const croppedImages = [];
+ // Image Cropping Logic
+ let cropper;
+ let currentInput;
 
-function previewAndCrop(event, index) {
-    const file = event.target.files[0];
-    if (!file) return;
+ // Trigger cropping modal on image selection
+ document.querySelectorAll(".productImagesAdd").forEach((input, index) => {
+   input.addEventListener("change", function(event) {
+     const file = event.target.files[0];
+     if (file && file.type.startsWith("image/")) {
+       currentInput = event.target;
 
-    // Check if the uploaded file is an image
-    if (!file.type.startsWith("image/")) {
-        Swal.fire("Invalid File", "Please upload a valid image file.", "error");
-        event.target.value = ""; // Clear the file input
-        return;
-    }
+       const reader = new FileReader();
+       reader.onload = function(e) {
+         const imageToCrop = document.getElementById("imageToCrop");
+         imageToCrop.src = e.target.result;
 
-    // Create modal for cropping
-    const modal = `
-        <div class="modal fade" id="cropModal${index}" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Crop Image</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <img id="cropPreview${index}" style="max-width: 100%" />
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary" onclick="startCropping(${index})">Crop</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    document.body.insertAdjacentHTML('beforeend', modal);
+         if (cropper) cropper.destroy();
+         cropper = new Cropper(imageToCrop, {
+           aspectRatio: 1,
+           viewMode: 1,
+           autoCropArea: 0.8,
+         });
 
-    const cropPreview = document.getElementById(`cropPreview${index}`);
-    const cropModal = new bootstrap.Modal(document.getElementById(`cropModal${index}`));
+         const cropImageModal = new bootstrap.Modal(document.getElementById("cropImageModal"));
+         cropImageModal.show();
+       };
+       reader.readAsDataURL(file);
+     } else {
+       alert("Please select a valid image file.");
+     }
+   });
+ });
 
-    // Set the cropping preview
-    cropPreview.src = URL.createObjectURL(file);
-    cropModal.show();
+ // Handle cropping
+ document.getElementById("cropButton").addEventListener("click", function() {
+   if (cropper) {
+     const croppedCanvas = cropper.getCroppedCanvas();
+     const croppedImage = croppedCanvas.toDataURL("image/jpeg");
 
-    // Initialize or reinitialize the cropper
-    if (cropperInstances[index]) {
-        cropperInstances[index].destroy();
-    }
-    cropperInstances[index] = new Cropper(cropPreview, {
-        aspectRatio: 3 / 4,
-        viewMode: 1,
-        autoCropArea: 1,
-        scalable: true,
-        zoomable: true,
-        movable: true,
-    });
+     const previewId = currentInput.id.replace("image", "roundPreview");
+     document.getElementById(previewId).src = croppedImage;
+
+     const blob = dataURLToBlob(croppedImage);
+     const croppedFile = new File([blob], "cropped-image.jpg", {
+       type: "image/jpeg"
+     });
+     const dataTransfer = new DataTransfer();
+     dataTransfer.items.add(croppedFile);
+     currentInput.files = dataTransfer.files;
+
+     const cropImageModal = bootstrap.Modal.getInstance(document.getElementById("cropImageModal"));
+     cropImageModal.hide();
+   }
+ });
+
+ // Utility: Convert data URL to Blob
+ function dataURLToBlob(dataURL) {
+   const parts = dataURL.split(",");
+   const mime = parts[0].match(/:(.*?);/)[1];
+   const binary = atob(parts[1]);
+   const array = [];
+   for (let i = 0; i < binary.length; i++) {
+     array.push(binary.charCodeAt(i));
+   }
+   return new Blob([new Uint8Array(array)], {
+     type: mime
+   });
+ }
+
+ // Stock Management Logic
+ document.addEventListener('DOMContentLoaded', function() {
+   const categorySelect = document.getElementById('productType');
+   const stockContainer = document.getElementById('stockManagementContainer');
+   const stockManagementInput = document.getElementById('productStockManagement');
+
+   // Size configurations
+   const sizeConfigs = {
+     'bottomware': Array.from({length: 9}, (_, i) => (28 + (i * 2)).toString()),
+     'topware': ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']
+   };
+
+   // Function to create stock input fields
+   function createStockFields(category) {
+    //  const categoryName = category.options[category.selectedIndex].text.toLowerCase();
+     const productType= categorySelect.value.toLowerCase();
+     console.log("THIS IS MY PRODUCT TYPE-->"+productType);
+     
+    const sizes = sizeConfigs[productType] || [];
+    console.log("THIS IS MY SIZES-->"+sizes);
+    
+
+     stockContainer.innerHTML = '';
+     sizes.forEach(size => {
+       const col = document.createElement('div');
+       col.className = 'col-md-3 mb-3';
+       col.innerHTML = `
+         <div class="input-group">
+           <span class="input-group-text">${size}</span>
+           <input 
+             type="number" 
+             class="form-control stock-input" 
+             data-size="${size}" 
+             value="0"
+             min="0"
+             placeholder="Quantity"
+           >
+         </div>
+       `;
+       stockContainer.appendChild(col);
+     });
+
+     document.querySelectorAll('.stock-input').forEach(input => {
+       input.addEventListener('change', updateStockManagement);
+     });
+
+     updateStockManagement();
+   }
+
+   // Function to update hidden stock management input
+   function updateStockManagement() {
+ const stockData = [];
+ document.querySelectorAll('.stock-input').forEach(input => {
+     const quantity = parseInt(input.value) || 0;
+     if (quantity >= 0) {
+         stockData.push({
+             size: input.dataset.size,
+             quantity: quantity
+         });
+     }
+ });
+ stockManagementInput.value = JSON.stringify(stockData); // Ensure this is correctly serialized
 }
 
-function startCropping(index) {
-    const cropper = cropperInstances[index];
-    if (!cropper) return;
 
-    // Crop the image and convert it to a Blob
-    cropper.getCroppedCanvas().toBlob((blob) => {
-        croppedImages[index] = blob;
+   // Listen for category changes
+   categorySelect.addEventListener('change', function() {
+     createStockFields(this);
+   });
 
-        const roundPreview = document.getElementById(`roundPreview${index}`);
-        const fileInput = document.getElementById(`productImage${index + 1}`);
+   // Initialize stock fields with current category
+   createStockFields(categorySelect);
+ });
 
-        // Update the round preview with the cropped image
-        roundPreview.src = URL.createObjectURL(blob);
-        roundPreview.style.display = "block";
+ // Form Validation
+ document.getElementById("productForm").addEventListener("submit", function(event) {
+   event.preventDefault();
 
-        // Update the corresponding file input with the cropped image Blob
-        const dataTransfer = new DataTransfer();
-        const croppedFile = new File([blob], fileInput.files[0].name, { type: 'image/png' });
-        dataTransfer.items.add(croppedFile);
-        fileInput.files = dataTransfer.files;
+   const errorMessages = document.querySelectorAll(".error-message");
+   errorMessages.forEach((msg) => msg.remove());
 
-        // Close the modal
-        const cropModal = bootstrap.Modal.getInstance(document.getElementById(`cropModal${index}`));
-        cropModal.hide();
-        document.getElementById(`cropModal${index}`).remove();
-    });
-}
+   const productName = document.getElementById("productName").value.trim();
+   const productPrice = parseFloat(document.getElementById("productPrice").value);
+   const offerPrice = parseFloat(document.getElementById("offerPrice").value) || null;
+   const productDescription = document.getElementById("productDescription").value.trim();
+   const productTags = document.getElementById("productTags").value.trim();
+   const productBrand = document.getElementById("productBrand").value.trim();
+   const productWarranty = document.getElementById("productWarranty").value.trim();
+   const productReturnPolicy = document.getElementById("productReturnPolicy").value.trim();
+   const productCategory = document.getElementById("productCategory").value;
+   const productStockManagement = document.getElementById("productStockManagement").value;
+   const productType= document.getElementById("productType").value;
+   console.log("THIS IS MY PRODUCT TYPE-->"+productType);
+   
+   const productImages = [...document.querySelectorAll(".productImagesAdd")];
 
-// New validation logic
-document.getElementById("productForm").addEventListener("submit", function (event) {
-    event.preventDefault(); // Prevent default form submission
+   let hasError = false;
 
-    // Clear previous error messages
-    const errorMessages = document.querySelectorAll(".error-message");
-    errorMessages.forEach((msg) => msg.remove());
+   function showError(inputId, message) {
+     const inputElement = document.getElementById(inputId);
+     const error = document.createElement("p");
+     error.classList.add("text-danger", "error-message");
+     error.textContent = message;
+     inputElement.parentElement.appendChild(error);
+     hasError = true;
+   }
 
-    // Get form values
-    const productName = document.getElementById("productName").value.trim();
-    const productPrice = parseFloat(document.getElementById("productPrice").value);
-    const offerPriceInput = document.getElementById("offerPrice");
-    const offerPrice = parseFloat(offerPriceInput.value) || null;
-    const productDescription = document.getElementById("productDescription").value.trim();
-    const productImages = [...document.querySelectorAll(".product-image")];
+   if (!productName) {
+     showError("productName", "Product name is required.");
+   }
 
-    let hasError = false;
+   if (isNaN(productPrice) || productPrice <= 0) {
+     showError("productPrice", "Please enter a valid price greater than zero.");
+   }
 
-    // Helper function to add error messages
-    function showError(inputId, message) {
-        const inputElement = document.getElementById(inputId);
-        const error = document.createElement("p");
-        error.classList.add("text-danger", "error-message");
-        error.textContent = message;
-        inputElement.parentElement.appendChild(error);
-        hasError = true;
+   if (offerPrice !== null && (isNaN(offerPrice) || offerPrice >= productPrice)) {
+     showError("offerPrice", "Offer price must be less than the original price.");
+   }
+
+   if (!productDescription) {
+     showError("productDescription", "Product description is required.");
+   }
+
+   if (!productCategory) {
+     showError("productCategory", "Please select a product category.");
+   }
+
+    if (!productType) {
+        showError("productType", "Please select a product type.");
     }
 
-    // Validate fields
-    if (!productName) {
-        showError("productName", "Product name is required.");
-    }
+   if (productTags && productTags.split(",").length > 10) {
+     showError("productTags", "You can add up to 10 tags only.");
+   }
 
-    if (isNaN(productPrice) || productPrice <= 0) {
-        showError("productPrice", "Please enter a valid price greater than zero.");
-    }
+   if (productBrand && productBrand.length > 50) {
+     showError("productBrand", "Brand name cannot exceed 50 characters.");
+   }
 
-    if (offerPrice !== null && (isNaN(offerPrice) || offerPrice >= productPrice)) {
-        showError("offerPrice", "Offer price must be less than the original price.");
-    }
+   if (productWarranty && !/^\d+\s*(year|month)s?$/.test(productWarranty)) {
+     showError("productWarranty", "Warranty must be in the format (e.g., 1 year, 6 months).");
+   }
 
-    if (!productDescription) {
-        showError("productDescription", "Product description is required.");
-    }
+   if (productReturnPolicy && !/^\d+\s*(day|month)s?$/.test(productReturnPolicy)) {
+     showError("productReturnPolicy", "Return policy must be in the format (e.g., 30 days, 1 month).");
+   }
 
-    // Validate image uploads
-    let imageUploaded = false;
-    productImages.forEach((input) => {
-        if (input.files.length > 0) {
-            imageUploaded = true;
+   // Validate stock management
+   if (productStockManagement) {
+     try {
+       const stockData = JSON.parse(productStockManagement);
+       if (!Array.isArray(stockData)) {
+         throw new Error();
+       }
+       stockData.forEach((item) => {
+         if (!item.size || !item.quantity || item.quantity < 0) {
+           throw new Error();
+         }
+       });
+     } catch {
+       showError("productStockManagement", "Invalid stock management data. Please check your inputs.");
+     }
+   }
 
-            // Check file type
-            const file = input.files[0];
-            if (!file.type.startsWith("image/")) {
-                showError(input.id, "Only image files are allowed.");
-            }
-        }
-    });
+   // Validate image uploads
+   let imageUploaded = false;
+   productImages.forEach((input, index) => {
+     if (input.files.length > 0) {
+       imageUploaded = true;
 
-    if (!imageUploaded) {
-        showError("productImage1", "Please upload at least one product image.");
-    }
+       // Check file type
+       const file = input.files[0];
+       if (!file.type.startsWith("image/")) {
+         showError(`image${index}`, `Image ${index + 1} must be a valid image file.`);
+       }
+     }
+   });
 
-    // If there are errors, return early
-    if (hasError) {
-        Swal.fire("Error", "Please fix the highlighted errors.", "error");
-        return;
-    }
+   if (!imageUploaded) {
+     showError("image0", "Please upload at least one product image.");
+   }
 
-    // Confirm submission if no errors
-    Swal.fire({
-        title: "Are you sure?",
-        text: "Do you want to add this product?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Yes, add it!",
-    }).then((result) => {
-        if (result.isConfirmed) {
-            event.target.submit(); // Submit the form
-        }
-    });
-});
+   // If there are errors, return early
+   if (hasError) {
+     Swal.fire({
+       icon: "error",
+       title: "Validation Error",
+       text: "Please fix the highlighted errors before submitting.",
+     });
+     return;
+   }
+
+   // If validation passes, show confirmation dialog
+   Swal.fire({
+     title: "Add Product",
+     text: "Are you sure you want to add this product?",
+     icon: "question",
+     showCancelButton: true,
+     confirmButtonText: "Yes, add it!",
+     cancelButtonText: "Cancel"
+   }).then((result) => {
+     if (result.isConfirmed) {
+       // Submit the form
+       this.submit();
+     }
+   });
+ });

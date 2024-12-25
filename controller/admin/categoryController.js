@@ -123,8 +123,7 @@ module.exports = {
       
       if (req.file) {
         categoryImage = req.file.path.split("public")[1];  
-        category.image = categoryImage;  
-        console.log('Uploaded file:', req.file);  
+        category.image = categoryImage;   
       }
    
       category.updatedAt = Date.now();
