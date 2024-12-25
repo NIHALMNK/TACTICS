@@ -80,8 +80,7 @@
    };
 
    // Function to create stock input fields
-   function createStockFields(category) {
-    //  const categoryName = category.options[category.selectedIndex].text.toLowerCase();
+   function createStockFields() {
      const productType= categorySelect.value.toLowerCase();
      console.log("THIS IS MY PRODUCT TYPE-->"+productType);
      
@@ -159,7 +158,7 @@
    const productCategory = document.getElementById("productCategory").value;
    const productStockManagement = document.getElementById("productStockManagement").value;
    const productType= document.getElementById("productType").value;
-   console.log("THIS IS MY PRODUCT TYPE-->"+productType);
+  
    
    const productImages = [...document.querySelectorAll(".productImagesAdd")];
 
