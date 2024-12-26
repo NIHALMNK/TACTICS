@@ -57,9 +57,11 @@
               <label class="form-label">Product Images</label>
               <div class="round-preview-container">
                 <% for (let i = 0; i < 4; i++) { %>
-                <div class="image-upload-wrapper">
-                  <img id="roundPreview<%= i %>" class="round-preview" src="/default-image.png" alt="Preview <%= i + 1 %>" />
-                  <input type="file" class="form-control productImagesAdd" id="image<%= i %>"   name="productImages<%= i+1 %>" accept="image/*" />
+                  <div class="image-upload-wrapper">
+                  <label for="image<%= i %>">
+                    <img id="roundPreview<%= i %>" class="round-preview" src="/default-image.png" alt="Preview <%= i + 1 %>" />
+                  </label>
+                  <input type="file" class="form-control productImagesAdd" id="image<%= i %>"   name="productImages<%= i+1 %>" accept="image/*" style="display: none;" />
                   <p id="imageError<%= i %>" class="text-danger" style="display:none;">Please select a valid image file.</p>
                 </div>
                 <% } %>

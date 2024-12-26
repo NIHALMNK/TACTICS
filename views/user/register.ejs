@@ -199,7 +199,6 @@
         }
     });
 });
-
 async function formValidate(e) {
     e.preventDefault();
     var name = document.getElementById('name').value.trim();
@@ -209,28 +208,89 @@ async function formValidate(e) {
     var confirmPassword = document.getElementById('confirmPassword').value.trim();
     var termsChecked = document.getElementById('terms').checked;
 
-    const userExists = await checkUser(name,email,phno,password);
-    if(name==""||email==""||phno==""||confirmPassword==""||password==""){
+    // Regex patterns
+    const nameRegex = /^[A-Za-z]+(?:\s[A-Za-z]+)*$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phnoRegex = /^[6-9]\d{9}$/;
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=]).{8,}$/;
+
+    if (name === "" || email === "" || phno === "" || password === "" || confirmPassword === "") {
         Swal.fire({
             icon: 'error',
             title: 'Error!',
-            text: 'fields are empty'
+            text: 'All fields are required!'
         });
+        return;
     }
-  if(userExists) {
+
+    if (!nameRegex.test(name)) {
         Swal.fire({
-            icon:'success',
+            icon: 'error',
+            title: 'Error!',
+            text: 'Name should only contain alphabets and spaces.'
+        });
+        return;
+    }
+
+    if (!emailRegex.test(email)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Invalid email format.'
+        });
+        return;
+    }
+
+    if (!phnoRegex.test(phno)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Phone number should be a valid 10-digit Indian number starting with 6-9.'
+        });
+        return;
+    }
+
+    if (!passwordRegex.test(password)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Password must be at least 8 characters long, contain at least one uppercase letter, one digit, and one special character.'
+        });
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Passwords do not match.'
+        });
+        return;
+    }
+
+    if (!termsChecked) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'You must agree to the terms and conditions.'
+        });
+        return;
+    }
+
+    const userExists = await checkUser(name, email, phno, password);
+    if (userExists) {
+        Swal.fire({
+            icon: 'success',
             title: 'Success!',
             text: 'User created successfully! Redirecting...'
         });
-        window.location.href = "/register/otp"
+        window.location.href = "/register/otp";
         return true;
     }
-
 }
-async function checkUser(name,email,phno,password) {
-    try {
 
+async function checkUser(name, email, phno, password) {
+    try {
         const response = await fetch('/register/check-user', {
             method: 'POST',
             headers: {
@@ -241,21 +301,22 @@ async function checkUser(name,email,phno,password) {
                 email: email,
                 phno: phno,
                 password: password
-            } )
+            })
         });
 
         const data = await response.json();
-        if(!data.success) {
-            return data.success; 
-        }else{
-            return data.success; 
+        if (!data.success) {
+            return data.success;
+        } else {
+            return data.success;
         }
         console.log('data --> : ' + data);
     } catch (error) {
         console.error('Error checking user:', error);
-        return false; 
+        return false;
     }
 }
+
      </script>
 
     </body>

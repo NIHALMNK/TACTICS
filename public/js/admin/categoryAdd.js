@@ -127,7 +127,7 @@ categoryForm.addEventListener('submit', function (e) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: `Failed to add category: ${error.message}`,
+                    text: `User already exists with the name`,
                 });
             });
     } else {

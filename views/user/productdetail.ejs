@@ -55,7 +55,7 @@
 
             <!-- Product Details -->
 <div class="col-md-6">
-    <h1 class="product-title mb-3"><%= product.title %></h1>
+    <h2 class="product-title mb-3"><b><%= product.name %></b></h1>
     <div class="d-flex align-items-center mb-3">
         <div class="rating me-2">
             <% for (let i = 0; i < product.rating; i++) { %>
@@ -103,6 +103,7 @@
 <button class="btn btn-light mb-3" id="wishlistBtn">
     <i class="fas fa-heart"></i> Add to Wishlist
 </button>
+<h1></h1>
 
 <!-- Size Selector -->
 <div class="btn-group" role="group">
@@ -118,7 +119,7 @@
         <label class="btn btn-outline-secondary" for="size-<%= stock.size %>"><%= stock.size %></label>
     <% }) %>
 </div>
-
+<h1></h1>
 <!-- Quantity Selector -->
 <div class="mb-4">
     <h3 class="h5">Quantity:</h3>
@@ -348,6 +349,16 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update max quantity
             quantityInput.setAttribute('max', selectedStock);
             quantityInput.value = Math.min(quantityInput.value, selectedStock);
+
+            // Show alert if stock is 0
+            if (selectedStock === 0) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Out of Stock',
+                    text: 'This product is currently out of stock. Please check back later.',
+                    confirmButtonColor: '#3085d6'
+                });
+            }
         });
     });
 
@@ -375,6 +386,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+
+
 
 
 

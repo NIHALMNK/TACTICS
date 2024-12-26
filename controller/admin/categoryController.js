@@ -103,42 +103,89 @@ module.exports = {
     }
 },
 
-  async updateCategory(req, res) {
-    const { categoryId, categoryName, categoryDescription } = req.body;
-    let categoryImage;
-   
-    try {
+async updateCategory(req, res) {
+  const { categoryId, categoryName, categoryDescription } = req.body;
+  let categoryImage;
+ 
+  try {
+      // Check for existing category with the same name (case-insensitive)
+      const existingCategory = await Category.findOne({
+          name: { $regex: new RegExp(`^${categoryName}$`, 'i') },
+          _id: { $ne: categoryId }, // Exclude current category
+          isDeleted: false
+      });
+
+      if (existingCategory) {
+          // Clean up uploaded file if there's a duplicate
+          if (req.file) {
+              const fs = require('fs');
+              fs.unlink(req.file.path, (err) => {
+                  if (err) console.error("Error deleting uploaded file:", err);
+              });
+          }
+          return res.status(409).json({ 
+              success: false, 
+              message: "A category with this name already exists." 
+          });
+      }
+
       const category = await Category.findById(categoryId);
       if (!category) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Category not found" });
+          // Clean up uploaded file if category not found
+          if (req.file) {
+              const fs = require('fs');
+              fs.unlink(req.file.path, (err) => {
+                  if (err) console.error("Error deleting uploaded file:", err);
+              });
+          }
+          return res.status(404).json({ 
+              success: false, 
+              message: "Category not found" 
+          });
       }
-   
+ 
       category.name = categoryName;
       category.description = categoryDescription;
-   
-      console.log('File Path:', req.file?.path);  
-   
-      
+ 
       if (req.file) {
-        categoryImage = req.file.path.split("public")[1];  
-        category.image = categoryImage;   
+          // Store the path of the old image for cleanup
+          const oldImagePath = category.image ? `public${category.image}` : null;
+          
+          // Update with new image path
+          categoryImage = req.file.path.split("public")[1];
+          category.image = categoryImage;
+
+          // Clean up old image file if it exists
+          if (oldImagePath) {
+              const fs = require('fs');
+              fs.unlink(oldImagePath, (err) => {
+                  if (err) console.error("Error deleting old image file:", err);
+              });
+          }
       }
-   
+ 
       category.updatedAt = Date.now();
-   
+ 
       await category.save();
-      return res
-        .status(200)
-        .json({ success: true, message: "Successfully updated category" });
-    } catch (error) {
-      console.error("Error updating category:", error);  
-      return res
-        .status(500)
-        .json({ success: false, message: "Error updating category" });
-    }
-   }, 
+      return res.status(200).json({ 
+          success: true, 
+          message: "Successfully updated category" 
+      });
+  } catch (error) {
+      // Clean up uploaded file if there's an error
+      if (req.file) {
+          const fs = require('fs');
+          fs.unlink(req.file.path, (err) => {
+              if (err) console.error("Error deleting uploaded file:", err);
+          });
+      }
+      console.error("Error updating category:", error);
+      return res.status(500).json({ 
+          success: false, 
+          message: "Error updating category" 
+      });
+  }
+},
   
   async loadAddCategoryPage(req, res) {
     try {
@@ -153,36 +200,61 @@ module.exports = {
 
   
 
-  async postAddCategoryPage(req, res) {
+async postAddCategoryPage(req, res) {
     try {
-        console.log("Received Body:", req.body);
-        console.log("Received File:", req.file);
-
+        // console.log("Received Body:", req.body);
+        // console.log("Received File:", req.file);
         const { categoryName, categoryDescription } = req.body;
-
-        
+       
         if (!req.file) {
             return res.status(400).json({ val: false, msg: "No image file uploaded." });
         }
 
+        // Check for existing category with the same name (case-insensitive)
+        const existingCategory = await Category.findOne({
+            name: { $regex: new RegExp(`^${categoryName}$`, 'i') },
+            isDeleted: false
+        });
+
+        if (existingCategory) {
+            // If file was uploaded, we should clean it up since we won't be using it
+            if (req.file) {
+                const fs = require('fs');
+                fs.unlink(req.file.path, (err) => {
+                    if (err) console.error("Error deleting uploaded file:", err);
+                });
+            }
+            return res.status(409).json({ 
+                val: false, 
+                msg: "A category with this name already exists." 
+            });
+        }
+
         const imagePath = req.file.path.split("public")[1];
         console.log("Stored Image Path:", imagePath);
-
+        
         const newCategory = new Category({
             name: categoryName,
             description: categoryDescription,
             image: imagePath,
             isDeleted: false,
         });
-
+        
         await newCategory.save();
         console.log("New Category Saved:", newCategory);
-
+        
         return res.status(201).json({
             message: "Category added successfully!",
             category: newCategory,
         });
     } catch (error) {
+        // Clean up uploaded file if there's an error
+        if (req.file) {
+            const fs = require('fs');
+            fs.unlink(req.file.path, (err) => {
+                if (err) console.error("Error deleting uploaded file:", err);
+            });
+        }
         console.error("Error in postAddCategoryPage:", error);
         return res.status(500).json({ message: "Error adding category." });
     }

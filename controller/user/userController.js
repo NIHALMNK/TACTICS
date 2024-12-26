@@ -112,18 +112,23 @@ async loadShop(req, res) {
       
       const product = await productModel
         .findById(productId)
-        .populate("category");
+        .populate("category")
+        .exec();
+                
+        if (!product || product.isDeleted ) {
+          console.log("Product not found, deleted, or has no category");
+          return res.redirect('/home');
+        } 
 
-        if (!product) {
-          return res.status(404).send("Product not found");
-        }
         // console.log("HEI"+product)
 
      
       const productAll = await productModel.find({ isDeleted: false });
       const relatedProducts = await productModel.find({
-        tags: { $in: product.tags },
+        brand: { $in: product.brand },
         _id: { $ne: product._id },
+        isDeleted: false,
+
       });
 
       return res.status(200).render("user/productdetail", {

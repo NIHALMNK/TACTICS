@@ -162,135 +162,175 @@
     //=============================>>>>
 
  // Image Cropping Logic
-let cropper = null;
-let currentInput = null;
-let currentModal = null;
-
-// Initialize cropper modal
-const cropImageModal = new bootstrap.Modal(document.getElementById('cropImageModal'));
-
-// Function to handle image selection
-function handleImageSelect(event) {
-  const file = event.target.files[0];
-  currentInput = event.target;
-
-  if (!file || !file.type.startsWith('image/')) {
-    Swal.fire({
-      title: 'Error',
-      text: 'Please select a valid image file.',
-      icon: 'error'
-    });
-    return;
-  }
-
-  // Get preview image element
-  const inputIndex = currentInput.id.replace('productImages', '');
-  const previewImage = document.getElementById(`roundPreview${inputIndex}`);
-
-  // Read the file
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const imageToCrop = document.getElementById('imageToCrop');
-    imageToCrop.src = e.target.result;
-
-    // Destroy existing cropper if it exists
-    if (cropper) {
-      cropper.destroy();
-    }
-
-    // Wait for image to load before initializing cropper
-    imageToCrop.onload = function() {
-      cropper = new Cropper(imageToCrop, {
-        aspectRatio: 1,
-        viewMode: 1,
-        autoCropArea: 0.8,
-        responsive: true,
-        restore: true,
-        modal: true,
-        guides: true,
-        center: true,
-        highlight: false,
-        cropBoxMovable: true,
-        cropBoxResizable: true,
-        toggleDragModeOnDblclick: false
-      });
-    };
-
-    // Show the modal
-    cropImageModal.show();
-  };
-
-  reader.readAsDataURL(file);
-}
-
-// Function to handle crop button click
-function handleCrop() {
-  if (!cropper || !currentInput) {
-    console.error('Cropper or input not initialized');
-    return;
-  }
-
-  const croppedCanvas = cropper.getCroppedCanvas({
-    width: 500,    // Set desired output size
-    height: 500,
-    imageSmoothingEnabled: true,
-    imageSmoothingQuality: 'high'
-  });
-
-  const croppedImage = croppedCanvas.toDataURL('image/jpeg', 0.9);
-
-  // Update preview image
-  const inputIndex = currentInput.id.replace('productImages', '');
-  const previewImage = document.getElementById(`roundPreview${inputIndex}`);
-  previewImage.src = croppedImage;
-
-  // Convert data URL to File object
-  croppedCanvas.toBlob((blob) => {
-    const fileName = currentInput.files[0].name;
-    const croppedFile = new File([blob], fileName, { type: 'image/jpeg' });
-    
-    // Update the file input
-    const dataTransfer = new DataTransfer();
-    dataTransfer.items.add(croppedFile);
-    currentInput.files = dataTransfer.files;
-    
-    // Close modal and cleanup
-    cropImageModal.hide();
-    cropper.destroy();
-    cropper = null;
-  }, 'image/jpeg', 0.9);
-}
-
-// Initialize event listeners
-document.addEventListener('DOMContentLoaded', function() {
-  // Add change listeners to all image inputs
-  document.querySelectorAll('input[type="file"][name="productImages[]"]').forEach(input => {
-    input.addEventListener('change', handleImageSelect);
-  });
-
-  // Add click listener to crop button
-  document.getElementById('cropButton').addEventListener('click', handleCrop);
-
-  // Handle modal close
-  document.getElementById('cropImageModal').addEventListener('hidden.bs.modal', function() {
-    if (cropper) {
-      cropper.destroy();
-      cropper = null;
-    }
-  });
-});
-
-// Utility: Convert data URL to Blob
-function dataURLToBlob(dataURL) {
-  const parts = dataURL.split(",");
-  const mime = parts[0].match(/:(.*?);/)[1];
-  const binary = atob(parts[1]);
-  const array = [];
-  for (let i = 0; i < binary.length; i++) {
-    array.push(binary.charCodeAt(i));
-  }
-  return new Blob([new Uint8Array(array)], { type: mime });
-}
+ let cropper = null;
+ let currentInput = null;
+ let currentModal = null;
+ 
+ // Initialize cropper modal
+ const cropImageModal = new bootstrap.Modal(document.getElementById('cropImageModal'));
+ 
+ // Function to handle image selection
+ function handleImageSelect(event) {
+   const file = event.target.files[0];
+   currentInput = event.target;
+ 
+   if (!file || !file.type.startsWith('image/')) {
+     Swal.fire({
+       title: 'Error',
+       text: 'Please select a valid image file.',
+       icon: 'error'
+     });
+     return;
+   }
+ 
+   // Get preview image element
+   const inputIndex = currentInput.id.replace('productImages', '');
+   const previewImage = document.getElementById(`roundPreview${inputIndex}`);
+ 
+   // Read the file
+   const reader = new FileReader();
+   reader.onload = function (e) {
+     const imageToCrop = document.getElementById('imageToCrop');
+     imageToCrop.src = e.target.result;
+ 
+     // Destroy existing cropper if it exists
+     if (cropper) {
+       cropper.destroy();
+     }
+ 
+     // Wait for image to load before initializing cropper
+     imageToCrop.onload = function () {
+       cropper = new Cropper(imageToCrop, {
+         aspectRatio: 1,
+         viewMode: 1,
+         autoCropArea: 0.8,
+         responsive: true,
+         restore: true,
+         modal: true,
+         guides: true,
+         center: true,
+         highlight: false,
+         cropBoxMovable: true,
+         cropBoxResizable: true,
+         toggleDragModeOnDblclick: false
+       });
+     };
+ 
+     // Show the modal
+     cropImageModal.show();
+   };
+ 
+   reader.readAsDataURL(file);
+ }
+ 
+ // Function to handle crop button click
+ function handleCrop() {
+   if (!cropper || !currentInput) {
+     console.error('Cropper or input not initialized');
+     return;
+   }
+ 
+   const croppedCanvas = cropper.getCroppedCanvas({
+     width: 500, // Set desired output size
+     height: 500,
+     imageSmoothingEnabled: true,
+     imageSmoothingQuality: 'high'
+   });
+ 
+   const croppedImage = croppedCanvas.toDataURL('image/jpeg', 0.9);
+ 
+   // Update preview image
+   const inputIndex = currentInput.id.replace('productImages', '');
+   const previewImage = document.getElementById(`roundPreview${inputIndex}`);
+   previewImage.src = croppedImage;
+ 
+   // Convert data URL to File object
+   croppedCanvas.toBlob((blob) => {
+     const fileName = currentInput.files[0].name;
+     const croppedFile = new File([blob], fileName, { type: 'image/jpeg' });
+ 
+     // Update the file input
+     const dataTransfer = new DataTransfer();
+     dataTransfer.items.add(croppedFile);
+     currentInput.files = dataTransfer.files;
+ 
+     // Upload the cropped image to the server
+     uploadCroppedImage(croppedFile)
+       .then(imageUrl => {
+         // Update the image URL in the input (if necessary)
+         const hiddenInput = document.querySelector(`input[name="existingImages[]"][value="${currentInput.value}"]`);
+         if (hiddenInput) {
+           hiddenInput.value = imageUrl; 
+         }
+ 
+         // Close modal and cleanup
+         cropImageModal.hide();
+         cropper.destroy();
+         cropper = null;
+       })
+       .catch(err => {
+         Swal.fire({
+           title: 'Error',
+           text: 'Failed to upload cropped image.',
+           icon: 'error'
+         });
+         cropImageModal.hide();
+         cropper.destroy();
+         cropper = null;
+       });
+   }, 'image/jpeg', 0.9);
+ }
+ 
+ // Function to upload the cropped image to the server
+ function uploadCroppedImage(file) {
+   const formData = new FormData();
+   formData.append('croppedImage', file);
+ 
+   return fetch('/admin/productManagement/update/:id', {
+     method: 'POST',
+     body: formData,
+   })
+     .then(response => response.json())
+     .then(data => {
+       if (data.success) {
+         return data.imageUrl; // Return the uploaded image URL
+       } else {
+         throw new Error('Failed to upload image');
+       }
+     });
+ }
+ 
+ // Initialize event listeners
+ document.addEventListener('DOMContentLoaded', function () {
+   // Add change listeners to all image inputs
+   document.querySelectorAll('input[type="file"][name="productImages[]"]').forEach(input => {
+     input.addEventListener('change', handleImageSelect);
+   });
+ 
+   // Add click listener to crop button
+   document.getElementById('cropButton').addEventListener('click', handleCrop);
+ 
+   // Handle modal close
+   document.getElementById('cropImageModal').addEventListener('hidden.bs.modal', function () {
+     if (cropper) {
+       cropper.destroy();
+       cropper = null;
+     }
+   });
+ });
+ 
+ // Utility: Convert data URL to Blob
+ function dataURLToBlob(dataURL) {
+   const parts = dataURL.split(",");
+   const mime = parts[0].match(/:(.*?);/)[1];
+   const binary = atob(parts[1]);
+   const array = [];
+   for (let i = 0; i < binary.length; i++) {
+     array.push(binary.charCodeAt(i));
+   }
+   return new Blob([new Uint8Array(array)], { type: mime });
+ }
+ 
 
 //============================================================================>>>>>>>>>>
 
@@ -386,4 +426,6 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('.stock-input').forEach(input => {
     input.addEventListener('change', updateStockManagement);
   });
+
+  
 });

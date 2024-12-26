@@ -71,7 +71,8 @@ async loadAddProductsPage(req, res) {
 async postAddProductsPage(req, res) {
     try {
         
-        console.log( req.body);
+        // console.log( req.body);rs
+        
         
         const {
             productName,
@@ -87,17 +88,17 @@ async postAddProductsPage(req, res) {
             productType,
         } = req.body;
 
-       console.log("productName====>"+productName);
-       console.log("productDescription====>"+productDescription);
-         console.log("productPrice====>"+productPrice);
-            console.log("productOfferPrice====>"+productOfferPrice);
-            console.log("productStockManagement====>"+productStockManagement);
-            console.log("productTags====>"+productTags);
-            console.log("productBrand====>"+productBrand);
-            console.log("productWarranty====>"+productWarranty);
-            console.log("productReturnPolicy====>"+productReturnPolicy);
-            console.log("productCategory====>"+productCategory);
-            console.log("productTypes====>"+productType);
+    //    console.log("productName====>"+productName);
+    //    console.log("productDescription====>"+productDescription);
+    //      console.log("productPrice====>"+productPrice);
+    //         console.log("productOfferPrice====>"+productOfferPrice);
+    //         console.log("productStockManagement====>"+productStockManagement);
+    //         console.log("productTags====>"+productTags);
+    //         console.log("productBrand====>"+productBrand);
+    //         console.log("productWarranty====>"+productWarranty);
+    //         console.log("productReturnPolicy====>"+productReturnPolicy);
+    //         console.log("productCategory====>"+productCategory);
+    //         console.log("productTypes====>"+productType);
 
        
        

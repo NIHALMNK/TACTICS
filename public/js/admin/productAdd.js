@@ -140,136 +140,133 @@
    createStockFields(categorySelect);
  });
 
- // Form Validation
  document.getElementById("productForm").addEventListener("submit", function(event) {
-   event.preventDefault();
+  event.preventDefault();
 
-   const errorMessages = document.querySelectorAll(".error-message");
-   errorMessages.forEach((msg) => msg.remove());
+  const errorMessages = document.querySelectorAll(".error-message");
+  errorMessages.forEach((msg) => msg.remove());
 
-   const productName = document.getElementById("productName").value.trim();
-   const productPrice = parseFloat(document.getElementById("productPrice").value);
-   const offerPrice = parseFloat(document.getElementById("offerPrice").value) || null;
-   const productDescription = document.getElementById("productDescription").value.trim();
-   const productTags = document.getElementById("productTags").value.trim();
-   const productBrand = document.getElementById("productBrand").value.trim();
-   const productWarranty = document.getElementById("productWarranty").value.trim();
-   const productReturnPolicy = document.getElementById("productReturnPolicy").value.trim();
-   const productCategory = document.getElementById("productCategory").value;
-   const productStockManagement = document.getElementById("productStockManagement").value;
-   const productType= document.getElementById("productType").value;
-  
-   
-   const productImages = [...document.querySelectorAll(".productImagesAdd")];
+  const productName = document.getElementById("productName").value.trim();
+  const productPrice = parseFloat(document.getElementById("productPrice").value);
+  const offerPrice = parseFloat(document.getElementById("offerPrice").value) || null;  
+  const productDescription = document.getElementById("productDescription").value.trim();
+  const productTags = document.getElementById("productTags").value.trim();
+  const productBrand = document.getElementById("productBrand").value.trim();
+  const productWarranty = document.getElementById("productWarranty").value.trim();
+  const productReturnPolicy = document.getElementById("productReturnPolicy").value.trim();
+  const productCategory = document.getElementById("productCategory").value;
+  const productStockManagement = document.getElementById("productStockManagement").value;
+  const productType = document.getElementById("productType").value;
+  const productImages = [...document.querySelectorAll(".productImagesAdd")];
 
-   let hasError = false;
+  let hasError = false;
 
-   function showError(inputId, message) {
-     const inputElement = document.getElementById(inputId);
-     const error = document.createElement("p");
-     error.classList.add("text-danger", "error-message");
-     error.textContent = message;
-     inputElement.parentElement.appendChild(error);
-     hasError = true;
-   }
+  function showError(inputId, message) {
+    const inputElement = document.getElementById(inputId);
+    const error = document.createElement("p");
+    error.classList.add("text-danger", "error-message");
+    error.textContent = message;
+    inputElement.parentElement.appendChild(error);
+    hasError = true;
+  }
 
-   if (!productName) {
-     showError("productName", "Product name is required.");
-   }
+  // Validation logic
+  if (!productName) {
+    showError("productName", "Product name is required.");
+  }
 
-   if (isNaN(productPrice) || productPrice <= 0) {
-     showError("productPrice", "Please enter a valid price greater than zero.");
-   }
+  if (isNaN(productPrice) || productPrice <= 0) {
+    showError("productPrice", "Product price must be greater than zero.");
+  }
 
-   if (offerPrice !== null && (isNaN(offerPrice) || offerPrice >= productPrice)) {
-     showError("offerPrice", "Offer price must be less than the original price.");
-   }
+  if (offerPrice !== null && (isNaN(offerPrice) || offerPrice < 1 || offerPrice >= productPrice )) {
+    console.log("THIS IS MY OFFER PRICE-->");
+    
+    showError("offerPrice", "Offer price must be greater than zero and less than the original price.");
+  }
 
-   if (!productDescription) {
-     showError("productDescription", "Product description is required.");
-   }
+  if (!productDescription) {
+    showError("productDescription", "Product description is required.");
+  }
 
-   if (!productCategory) {
-     showError("productCategory", "Please select a product category.");
-   }
+  if (!productCategory) {
+    showError("productCategory", "Please select a product category.");
+  }
 
-    if (!productType) {
-        showError("productType", "Please select a product type.");
+  if (!productType) {
+    showError("productType", "Please select a product type.");
+  }
+
+  if (productTags && productTags.split(",").length > 10) {
+    showError("productTags", "You can add up to 10 tags only.");
+  }
+
+  if (productBrand && productBrand.length > 50) {
+    showError("productBrand", "Brand name cannot exceed 50 characters.");
+  }
+
+  if (productWarranty && !/^\d+\s*(year|month)s?$/.test(productWarranty)) {
+    showError("productWarranty", "Warranty must be in the format (e.g., 1 year, 6 months).");
+  }
+
+  if (productReturnPolicy && !/^\d+\s*(day|month)s?$/.test(productReturnPolicy)) {
+    showError("productReturnPolicy", "Return policy must be in the format (e.g., 30 days, 1 month).");
+  }
+
+  if (productStockManagement) {
+    try {
+      const stockData = JSON.parse(productStockManagement);
+      if (!Array.isArray(stockData)) {
+        throw new Error();
+      }
+      const totalStock = stockData.reduce((sum, item) => sum + (item.quantity || 0), 0);
+      if (totalStock <= 0) {
+        showError("productStockManagement", "Total stock must be greater than zero.");
+      }
+      stockData.forEach((item) => {
+        if (!item.size || item.quantity < 0) {
+          throw new Error();
+        }
+      });
+    } catch {
+      showError("productStockManagement", "Invalid stock management data. Please check your inputs.");
     }
+  }
 
-   if (productTags && productTags.split(",").length > 10) {
-     showError("productTags", "You can add up to 10 tags only.");
-   }
+  let imageUploaded = false;
+  productImages.forEach((input, index) => {
+    if (input.files.length > 0) {
+      imageUploaded = true;
+      const file = input.files[0];
+      if (!file.type.startsWith("image/")) {
+        showError(`image${index}`, `Image ${index + 1} must be a valid image file.`);
+      }
+    }
+  });
 
-   if (productBrand && productBrand.length > 50) {
-     showError("productBrand", "Brand name cannot exceed 50 characters.");
-   }
+  if (!imageUploaded) {
+    showError("image0", "Please upload at least one product image.");
+  }
 
-   if (productWarranty && !/^\d+\s*(year|month)s?$/.test(productWarranty)) {
-     showError("productWarranty", "Warranty must be in the format (e.g., 1 year, 6 months).");
-   }
+  if (hasError) {
+    Swal.fire({
+      icon: "error",
+      title: "Validation Error",
+      text: "Please fix the highlighted errors before submitting.",
+    });
+    return;
+  }
 
-   if (productReturnPolicy && !/^\d+\s*(day|month)s?$/.test(productReturnPolicy)) {
-     showError("productReturnPolicy", "Return policy must be in the format (e.g., 30 days, 1 month).");
-   }
-
-   // Validate stock management
-   if (productStockManagement) {
-     try {
-       const stockData = JSON.parse(productStockManagement);
-       if (!Array.isArray(stockData)) {
-         throw new Error();
-       }
-       stockData.forEach((item) => {
-         if (!item.size || !item.quantity || item.quantity < 0) {
-           throw new Error();
-         }
-       });
-     } catch {
-       showError("productStockManagement", "Invalid stock management data. Please check your inputs.");
-     }
-   }
-
-   // Validate image uploads
-   let imageUploaded = false;
-   productImages.forEach((input, index) => {
-     if (input.files.length > 0) {
-       imageUploaded = true;
-
-       // Check file type
-       const file = input.files[0];
-       if (!file.type.startsWith("image/")) {
-         showError(`image${index}`, `Image ${index + 1} must be a valid image file.`);
-       }
-     }
-   });
-
-   if (!imageUploaded) {
-     showError("image0", "Please upload at least one product image.");
-   }
-
-   // If there are errors, return early
-   if (hasError) {
-     Swal.fire({
-       icon: "error",
-       title: "Validation Error",
-       text: "Please fix the highlighted errors before submitting.",
-     });
-     return;
-   }
-
-   // If validation passes, show confirmation dialog
-   Swal.fire({
-     title: "Add Product",
-     text: "Are you sure you want to add this product?",
-     icon: "question",
-     showCancelButton: true,
-     confirmButtonText: "Yes, add it!",
-     cancelButtonText: "Cancel"
-   }).then((result) => {
-     if (result.isConfirmed) {
-       // Submit the form
-       this.submit();
-     }
-   });
- });
+  Swal.fire({
+    title: "Add Product",
+    text: "Are you sure you want to add this product?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Yes, add it!",
+    cancelButtonText: "Cancel",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.submit();
+    }
+  });
+});
