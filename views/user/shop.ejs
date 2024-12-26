@@ -23,16 +23,19 @@
    
 <!--filter-->
 
-  <div class="container">
+<div class="container">
     <nav class="nav-category">
         <div class="nav-links">
-            <a href="/shop" class="nav-link">All Products</a>
-            <a href="/shop?category=SHIRT" class="nav-link">SHIRT</a>
-            <a href="/shop?category=TROUSERS" class="nav-link">TROUSERS</a>
-            <a href="/shop?category=JACKETS" class="nav-link">JACKETS</a>
-            <a href="/shop?category=SHOES" class="nav-link">Shoes</a>
-            <a href="/shop?category=WATCH" class="nav-link">Watches</a>
+            <% categories.forEach(category => { %> 
+                <a href="/shop?category=<%= category.name.toUpperCase() %>" class="nav-link">
+                    <%= category.name %>
+                   
+                </a>
+            <% }) %>
         </div>
+    
+
+
         
         <div class="controls-section">
             <button id="filter-toggle-btn" class="btn btn-icon">
@@ -118,26 +121,20 @@
             </div>
 
             <div class="filter-section">
-                <h3>Color</h3>
-                <div class="color-options">
-                    <div class="color-circle" style="background-color: #000000;" title="Black"></div>
-                    <div class="color-circle" style="background-color: #0066cc;" title="Blue"></div>
-                    <div class="color-circle" style="background-color: #808080;" title="Grey"></div>
-                    <div class="color-circle" style="background-color: #2ecc71;" title="Green"></div>
-                    <div class="color-circle" style="background-color: #e74c3c;" title="Red"></div>
-                    <div class="color-circle" style="background-color: #ffffff; border: 1px solid #e2e8f0;" title="White"></div>
-                </div>
-            </div>
-
-            <div class="filter-section">
-                <h3>Tags</h3>
-                <div class="tag-options">
-                    <button class="tag">Fashion</button>
-                    <button class="tag">Lifestyle</button>
-                    <button class="tag">Denim</button>
-                    <button class="tag">Streetwear</button>
-                    <button class="tag">Crafts</button>
-                </div>
+                <h3>Name Range</h3>
+                <label class="option-label">
+                    <input type="radio" name="NameRange" checked>
+                    All
+                </label>
+                <label class="option-label">
+                    <input type="radio" name="NameRange">
+                    A-Z
+                </label>
+                <label class="option-label">
+                    <input type="radio" name="NameRange">
+                    Z-A
+                </label>
+                
             </div>
         </div>
     </div>

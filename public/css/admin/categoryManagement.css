@@ -2,8 +2,8 @@
     --primary-bg-color: #2c3e50;
     --container-bg-color: #34495e;
     --text-color: #ecf0f1;
-    --secondary-text-color: #bdc3c7;
-    --muted-text-color: #95a5a6;
+    --secondary-text-color: #ffffff;
+    --muted-text-color: #ffffff;
     --primary-action-color: #1abc9c;
     --primary-action-hover: #16a085;
     --danger-action-color: #e74c3c;
@@ -70,6 +70,8 @@ body {
 .table td {
     vertical-align: middle;
     background-color: var(--primary-bg-color);
+    color: var(--text-color);
+    font-weight: 600;
 }
 
 .table tr:hover {

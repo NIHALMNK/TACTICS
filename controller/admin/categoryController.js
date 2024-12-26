@@ -148,14 +148,12 @@ async updateCategory(req, res) {
       category.description = categoryDescription;
  
       if (req.file) {
-          // Store the path of the old image for cleanup
           const oldImagePath = category.image ? `public${category.image}` : null;
           
-          // Update with new image path
           categoryImage = req.file.path.split("public")[1];
           category.image = categoryImage;
 
-          // Clean up old image file if it exists
+          
           if (oldImagePath) {
               const fs = require('fs');
               fs.unlink(oldImagePath, (err) => {
@@ -172,7 +170,7 @@ async updateCategory(req, res) {
           message: "Successfully updated category" 
       });
   } catch (error) {
-      // Clean up uploaded file if there's an error
+     
       if (req.file) {
           const fs = require('fs');
           fs.unlink(req.file.path, (err) => {
@@ -202,22 +200,21 @@ async updateCategory(req, res) {
 
 async postAddCategoryPage(req, res) {
     try {
-        // console.log("Received Body:", req.body);
-        // console.log("Received File:", req.file);
+       
         const { categoryName, categoryDescription } = req.body;
        
         if (!req.file) {
             return res.status(400).json({ val: false, msg: "No image file uploaded." });
         }
 
-        // Check for existing category with the same name (case-insensitive)
+       
         const existingCategory = await Category.findOne({
             name: { $regex: new RegExp(`^${categoryName}$`, 'i') },
             isDeleted: false
         });
 
         if (existingCategory) {
-            // If file was uploaded, we should clean it up since we won't be using it
+            
             if (req.file) {
                 const fs = require('fs');
                 fs.unlink(req.file.path, (err) => {
@@ -248,7 +245,7 @@ async postAddCategoryPage(req, res) {
             category: newCategory,
         });
     } catch (error) {
-        // Clean up uploaded file if there's an error
+        
         if (req.file) {
             const fs = require('fs');
             fs.unlink(req.file.path, (err) => {

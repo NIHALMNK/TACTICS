@@ -32,6 +32,9 @@ async loadShop(req, res) {
 
     let query = { isDeleted: false };
     
+    // Fetch all categories
+    const categories = await categoryModel.find({ isDeleted: false });
+
     if (categoryName) {
       const category = await categoryModel.findOne({
         name: categoryName,
@@ -56,14 +59,15 @@ async loadShop(req, res) {
       .skip(skip)
       .limit(limit);
 
-    // For the first page, render the full shop page
+    // Render the shop page
     if (page === 1) {
       return res.render("user/shop", { 
         user: req.session.user, 
         products,
         currentPage: page,
         totalPages,
-        categoryName: categoryName || 'All Products'
+        categories, // Pass categories array here
+        selectedCategory: categoryName || 'All Products', // Pass selected category name
       });
     }
 
@@ -72,7 +76,8 @@ async loadShop(req, res) {
       products,
       currentPage: page,
       totalPages,
-      categoryName: categoryName || 'All Products'
+      categories,
+      selectedCategory: categoryName || 'All Products'
     });
 
   } catch (error) {
