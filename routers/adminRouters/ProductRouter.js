@@ -20,7 +20,10 @@ router.post("/productManagement/add",upload.fields([
     ]),productController.postAddProductsPage);
 
     router.get("/productManagement/update/:id", productController.loadUpdateProduct);
-// router.put("/productManagement/update/:id", productController.postUpdateProduct);
+    router.put("/productManagement/update/:id", upload.fields([
+        { name: "productImages[]", maxCount: 4 }
+    ]), productController.postUpdateProduct);
+
 router.post(
     "/productManagement/update/:id",
     upload.fields([

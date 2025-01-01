@@ -208,12 +208,85 @@ async loadUpdateProduct(req, res) {
     }
 },
 
+// async postUpdateProduct(req, res) {
+//     try {
+//         const productId = req.params.id;
+//         // console.log(productId);
+        
+//         const existingProduct = await Products.findById(productId);
+//         if (!existingProduct) {
+//             return res.status(404).json({
+//                 success: false,
+//                 message: 'Product not found'
+//             });
+//         }
+
+      
+
+        
+
+//         // Parse stock management data
+//         let parsedStockManagement = [];
+//         try {
+//             const stockData = JSON.parse(req.body.productStockManagement || '[]');
+//             parsedStockManagement = stockData.map(item => ({
+//                 size: item.size,
+//                 quantity: parseInt(item.quantity) || 0
+//             }));
+//         } catch (error) {
+//             console.error('Stock parsing error:', error);
+//             parsedStockManagement = existingProduct.stockManagement;
+//         }
+
+       
+//         const updatedProduct = await Products.findByIdAndUpdate(
+//             productId,
+//             {
+//                 $set: {
+//                     name: req.body.productName,
+//                     description: req.body.productDescription,
+//                     price: parseFloat(req.body.productPrice),
+//                     offerPrice: req.body.offerPrice ? 
+//                               parseInt(req.body.offerPrice) : 
+//                               parseInt(req.body.productPrice),
+//                     stockManagement: parsedStockManagement,
+                   
+//                     tags: req.body.productTags ? req.body.productTags.split(',') : [],
+//                     brand: req.body.productBrand,
+//                     warranty: req.body.productWarranty,
+//                     returnPolicy: req.body.productReturnPolicy,
+//                     category: req.body.productCategory,
+//                     type: req.body.productType,
+//                     updatedAt: Date.now()
+//                 }
+//             },
+//             { new: true, runValidators: true }
+//         );
+
+//         // console.log("the product updatedProduct:----> " + updatedProduct);
+        
+
+//         return res.status(200).json({
+//             success: true,
+//             message: 'Product updated successfully',
+//             product: updatedProduct
+//         });
+
+//     } catch (error) {
+//         console.error('Error updating product:', error.message);
+//         return res.status(500).json({
+//             success: false,
+//             message: 'Error updating product'
+//         });
+//     }
+// },
+
+
 async postUpdateProduct(req, res) {
     try {
         const productId = req.params.id;
-        // console.log(productId);
-        
         const existingProduct = await Products.findById(productId);
+        
         if (!existingProduct) {
             return res.status(404).json({
                 success: false,
@@ -221,24 +294,28 @@ async postUpdateProduct(req, res) {
             });
         }
 
-      
-
-        
+        // Handle image updates
+        let updatedImages = [...existingProduct.images];
+        if (req.files && req.files['productImages[]']) {
+            const newImages = req.files['productImages[]'].map(file => file.path.split('public')[1]);
+            newImages.forEach((imagePath, index) => {
+                if (index < updatedImages.length) {
+                    updatedImages[index] = imagePath;
+                } else {
+                    updatedImages.push(imagePath);
+                }
+            });
+        }
 
         // Parse stock management data
         let parsedStockManagement = [];
         try {
-            const stockData = JSON.parse(req.body.productStockManagement || '[]');
-            parsedStockManagement = stockData.map(item => ({
-                size: item.size,
-                quantity: parseInt(item.quantity) || 0
-            }));
+            parsedStockManagement = JSON.parse(req.body.productStockManagement || '[]');
         } catch (error) {
             console.error('Stock parsing error:', error);
             parsedStockManagement = existingProduct.stockManagement;
         }
 
-       
         const updatedProduct = await Products.findByIdAndUpdate(
             productId,
             {
@@ -246,11 +323,9 @@ async postUpdateProduct(req, res) {
                     name: req.body.productName,
                     description: req.body.productDescription,
                     price: parseFloat(req.body.productPrice),
-                    offerPrice: req.body.offerPrice ? 
-                              parseInt(req.body.offerPrice) : 
-                              parseInt(req.body.productPrice),
+                    offerPrice: parseFloat(req.body.productOfferPrice) || parseFloat(req.body.productPrice),
                     stockManagement: parsedStockManagement,
-                   
+                    images: updatedImages,
                     tags: req.body.productTags ? req.body.productTags.split(',') : [],
                     brand: req.body.productBrand,
                     warranty: req.body.productWarranty,
@@ -263,9 +338,6 @@ async postUpdateProduct(req, res) {
             { new: true, runValidators: true }
         );
 
-        // console.log("the product updatedProduct:----> " + updatedProduct);
-        
-
         return res.status(200).json({
             success: true,
             message: 'Product updated successfully',
@@ -273,14 +345,24 @@ async postUpdateProduct(req, res) {
         });
 
     } catch (error) {
-        console.error('Error updating product:', error.message);
+        console.error('Error updating product:', error);
         return res.status(500).json({
             success: false,
             message: 'Error updating product'
         });
     }
 },
+
+
+
+
+
 //---------delete product----------------->
+
+
+
+
+
 async loadDelProductPage (req, res){
     try {
         const deletedProducts = await Products.find({ isDeleted: true });
