@@ -82,10 +82,10 @@
    // Function to create stock input fields
    function createStockFields() {
      const productType= categorySelect.value.toLowerCase();
-     console.log("THIS IS MY PRODUCT TYPE-->"+productType);
+    //  console.log("THIS IS MY PRODUCT TYPE-->"+productType);
      
     const sizes = sizeConfigs[productType] || [];
-    console.log("THIS IS MY SIZES-->"+sizes);
+    // console.log("THIS IS MY SIZES-->"+sizes);
     
 
      stockContainer.innerHTML = '';
@@ -180,7 +180,7 @@
   }
 
   if (offerPrice !== null && (isNaN(offerPrice) || offerPrice < 1 || offerPrice >= productPrice )) {
-    console.log("THIS IS MY OFFER PRICE-->");
+    // console.log("THIS IS MY OFFER PRICE-->");
     
     showError("offerPrice", "Offer price must be greater than zero and less than the original price.");
   }

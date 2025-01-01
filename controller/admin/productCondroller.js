@@ -88,17 +88,7 @@ async postAddProductsPage(req, res) {
             productType,
         } = req.body;
 
-    //    console.log("productName====>"+productName);
-    //    console.log("productDescription====>"+productDescription);
-    //      console.log("productPrice====>"+productPrice);
-    //         console.log("productOfferPrice====>"+productOfferPrice);
-    //         console.log("productStockManagement====>"+productStockManagement);
-    //         console.log("productTags====>"+productTags);
-    //         console.log("productBrand====>"+productBrand);
-    //         console.log("productWarranty====>"+productWarranty);
-    //         console.log("productReturnPolicy====>"+productReturnPolicy);
-    //         console.log("productCategory====>"+productCategory);
-    //         console.log("productTypes====>"+productType);
+    
 
        
        
@@ -221,7 +211,7 @@ async loadUpdateProduct(req, res) {
 async postUpdateProduct(req, res) {
     try {
         const productId = req.params.id;
-        console.log(productId);
+        // console.log(productId);
         
         const existingProduct = await Products.findById(productId);
         if (!existingProduct) {
@@ -273,7 +263,7 @@ async postUpdateProduct(req, res) {
             { new: true, runValidators: true }
         );
 
-        console.log("the product updatedProduct:----> " + updatedProduct);
+        // console.log("the product updatedProduct:----> " + updatedProduct);
         
 
         return res.status(200).json({
@@ -339,7 +329,7 @@ async recoverProducts(req, res){
 
 async permanentDeleteProducts(req, res){
     const { id } = req.params;
-    console.log(id);
+    // console.log(id);
 
     try {
         await Products.findByIdAndDelete(id);

@@ -55,7 +55,7 @@
 
             <!-- Product Details -->
 <div class="col-md-6">
-    <h2 class="product-title mb-3"><b><%= product.name %></b></h1>
+    <h2 class="product-title mb-3"><b><%= product.name %></b></h2>
     <div class="d-flex align-items-center mb-3">
         <div class="rating me-2">
             <% for (let i = 0; i < product.rating; i++) { %>
@@ -65,8 +65,9 @@
                 <i class="far fa-star"></i>
             <% } %>
         </div>
-        <!---threr is somthing to be added here from the notepad-->
-        <span class="text-muted">(Reviews)  </span>
+        
+
+        <!-- <span class="text-muted">(Reviews)  </span> -->
     </div>
 
     <div class="mb-3">
@@ -148,7 +149,7 @@
 
             <!-- Buy Now Button -->
             <button class="btn btn-success" id="buyNowBtn">Buy Now</button>
-            <button class="btn btn-success" id="buyNowBtn">Add To Cart</button>
+            <button class="btn btn-primary" id="addToCartBtn">Add to Cart</button> 
         </div>
     </div>
 </div>    
@@ -204,8 +205,9 @@
             <% }); %>
         <% } else { %>
             <div class="col-12">
-                <p class="text-center">No related products available.</p>
+                <p class="text-center">No related products available at the moment. Check back later!</p>
             </div>
+            
         <% } %>
     </div>
 </div>
@@ -276,7 +278,9 @@
 
     productImage.addEventListener('load', setupMagnifier);
     setupMagnifier(); 
+
 });
+
 //-------------------------------------------------------------->
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -387,12 +391,112 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    const sizeInputs = document.querySelectorAll('input[name="size"]');
+    const quantityInput = document.getElementById('quantity');
+
+    // Event listener for Add to Cart button
+    addToCartBtn.addEventListener('click', async () => {
+        const selectedSize = Array.from(sizeInputs).find(input => input.checked)?.id.split('-')[1];
+        const quantity = parseInt(quantityInput.value);
+        const productId = '<%= product._id %>';
+        const userId = '<%= user%>';
+
+        // console.log(`selectedSize: ${selectedSize}`);
+        // console.log(`quantity: ${quantity}`);
+        // console.log(`productId: ${productId}`);
+
+        if(!userId) {
+            Swal.fire('Error!', 'Please login to add items to cart.', 'error'); 
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
+            return;
+        }
+
+        if (!selectedSize) {
+            Swal.fire('Wait!', 'Please select a size first!', 'error');
+            return;
+        }
+
+        if (!quantity || isNaN(quantity) || quantity <= 0) {
+            Swal.fire('Invalid Input', 'Please enter a valid quantity.', 'error');
+            return;
+        }
+
+        
+        
+        try {
+            // First, check stock availability
+            const stockResponse = await fetch('/product-detail/get-stock', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    itemId: productId,
+                    size: selectedSize,
+                    quantity: quantity,
+                }),
+            });
+
+           
+
+            if (!stockResponse.ok) {
+                throw new Error('Failed to fetch stock details.');
+            }
+
+            const stockData = await stockResponse.json();
+            // console.log('stockData:', stockData);
+
+            if (!stockData.success) {
+                Swal.fire('Error!', stockData.message, 'error');
+                return;
+            }
+
+            if (stockData.stock < quantity) {
+                Swal.fire('Stock Alert!', `Sorry, only ${stockData.stock} items are available for size ${selectedSize}.`, 'info');
+                return;
+            }
+
+            // Now, proceed to add the item to the cart
+            const response = await fetch('/product-detail/add-to-cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    productId: productId,
+                    size: selectedSize,
+                    quantity: quantity,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to add item to cart.');
+            }
+
+            const data = await response.json();
+            // console.log('addToCart Response:', data);
+
+            if (data.success) {
+                Swal.fire('Success!', 'Item added to cart!', 'success');
+            } else {
+                Swal.fire('Error!', data.message, 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error.message || error);
+            Swal.fire('Error!', 'There was an issue adding the item to the cart.', 'error');
+        }
+    });
+});
 
 
 
 
 
-
+// });
 
    </script>
 </body>

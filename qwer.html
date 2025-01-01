@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Common styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .checkout-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .checkout-card {
+            border-radius: 15px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Custom Radio Button */
+        .custom-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #3AA39F;
+            border-radius: 50%;
+            position: relative;
+            margin-right: 10px;
+        }
+
+        .custom-radio.selected::after {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: #3AA39F;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Responsive Breakpoints */
+        
+        /* Small - 320px */
+        @media (min-width: 320px) {
+            .checkout-container {
+                padding: 10px;
+            }
+            
+            .address-section, .summary-section {
+                padding: 15px;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .address-card {
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+        }
+
+        /* Medium - 375px */
+        @media (min-width: 375px) {
+            .checkout-container {
+                padding: 15px;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
+            .address-card {
+                padding: 15px;
+            }
+        }
+
+        /* Large - 425px */
+        @media (min-width: 425px) {
+            .section-title {
+                font-size: 1.4rem;
+            }
+
+            .address-details p {
+                margin-bottom: 8px;
+            }
+        }
+
+        /* Tablet - 768px */
+        @media (min-width: 768px) {
+            .checkout-container {
+                padding: 20px;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .checkout-layout {
+                display: flex;
+                gap: 20px;
+            }
+
+            .address-section {
+                flex: 2;
+            }
+
+            .summary-section {
+                flex: 1;
+            }
+        }
+
+        /* Laptop - 1024px */
+        @media (min-width: 1024px) {
+            .checkout-container {
+                padding: 30px;
+            }
+
+            .section-title {
+                font-size: 1.6rem;
+            }
+
+            .address-card {
+                padding: 20px;
+            }
+        }
+
+        /* Laptop L - 1440px */
+        @media (min-width: 1440px) {
+            .checkout-container {
+                padding: 40px;
+            }
+
+            .checkout-layout {
+                gap: 30px;
+            }
+        }
+
+        /* 4K - 2560px */
+        @media (min-width: 2560px) {
+            .checkout-container {
+                max-width: 2000px;
+                padding: 60px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .address-card {
+                padding: 30px;
+            }
+        }
+
+
+        .coupon-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .coupon-section .input-group {
+            margin-bottom: 10px;
+        }
+
+        .coupon-error {
+            color: #dc3545;
+            font-size: 0.875rem;
+            display: none;
+            margin-top: 5px;
+        }
+
+        .coupon-success {
+            color: #198754;
+            font-size: 0.875rem;
+            display: none;
+            margin-top: 5px;
+        }
+
+        .applied-coupon {
+            background-color: #e8f5e9;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+      <!-------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+ <%- include('./layout/NAV.ejs') %>
+ <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <div class="checkout-container">
+        <div class="checkout-layout">
+            <!-- Left Section: Address -->
+            <div class="address-section bg-white p-4 checkout-card">
+                <h2 class="section-title mb-4">Shipping Address</h2>
+                
+                <!-- Address List -->
+                <div class="address-list">
+                    <% addresses.forEach((address, index) => { %>
+                        <div class="address-card border rounded p-3 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="custom-radio <%= index === 0 ? 'selected' : '' %>"></div>
+                                <div class="address-details">
+                                    <p class="mb-2"><strong><%= address.name %></strong></p>
+                                    <p class="mb-2"><%= address.street %></p>
+                                    <p class="mb-2"><%= address.city %>, <%= address.state %></p>
+                                    <p class="mb-2"><%= address.pincode %></p>
+                                    <p class="mb-0">Phone: <%= address.phone %></p>
+                                </div>
+                            </div>
+                            <div class="address-actions mt-3">
+                                <button class="btn btn-outline-primary btn-sm me-2">Edit</button>
+                                <button class="btn btn-outline-danger btn-sm">Delete</button>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+
+                <!-- Add New Address Button -->
+                <button class="btn btn-primary w-100 mt-3" data-bs-toggle="modal" data-bs-target="#addressModal">
+                    Add New Address
+                </button>
+
+                <!-- Payment Methods -->
+                <div class="payment-section mt-4">
+                    <h3 class="section-title mb-3">Payment Method</h3>
+                    <div class="payment-options">
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="radio" name="payment" id="cod">
+                            <label class="form-check-label" for="cod">
+                                Cash on Delivery
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="payment" id="online">
+                            <label class="form-check-label" for="online">
+                                Online Payment
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Section: Order Summary -->
+            <div class="summary-section bg-white p-4 checkout-card">
+                <h2 class="section-title mb-4">Order Summary</h2>
+
+              
+                
+                
+                <!-- Price Details -->
+                <div class="price-details">
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Subtotal</span>
+                        <span>₹<%= subtotal %></span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Shipping</span>
+                        <span>₹<%= shipping %></span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Discount</span>
+                        <span class="text-success">-₹<%= discount %></span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <strong>Total</strong>
+                        <strong>₹<%= total %></strong>
+                    </div>
+                </div>
+
+                 <!-- Updated Coupon Section -->
+    <div class="coupon-section mb-4">
+        <h6 class="mb-3">Have a coupon?</h6>
+        <div class="input-group">
+            <input type="text" 
+                   class="form-control" 
+                   id="couponInput" 
+                   placeholder="Enter coupon code"
+                   pattern="[A-Za-z0-9]+"
+                   maxlength="10">
+            <button class="btn btn-success" id="applyCoupon">Apply</button>
+        </div>
+        <div id="couponError" class="coupon-error">
+            Invalid coupon code. Please try again.
+        </div>
+        <div id="couponSuccess" class="coupon-success">
+            Coupon applied successfully!
+        </div>
+        <div id="appliedCoupon" class="applied-coupon">
+            <div class="d-flex justify-content-between align-items-center">
+                <span id="appliedCouponCode"></span>
+                <button class="btn btn-sm btn-link text-danger p-0" id="removeCoupon">Remove</button>
+            </div>
+        </div>
+    </div>
+
+
+                <!-- Checkout Button -->
+                <button class="btn btn-primary w-100">Place Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Address Modal -->
+    <div class="modal fade" id="addressModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Address</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addressForm">
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Street Address</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label class="form-label">City</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="col">
+                                <label class="form-label">State</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Pincode</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Save Address</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!------footer------->
+    <%- include('./layout/FOOTER.ejs') %>
+      <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+      
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize custom radio buttons
+        document.querySelectorAll('.custom-radio').forEach(radio => {
+            radio.addEventListener('click', () => {
+                document.querySelectorAll('.custom-radio').forEach(r => r.classList.remove('selected'));
+                radio.classList.add('selected');
+            });
+        });
+
+        // Form validation
+        const addressForm = document.getElementById('addressForm');
+        addressForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Add your form submission logic here
+            $('#addressModal').modal('hide');
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const couponInput = document.getElementById('couponInput');
+            const applyCouponBtn = document.getElementById('applyCoupon');
+            const couponError = document.getElementById('couponError');
+            const couponSuccess = document.getElementById('couponSuccess');
+            const appliedCoupon = document.getElementById('appliedCoupon');
+            const appliedCouponCode = document.getElementById('appliedCouponCode');
+            const removeCouponBtn = document.getElementById('removeCoupon');
+
+            applyCouponBtn.addEventListener('click', function() {
+                const couponCode = couponInput.value.trim();
+                
+                // Reset messages
+                couponError.style.display = 'none';
+                couponSuccess.style.display = 'none';
+
+                // Basic validation
+                if (couponCode === '') {
+                    couponError.textContent = 'Please enter a coupon code';
+                    couponError.style.display = 'block';
+                    return;
+                }
+
+                // Here you would typically validate the coupon code with your backend
+                // For demo purposes, we'll just simulate a successful application
+                couponSuccess.style.display = 'block';
+                appliedCoupon.style.display = 'block';
+                appliedCouponCode.textContent = couponCode;
+                
+                // Disable input and apply button
+                couponInput.disabled = true;
+                applyCouponBtn.disabled = true;
+            });
+
+            removeCouponBtn.addEventListener('click', function() {
+                // Reset everything
+                couponInput.value = '';
+                couponInput.disabled = false;
+                applyCouponBtn.disabled = false;
+                couponSuccess.style.display = 'none';
+                appliedCoupon.style.display = 'none';
+            });
+
+            // Add input validation
+            couponInput.addEventListener('input', function(e) {
+                // Remove any characters that aren't letters or numbers
+                this.value = this.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+            });
+        });
+    </script>
+</body>
+</html>

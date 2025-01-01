@@ -3,7 +3,7 @@
 // Recover Button Action
 $(".btn-recover").on("click", async function () {
     const productId = $(this).data("id");
-    console.log("Product ID for recover:", productId);  // Debugging
+    ("Product ID for recover:", productId);  // Debugging
     try {
         const res = await fetch(`/admin/productManagement/recoverProducts/${productId}`, { method: "PATCH" });
         const result = await res.json();
@@ -36,7 +36,7 @@ $(".btn-recover").on("click", async function () {
 // Permanent Delete Button Action
 $(".btn-delete").on("click", async function () {
     const productId = $(this).data("id");
-    console.log("Product ID for delete:", productId);  // Debugging
+    ("Product ID for delete:", productId);  // Debugging
 
     // SweetAlert confirmation for deletion
     const result = await Swal.fire({

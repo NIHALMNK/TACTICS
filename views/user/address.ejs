@@ -186,7 +186,7 @@
       const saveButton = document.getElementById('saveButton');
 
       function prepareModal(mode, addressData = null) {
-        console.log('Prepare Modal Called', mode, addressData);
+        // console.log('Prepare Modal Called', mode, addressData);
         const modalTitle = document.getElementById('modalTitle');
         const saveButton = document.getElementById('saveButton');
         const modal = new bootstrap.Modal(document.getElementById('addressModal'));
@@ -197,7 +197,7 @@
         //   resetForm();
           modal.show();
         } else if (mode === 'edit' && addressData) {
-          console.log('Edit mode', addressData);
+          // console.log('Edit mode', addressData);
           modalTitle.textContent = 'Update Address';
           saveButton.textContent = 'Update Address';
 
@@ -212,7 +212,7 @@
       }
 
       function populateForm(addressData) {
-        console.log('Populating Form with:', addressData);
+        // console.log('Populating Form with:', addressData);
 
         document.getElementById('addressId').value = addressData._id || addressData.id || '';
         document.getElementById('houseInput').value = addressData.house || addressData.house || '';
@@ -256,7 +256,7 @@
 
 function cancelButton(){
     window.location.reload();
-    console.log("cancel button------------------------------------------->");
+    // console.log("cancel button------------------------------------------->");
 }
 
 
@@ -282,12 +282,12 @@ async function saveAddress() {
         pinCode: addressData.pinCode
     };
 
-    console.log('saveAddress:', {
-        addressId: addressData.id,
-        url: url,
-        method: method,
-        payload: payload,
-    });
+    // console.log('saveAddress:', {
+    //     addressId: addressData.id,
+    //     url: url,
+    //     method: method,
+    //     payload: payload,
+    // });
 
     try {
         const response = await fetch(url, {

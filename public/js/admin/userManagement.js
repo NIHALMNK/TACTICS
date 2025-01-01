@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <p><strong>Status:</strong> ${userDetails.isDeleted ? 'Banned' : 'Active'}</p>
             `;
         } catch (error) {
-            console.log('Error fetching user details:', error);
+            // console.log('Error fetching user details:', error);
             
             // SweetAlert for error notification
             Swal.fire({

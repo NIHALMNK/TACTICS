@@ -14,7 +14,6 @@ module.exports ={
             }
             return res.status(200).render('admin/dashboard', { admin: req.session.admin });
         } catch (error) {
-            console.log('1 --->' + error);
         }
     },
     
@@ -26,7 +25,7 @@ module.exports ={
             }
             return res.status(200).redirect('/admin/dashboard');
         } catch (error) {
-            console.log('2 --->' + error);
+            // console.log('2 --->' + error);
         }
     },
     

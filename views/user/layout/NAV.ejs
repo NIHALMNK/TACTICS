@@ -62,6 +62,7 @@
               <div class="nav-icons d-lg-none">
                   <a href="/cart" class="nav-link">
                     <img src="/images/logos/cart (1).png" alt="Cart" />
+                   
                   </a>
                   <a href="/wislist" class="nav-link">
                     <img src="/images/logos/whislist.png" alt="Wishlist" />
@@ -75,11 +76,16 @@
     
           <!-- Desktop Icons (Visible only on larger screens) -->
           <ul class="nav-icons list-unstyled mb-0 d-none d-lg-flex">
-              <li>
-                <a href="/cart" class="nav-link">
+            <li>
+              <a href="/cart" class="nav-link position-relative">
                   <img src="/images/logos/cart (1).png" alt="Cart" />
-                </a>
-              </li>
+                  <span 
+                      class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                      0
+                  </span>
+              </a>
+          </li>
+          
               <li>
                 <a href="/wislist" class="nav-link">
                   <img src="/images/logos/whislist.png" alt="Wishlist" />
@@ -95,5 +101,7 @@
       </nav>
     </div>
     
+
+    <script src="/js/user/layout/NAV.js"></script>
 
     

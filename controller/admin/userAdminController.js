@@ -92,7 +92,7 @@ const userBan = async (req, res) => {
         user.isDeleted = !user.isDeleted;
         await user.save(); 
         const status = user.isDeleted ? 'banned' : 'unbanned';
-        console.log(`User ${status}: ${email}`);
+        // console.log(`User ${status}: ${email}`);
         return res.status(200).json({ message: `User ${status} successfully`, isDeleted: user.isDeleted });
 
     } catch (error) {

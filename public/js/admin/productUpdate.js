@@ -348,14 +348,14 @@ document.addEventListener('DOMContentLoaded', function() {
   
   function createStockFields(category) {
     const productType= categorySelect.value.toLowerCase();
-    console.log("THIS IS MY PRODUCT TYPE-->"+productType);
+    // console.log("THIS IS MY PRODUCT TYPE-->"+productType);
     
     
     
     
     // Get appropriate sizes
     const sizes = sizeConfigs[productType] || [];
-    console.log("THIS IS MY SIZE-->"+sizes);
+    // console.log("THIS IS MY SIZE-->"+sizes);
     
     // Get current stock data
     let currentStock = {};

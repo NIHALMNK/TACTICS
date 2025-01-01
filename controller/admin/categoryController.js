@@ -228,7 +228,7 @@ async postAddCategoryPage(req, res) {
         }
 
         const imagePath = req.file.path.split("public")[1];
-        console.log("Stored Image Path:", imagePath);
+        // console.log("Stored Image Path:", imagePath);
         
         const newCategory = new Category({
             name: categoryName,
@@ -238,7 +238,7 @@ async postAddCategoryPage(req, res) {
         });
         
         await newCategory.save();
-        console.log("New Category Saved:", newCategory);
+        // console.log("New Category Saved:", newCategory);
         
         return res.status(201).json({
             message: "Category added successfully!",

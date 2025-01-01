@@ -148,3 +148,14 @@ body {
     font-size: 22px;
   }
 }
+.cart-badge {
+  font-size: 0.75rem;
+  color: #fff;
+  background-color: red;
+  padding: 0.25em 0.5em;
+  border-radius: 50%;
+  display: inline-block;
+  min-width: 1.5em;
+  text-align: center;
+}
+

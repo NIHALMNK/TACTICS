@@ -1,3 +1,5 @@
+
+
 const User = require("../../models/userRegister");
 const productModel = require("../../models/productModel");
 const categoryModel = require("../../models/categoryModel");
@@ -121,7 +123,7 @@ async loadShop(req, res) {
         .exec();
                 
         if (!product || product.isDeleted ) {
-          console.log("Product not found, deleted, or has no category");
+          // console.log("Product not found, deleted, or has no category");
           return res.redirect('/home');
         } 
 
@@ -191,7 +193,7 @@ async loadShop(req, res) {
           
           // Find the user by ID
           const user = await User.findById(userId);
-      console.log("the update page page"+req.session.user.name);
+      // console.log("the update page page"+req.session.user.name);
 
           if (!user) {
             return res.status(404).json({ message: "o1---->"+"User not found" });
@@ -336,7 +338,7 @@ async updatePassword(req, res) {
             message: "Address created successfully", 
             address: newAddress 
           });
-          console.log("creation of the address --------------------> Done!");
+          // console.log("creation of the address --------------------> Done!");
         } catch (error) {
           console.error("Error creating address:", error);
           res.status(500).json({ message: "Server error",error:error.message });
@@ -386,7 +388,7 @@ async updatePassword(req, res) {
             message: "Address updated successfully", 
             address: user.address[addressIndex] 
           });
-          console.log("updation of the address --------------------> Done!");
+          // console.log("updation of the address --------------------> Done!");
           
         } catch (error) {
           console.error("Error updating address:", error);

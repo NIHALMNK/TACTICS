@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // For demonstration purposes
             console.log('Form submitted successfully');
             console.log('Email:', email.value);
-            console.log('Password:', password.value);
+            // console.log('Password:', password.value);
             // Submit the form
             e.target.submit();
         }

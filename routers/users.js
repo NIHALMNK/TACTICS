@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controller/user/userController');
 const logController = require('../controller/user/logontroller');
+const cartController = require('../controller/user/cartController');
 const nocache = require('nocache');
 
 
@@ -70,7 +71,13 @@ router.delete('/address/:addressId', userController.removeAddress);
 // wallet routes
 router.get('/wallet', userController.loadWallet);
 
-
+// cart routes
+router.get('/cart',cartController.LoadCart);
+router.get('/cart/badge', cartController.cartBadge);
+router.post('/product-detail/get-stock', cartController.getStock);
+router.post('/product-detail/add-to-cart',cartController.addToCart);
+router.post('/cart/remove', cartController.removeFromCart);
+router.post('/cart/update', cartController.updateQuantity);
 
 
 

@@ -27,12 +27,12 @@ router.get('/category/del', categoryController.loadDelCategoryPage);
 router.put('/category/unlink', categoryController.deleteCategory);
 
 router.patch("/category/recoverCategory/:id", (req, res, next) => {
-    console.log("Recover category request received for ID:", req.params.id);
+    // console.log("Recover category request received for ID:", req.params.id);
     next();
 }, categoryController.recoverCategory);
 
 router.delete("/category/permanentDeleteCategory/:id", (req, res, next) => {
-    console.log("Permanent delete request received for ID:", req.params.id);
+    // console.log("Permanent delete request received for ID:", req.params.id);
     next();
 }, categoryController.permanentDeleteCategory);
 
