@@ -1,5 +1,5 @@
 let authCheck = (req, res, next) => {
-    if (['/dashboard', '/wishlist', '/cart','/order','/address','/wallet','/profile'].includes(req.url)) {
+    if (['/dashboard', '/wishlist', '/cart','/order','/address','/wallet','/profile','/checkout'].includes(req.url)) {
         if (!req.session.loggedIn) {
             return res.redirect('/register');
         }

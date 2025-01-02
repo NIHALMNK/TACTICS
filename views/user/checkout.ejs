@@ -6,24 +6,46 @@
     <title>Checkout Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Common styles */
+        /* Base styles */
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f8f9fa;
         }
 
+        /* Updated Container Layout */
         .checkout-container {
             max-width: 1440px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 5% 5%; /* 10% total padding */
         }
 
-        .checkout-card {
+        .checkout-layout {
+            display: flex;
+            gap: clamp(20px, 3vw, 40px);
+        }
+
+        /* Left Section - 60% */
+        .address-section {
+            flex: 60;
+            background: white;
             border-radius: 15px;
             box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            padding: clamp(15px, 2vw, 30px);
         }
 
-        /* Custom Radio Button */
+        /* Right Section - 30% */
+        .summary-section {
+            flex: 30;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            padding: clamp(15px, 2vw, 30px);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        /* Keep your existing styles */
         .custom-radio {
             width: 20px;
             height: 20px;
@@ -45,130 +67,19 @@
             transform: translate(-50%, -50%);
         }
 
-        /* Responsive Breakpoints */
-        
-        /* Small - 320px */
-        @media (min-width: 320px) {
-            .checkout-container {
-                padding: 10px;
-            }
-            
-            .address-section, .summary-section {
-                padding: 15px;
-            }
-
-            .section-title {
-                font-size: 1.2rem;
-            }
-
-            .address-card {
-                padding: 10px;
-                margin-bottom: 10px;
-            }
+        /* Payment section inside summary */
+        .payment-section {
+            border-top: 1px solid #e0e0e0;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
         }
 
-        /* Medium - 375px */
-        @media (min-width: 375px) {
-            .checkout-container {
-                padding: 15px;
-            }
-
-            .section-title {
-                font-size: 1.3rem;
-            }
-
-            .address-card {
-                padding: 15px;
-            }
-        }
-
-        /* Large - 425px */
-        @media (min-width: 425px) {
-            .section-title {
-                font-size: 1.4rem;
-            }
-
-            .address-details p {
-                margin-bottom: 8px;
-            }
-        }
-
-        /* Tablet - 768px */
-        @media (min-width: 768px) {
-            .checkout-container {
-                padding: 20px;
-            }
-
-            .section-title {
-                font-size: 1.5rem;
-            }
-
-            .checkout-layout {
-                display: flex;
-                gap: 20px;
-            }
-
-            .address-section {
-                flex: 2;
-            }
-
-            .summary-section {
-                flex: 1;
-            }
-        }
-
-        /* Laptop - 1024px */
-        @media (min-width: 1024px) {
-            .checkout-container {
-                padding: 30px;
-            }
-
-            .section-title {
-                font-size: 1.6rem;
-            }
-
-            .address-card {
-                padding: 20px;
-            }
-        }
-
-        /* Laptop L - 1440px */
-        @media (min-width: 1440px) {
-            .checkout-container {
-                padding: 40px;
-            }
-
-            .checkout-layout {
-                gap: 30px;
-            }
-        }
-
-        /* 4K - 2560px */
-        @media (min-width: 2560px) {
-            .checkout-container {
-                max-width: 2000px;
-                padding: 60px;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .address-card {
-                padding: 30px;
-            }
-        }
-
-
+        /* Keep your existing coupon styles */
         .coupon-section {
             background-color: #f8f9fa;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
-        }
-
-        .coupon-section .input-group {
-            margin-bottom: 10px;
         }
 
         .coupon-error {
@@ -192,6 +103,123 @@
             margin-top: 10px;
             display: none;
         }
+
+        /* Keep your existing carousel styles */
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 40px;
+            height: 40px;
+            top: 50%;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            margin: 0 -20px;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .carousel-indicators {
+            margin-bottom: 0;
+        }
+
+        .carousel-indicators [data-bs-target] {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin: 0 5px;
+        }
+
+        .address-card {
+            margin: 0 40px;
+        }
+
+        /* Updated Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .checkout-layout {
+                flex-direction: column;
+            }
+
+            .address-section,
+            .summary-section {
+                flex: 100%;
+            }
+
+            .summary-section {
+                position: relative;
+                top: 0;
+            }
+
+            .checkout-container {
+                padding: 15px;
+            }
+
+            .address-card {
+                margin: 0 20px;
+            }
+        }
+
+        /* Small - 320px */
+        @media (min-width: 320px) {
+            .section-title {
+                font-size: 1.2rem;
+            }
+            
+            .address-card {
+                padding: 10px;
+            }
+        }
+
+        /* Medium - 375px */
+        @media (min-width: 375px) {
+            .section-title {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Large - 425px */
+        @media (min-width: 425px) {
+            .section-title {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* Tablet - 768px */
+        @media (min-width: 768px) {
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Laptop - 1024px */
+        @media (min-width: 1024px) {
+            .section-title {
+                font-size: 1.6rem;
+            }
+            .checkout-container {
+                padding: 30px;
+            }
+        }
+
+        /* Laptop L - 1440px */
+        @media (min-width: 1440px) {
+            .checkout-container {
+                padding: 40px;
+            }
+        }
+
+        /* 4K - 2560px */
+        @media (min-width: 2560px) {
+            .checkout-container {
+                max-width: 2000px;
+                padding: 60px;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -202,63 +230,108 @@
     <div class="checkout-container">
         <div class="checkout-layout">
             <!-- Left Section: Address -->
-            <div class="address-section bg-white p-4 checkout-card">
-                <h2 class="section-title mb-4">Shipping Address</h2>
-                
-                <!-- Address List -->
-                <div class="address-list">
-                    <% addresses.forEach((address, index) => { %>
-                        <div class="address-card border rounded p-3 mb-3">
-                            <div class="d-flex align-items-center">
-                                <div class="custom-radio <%= index === 0 ? 'selected' : '' %>"></div>
-                                <div class="address-details">
-                                    <p class="mb-2"><strong><%= address.name %></strong></p>
-                                    <p class="mb-2"><%= address.street %></p>
-                                    <p class="mb-2"><%= address.city %>, <%= address.state %></p>
-                                    <p class="mb-2"><%= address.pincode %></p>
-                                    <p class="mb-0">Phone: <%= address.phone %></p>
-                                </div>
-                            </div>
-                            <div class="address-actions mt-3">
-                                <button class="btn btn-outline-primary btn-sm me-2">Edit</button>
-                                <button class="btn btn-outline-danger btn-sm">Delete</button>
+     <!-- Update the address list section in checkout.ejs -->
+<div class="address-section bg-white p-4 checkout-card">
+    <h2 class="section-title mb-4">Shipping Address</h2>
+   
+    
+    <!-- Address Carousel -->
+    <div id="addressCarousel" class="carousel slide" >
+        <div class="carousel-inner">
+            <% addresses.forEach((address, index) => { %>
+                <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                    <div class="address-card border rounded p-3">
+                        <div class="d-flex align-items-center">
+                            <div class="custom-radio <%= index === 0 ? 'selected' : '' %>"></div>
+                            <div class="address-details">
+                              <p class="mb-2">id: <%= address.id %></p>
+                                <p class="mb-2"><strong>Name: <%= address.name %></strong></p>
+                                <p class="mb-2"><strong>Phone: </strong><%= address.phone %></p>
+                                <p class="mb-2"><strong>House: </strong><%= address.house %></p>
+                                <p class="mb-2"><strong>Street: </strong><%= address.street %></p>
+                                <p class="mb-2"><strong>Landmark: </strong><%= address.landmark %></p>
+                                <p class="mb-2"><strong>City: </strong><%= address.city %></p>
+                                <p class="mb-2"><strong>District: </strong><%= address.district %></p>
+                                <p class="mb-2"><strong>State: </strong><%= address.state %></p>
+                                <p class="mb-2"><strong>Country: </strong><%= address.country %></p>
+                                <p class="mb-2"><strong>PIN Code: </strong><%= address.pinCode %></p>
                             </div>
                         </div>
-                    <% }) %>
-                </div>
-
-                <!-- Add New Address Button -->
-                <button class="btn btn-primary w-100 mt-3" data-bs-toggle="modal" data-bs-target="#addressModal">
-                    Add New Address
-                </button>
-
-                <!-- Payment Methods -->
-                <div class="payment-section mt-4">
-                    <h3 class="section-title mb-3">Payment Method</h3>
-                    <div class="payment-options">
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="radio" name="payment" id="cod">
-                            <label class="form-check-label" for="cod">
-                                Cash on Delivery
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="payment" id="online">
-                            <label class="form-check-label" for="online">
-                                Online Payment
-                            </label>
+                        <div class="address-actions mt-3">
+                            <button class="btn btn-outline-primary btn-sm me-2 btn-edit-address"
+                                    data-address="<%= JSON.stringify(address) %>"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#addressModal"
+                                    onclick="prepareModal('edit', this.getAttribute('data-address'))">
+                                Edit
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm"
+                                    onclick="removeAddress('<%= address._id %>')">
+                                Delete
+                            </button>
                         </div>
                     </div>
                 </div>
+            <% }) %>
+        </div>
+        
+        <!-- Carousel Navigation -->
+        <% if (addresses.length > 1) { %>
+            <button class="carousel-control-prev" type="button" data-bs-target="#addressCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#addressCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        <% } %>
+        
+        <!-- Carousel Indicators -->
+        <% if (addresses.length > 1) { %>
+            <div class="carousel-indicators position-relative mt-3">
+                <% addresses.forEach((_, index) => { %>
+                    <button type="button" 
+                            data-bs-target="#addressCarousel" 
+                            data-bs-slide-to="<%= index %>" 
+                            class="<%= index === 0 ? 'active' : '' %> bg-dark"
+                            aria-current="<%= index === 0 ? 'true' : 'false' %>"
+                            aria-label="Slide <%= index + 1 %>">
+                    </button>
+                <% }) %>
             </div>
+        <% } %>
+    </div>
 
-            <!-- Right Section: Order Summary -->
-            <div class="summary-section bg-white p-4 checkout-card">
+    <!-- Add New Address Button -->
+    <button class="btn btn-primary w-100 mt-4" data-bs-toggle="modal" data-bs-target="#addressModal">
+        Add New Address
+    </button>
+</div>
+              <!-- Updated Order Summary Section -->
+            <div class="summary-section">
                 <h2 class="section-title mb-4">Order Summary</h2>
 
-              
-                
-                
+                <span id="idid" class="d-none" data-userid="<%= user.id %>"></span>
+                <% console.log(user.id) %>;
+                 %>
+                <!-- Coupon Section -->
+                <div class="coupon-section mb-4">
+                    <h6 class="mb-3">Have a coupon?</h6>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="couponInput" placeholder="Enter coupon code" pattern="[A-Za-z0-9]+" maxlength="10">
+                        <button class="btn btn-success" id="applyCoupon">Apply</button>
+                    </div>
+                    <div id="couponError" class="coupon-error"></div>
+                    <div id="couponSuccess" class="coupon-success"></div>
+                    <div id="appliedCoupon" class="applied-coupon">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span id="appliedCouponCode"></span>
+                            <button class="btn btn-sm btn-link text-danger p-0" id="removeCoupon">Remove</button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Price Details -->
                 <div class="price-details">
                     <div class="d-flex justify-content-between mb-3">
@@ -280,80 +353,79 @@
                     </div>
                 </div>
 
-                 <!-- Updated Coupon Section -->
-    <div class="coupon-section mb-4">
-        <h6 class="mb-3">Have a coupon?</h6>
-        <div class="input-group">
-            <input type="text" 
-                   class="form-control" 
-                   id="couponInput" 
-                   placeholder="Enter coupon code"
-                   pattern="[A-Za-z0-9]+"
-                   maxlength="10">
-            <button class="btn btn-success" id="applyCoupon">Apply</button>
-        </div>
-        <div id="couponError" class="coupon-error">
-            Invalid coupon code. Please try again.
-        </div>
-        <div id="couponSuccess" class="coupon-success">
-            Coupon applied successfully!
-        </div>
-        <div id="appliedCoupon" class="applied-coupon">
-            <div class="d-flex justify-content-between align-items-center">
-                <span id="appliedCouponCode"></span>
-                <button class="btn btn-sm btn-link text-danger p-0" id="removeCoupon">Remove</button>
-            </div>
-        </div>
-    </div>
+               <!-- Payment Methods (Moved inside summary section) -->
+<div class="payment-section">
+  <h3 class="section-title mb-3">Payment Method</h3>
+  <div class="payment-options">
+      <button type="button" class="btn btn-outline-success w-100 mb-3 payment-button" id="cod" data-payment="cod">
+          Cash on Delivery
+      </button>
+      <button type="button" class="btn btn-outline-success w-100 mb-3 payment-button" id="online" data-payment="razorpay">
+          Razorpay
+      </button>
+  </div>
+</div>
 
 
                 <!-- Checkout Button -->
-                <button class="btn btn-primary w-100">Place Order</button>
+                <button class="btn btn-primary w-100 mt-3 btn-placeorder">Place Order</button>
             </div>
         </div>
     </div>
+
 
     <!-- Address Modal -->
     <div class="modal fade" id="addressModal" tabindex="-1">
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add New Address</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="addressForm">
-                        <div class="mb-3">
-                            <label class="form-label">Full Name</label>
-                            <input type="text" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Phone Number</label>
-                            <input type="tel" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Street Address</label>
-                            <input type="text" class="form-control" required>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label class="form-label">City</label>
-                                <input type="text" class="form-control" required>
-                            </div>
-                            <div class="col">
-                                <label class="form-label">State</label>
-                                <input type="text" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Pincode</label>
-                            <input type="text" class="form-control" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Save Address</button>
-                    </form>
-                </div>
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalTitle">Create/Update Address</h5>
+              <button type="button" class="btn-close"  onclick="cancelButton()" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div class="modal-body">
+              <form id="addressForm">
+                <input type="hidden" id="addressId" name="id">
+                <div class="mb-3">
+                  <label for="houseInput" class="form-label">House</label>
+                  <input type="text" class="form-control" id="houseInput" name="house" required autocomplete="street-address" aria-describedby="houseHelp">
+                </div>
+                <div class="mb-3">
+                  <label for="streetInput" class="form-label">Street</label>
+                  <input type="text" class="form-control" id="streetInput" name="street" required autocomplete="street-address" aria-describedby="streetHelp">
+                </div>
+                <div class="mb-3">
+                  <label for="landmarkInput" class="form-label">Landmark</label>
+                  <input type="text" class="form-control" id="landmarkInput" name="landmark" required autocomplete="address-line2" aria-describedby="landmarkHelp">
+                </div>
+                <div class="mb-3">
+                  <label for="cityInput" class="form-label">City</label>
+                  <input type="text" class="form-control" id="cityInput" name="city" required autocomplete="address-level2" aria-describedby="cityHelp">
+                </div>
+                <div class="mb-3">
+                  <label for="districtInput" class="form-label">District</label>
+                  <input type="text" class="form-control" id="districtInput" name="district" required autocomplete="address-level2" aria-describedby="districtHelp">
+                </div>
+                <div class="mb-3">
+                  <label for="stateInput" class="form-label">State</label>
+                  <input type="text" class="form-control" id="stateInput" name="state" required autocomplete="address-level1" aria-describedby="stateHelp">
+                </div>
+                <div class="mb-3">
+                  <label for="countryInput" class="form-label">Country</label>
+                  <input type="text" class="form-control" id="countryInput" name="country" required autocomplete="country" aria-describedby="countryHelp">
+                </div>
+                <div class="mb-3">
+                  <label for="pinCodeInput" class="form-label">PIN Code</label>
+                  <input type="text" class="form-control" id="pinCodeInput" name="pinCode" required autocomplete="postal-code" aria-describedby="pinCodeHelp">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" id="cancelButton" data-bs-dismiss="modal" onclick="cancelButton()">Cancel</button>
+              <button type="button" class="btn btn-primary" id="saveButton" onclick="saveAddress()">Save Address</button>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
 
      <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
@@ -361,7 +433,8 @@
     <%- include('./layout/FOOTER.ejs') %>
       <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
       
-
+    <!-- Add this in the head section of checkout.ejs -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Initialize custom radio buttons
@@ -431,5 +504,242 @@
             });
         });
     </script>
+    
+    <script>
+      async function saveAddress() {
+        if (!validateForm()) return;
+    
+        const formData = new FormData(addressForm);
+        const addressData = Object.fromEntries(formData.entries());
+        const addressId = addressData.id;
+    
+        const url = addressId ? `/address/${addressId}` : '/address/create';
+        const method = addressId ? 'PUT' : 'POST';
+    
+        const payload = {
+          house: addressData.house,
+          street: addressData.street,
+          landmark: addressData.landmark,
+          city: addressData.city,
+          district: addressData.district,
+          state: addressData.state,
+          country: addressData.country,
+          pinCode: addressData.pinCode
+        };
+    
+        try {
+          const response = await fetch(url, {
+            method: method,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          });
+    
+          if (!response.ok) throw new Error('Network response was not ok');
+          const data = await response.json();
+    
+          await Swal.fire({
+            icon: 'success',
+            title: data.message,
+            text: 'Address saved successfully!'
+          });
+    
+          location.reload();
+        } catch (error) {
+          console.error('Error:', error);
+          await Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'An error occurred while saving the address',
+          });
+        }
+      }
+    
+      function validateForm() {
+        const requiredFields = [
+          'houseInput', 'streetInput', 'landmarkInput', 'cityInput',
+          'districtInput', 'stateInput', 'countryInput', 'pinCodeInput'
+        ];
+    
+        for (let fieldId of requiredFields) {
+          const input = document.getElementById(fieldId);
+          if (!input.value.trim()) {
+            Swal.fire({
+              icon: 'error',
+              title: `Please fill in the ${input.name} field`,
+              text: 'All fields are required'
+            });
+            input.focus();
+            return false;
+          }
+        }
+        return true;
+      }
+    
+      function prepareModal(mode, addressData = null) {
+        const modalTitle = document.getElementById('modalTitle');
+        const saveButton = document.getElementById('saveButton');
+        
+        if (mode === 'create') {
+          modalTitle.textContent = 'Create New Address';
+          saveButton.textContent = 'Create Address';
+          document.getElementById('addressForm').reset();
+        } else if (mode === 'edit' && addressData) {
+          modalTitle.textContent = 'Update Address';
+          saveButton.textContent = 'Update Address';
+          populateForm(typeof addressData === 'string' ? JSON.parse(addressData) : addressData);
+        }
+      }
+    
+      function populateForm(addressData) {
+        document.getElementById('addressId').value = addressData._id || '';
+        document.getElementById('houseInput').value = addressData.house || '';
+        document.getElementById('streetInput').value = addressData.street || '';
+        document.getElementById('landmarkInput').value = addressData.landmark || '';
+        document.getElementById('cityInput').value = addressData.city || '';
+        document.getElementById('districtInput').value = addressData.district || '';
+        document.getElementById('stateInput').value = addressData.state || '';
+        document.getElementById('countryInput').value = addressData.country || '';
+        document.getElementById('pinCodeInput').value = addressData.pinCode || '';
+      }
+    
+      async function removeAddress(addressId) {
+        const result = await Swal.fire({
+          title: 'Are you sure?',
+          text: 'Do you want to remove this address?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, remove it!',
+          cancelButtonText: 'Cancel'
+        });
+    
+        if (result.isConfirmed) {
+          try {
+            const response = await fetch(`/address/${addressId}`, {
+              method: 'DELETE'
+            });
+    
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+    
+            await Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: data.message
+            });
+    
+            location.reload();
+          } catch (error) {
+            console.error('Error:', error);
+            await Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'An error occurred while removing the address.'
+            });
+          }
+        }
+      }
+    
+      function cancelButton() {
+        document.getElementById('addressForm').reset();
+      }
+    
+      // Initialize event listeners
+      document.addEventListener('DOMContentLoaded', function() {
+        // Add click handlers to edit buttons
+        document.querySelectorAll('.btn-edit-address').forEach(button => {
+          button.addEventListener('click', function() {
+            const addressData = this.getAttribute('data-address');
+            prepareModal('edit', addressData);
+          });
+        });
+      });
+    </script>
+    
+    <script>
+      let selectedAddress = null; // Declare outside for global access
+let selectedPayment = null;
+
+document.addEventListener('DOMContentLoaded', function () {
+    const carousel = new bootstrap.Carousel(document.getElementById('addressCarousel'), {
+        interval: false,
+        wrap: true,
+    });
+
+    // Function to update the selected address ID
+    function updateSelectedAddress() {
+        const activeItem = document.querySelector('.carousel-item.active'); // Get the active carousel item
+        if (activeItem) {
+            const idElement = activeItem.querySelector('.address-details p:nth-child(1)'); // Select the 'id' paragraph
+            if (idElement) {
+                selectedAddress = idElement.textContent.replace('id: ', '').trim(); // Extract the ID text
+                console.log('Selected Address ID:', selectedAddress); // Debugging output
+            }
+        }
+    }
+
+    // Update selectedAddress whenever the carousel slides
+    document.getElementById('addressCarousel').addEventListener('slid.bs.carousel', updateSelectedAddress);
+
+    // Set initial value on page load
+    updateSelectedAddress();
+});
+
+// Event listener for payment selection
+document.querySelectorAll('.payment-button').forEach(button => {
+    button.addEventListener('click', function () {
+        // Remove 'active' class from all buttons
+        document.querySelectorAll('.payment-button').forEach(btn => btn.classList.remove('btn-success'));
+        document.querySelectorAll('.payment-button').forEach(btn => btn.classList.add('btn-outline-success'));
+
+        // Add 'active' class to the clicked button
+        this.classList.remove('btn-outline-success');
+        this.classList.add('btn-success');
+
+        // Store the selected payment method
+        selectedPayment = this.getAttribute('data-payment');
+        console.log('Selected Payment Method:', selectedPayment);
+    });
+});
+
+// Place order button logic
+document.querySelector(".btn-placeorder").addEventListener('click', async () => {
+    try {
+        if (!selectedAddress || !selectedPayment) {
+            alert('Please select an address and payment method before placing the order.');
+            return;
+        }
+
+        const response = await fetch("/checkout/placeorder", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                addressid: selectedAddress,
+                selectedPayment: selectedPayment,
+            })
+        });
+
+        const data = await response.json();
+        console.log(data.success);
+        
+        if (data.success) {
+            await alert('Your order is successful!');
+            window.location.href = `/order/success?orderId=${data.orderId}`;
+            
+        } else {
+            alert(data.message);
+        }
+    } catch (error) {
+        alert("Error: " + error.message);
+    }
+});
+
+    </script>
+
+
+    
 </body>
 </html>

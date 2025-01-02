@@ -81,11 +81,11 @@ router.post('/cart/remove', cartController.removeFromCart);
 router.post('/cart/update', cartController.updateQuantity);
 
 
-router.post('/checkout/load',checkoutController.loadCheckout);
+router.get('/checkout',checkoutController.loadCheckout);
+router.post('/checkout/placeorder',checkoutController.placeOrder);
 
 
-
-
+router.get('/order/success',checkoutController .loadPaymentSuccess);
 
 
 
