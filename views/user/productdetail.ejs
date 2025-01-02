@@ -374,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentValue = parseInt(quantityInput.value);
 
         if (currentValue < selectedStock) {
-            quantityInput.value = currentValue + 1;
+            quantityInput.value = currentValue ;
         } else {
             Swal.fire('Wait!', 'Cannot exceed available stock!', 'error');
         }
@@ -384,7 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentValue = parseInt(quantityInput.value);
 
         if (currentValue > 1) {
-            quantityInput.value = currentValue - 1;
+            quantityInput.value = currentValue ;
         } else {
             Swal.fire('Wait!', "Cannot decrease!", "error");
         }

@@ -4,6 +4,7 @@ const userController = require('../controller/user/userController');
 const logController = require('../controller/user/logontroller');
 const cartController = require('../controller/user/cartController');
 const checkoutController = require('../controller/user/checkoutController');
+const orderController = require('../controller/user/orderController');
 const nocache = require('nocache');
 
 
@@ -55,8 +56,34 @@ router.get('/product-detail/:id', userController.getProductDetail);
 
 router.get('/dashboard', userController.loadDashboard);
 
+
+
+
+
+
+
+
+
 //orders routes
-router.get('/order', userController.loadOrders);
+// View all orders
+router.get('/order', orderController.loadOrders);
+
+// Get specific order details
+router.get('/order/:orderId', orderController.getOrderDetails);
+
+// Cancel order
+// router.post('/order/:orderId/cancel', orderController.cancelOrder);
+
+// Request return
+router.post('/order/:orderId/return', orderController.requestReturn);
+
+router.post('/order/cancel/:orderId', orderController.cancelOrder);
+
+
+
+
+
+
 
 // profile routes
 
@@ -84,6 +111,7 @@ router.post('/cart/update', cartController.updateQuantity);
 router.get('/checkout',checkoutController.loadCheckout);
 router.post('/checkout/placeorder',checkoutController.placeOrder);
 
+router.get('/order/success/:orderId', checkoutController.loadPaymentSuccess);
 
 router.get('/order/success',checkoutController .loadPaymentSuccess);
 

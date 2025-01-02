@@ -87,9 +87,6 @@
     margin-bottom: 1rem;
   }
 
-  .main-content {
-    width: 100%;
-  }
 }
 
 /* Laptop and Above */
@@ -104,10 +101,7 @@
     flex-shrink: 0;
   }
 
-  .main-content {
-    flex-grow: 1;
-    width: calc(100% - 250px); /* Adjust based on sidebar width */
-  }
+ 
 }
 
 /* Laptop L (1440px) */
@@ -116,9 +110,7 @@
     width: 300px;
   }
 
-  .main-content {
-    width: calc(100% - 300px);
-  }
+ 
 }
 
 /* 4K and Above */
@@ -129,11 +121,6 @@
 
   .sidebar {
     width: 350px;
-  }
-
-  .main-content {
-    width: calc(100% - 350px);
-    padding: 2rem;
   }
 
   .nav-button {
@@ -148,10 +135,6 @@
     width: 400px;
   }
 
-  .main-content {
-    width: calc(100% - 400px);
-    padding: 2.5rem;
-  }
 }
 /*========================================*/
 .section-title {

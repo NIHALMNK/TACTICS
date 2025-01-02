@@ -723,14 +723,13 @@ document.querySelector(".btn-placeorder").addEventListener('click', async () => 
         });
 
         const data = await response.json();
-        console.log(data.success);
         
-        if (data.success) {
+        if (data.success && data.orderId) {
             await alert('Your order is successful!');
-            window.location.href = `/order/success?orderId=${data.orderId}`;
-            
+            // Use the actual orderId from the response
+            window.location.href = `/order/success/${data.orderId}`;
         } else {
-            alert(data.message);
+            alert(data.message || 'Something went wrong');
         }
     } catch (error) {
         alert("Error: " + error.message);

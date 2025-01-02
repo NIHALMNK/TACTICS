@@ -8,7 +8,282 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
  
-  <link rel="stylesheet" href="/css/user/order.css">
+  <!-- <link rel="stylesheet" href="/css/user/order.css"> -->
+   <style>
+     /* Base Responsive Styles */
+ body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+}
+
+/* Navbar Styles */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1050;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 80px;
+}
+
+/* Profile Session Container */
+.profile-session-container {
+  padding-top: 80px; /* Accommodate fixed navbar */
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.dashboard {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* Sidebar Styles */
+.sidebar {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+}
+
+.nav-button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-button svg {
+  margin-right: 0.75rem;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.nav-button:hover {
+  background-color: #f3f4f6;
+}
+
+.nav-button.active {
+  background-color: #0d9488;
+  color: white;
+}
+
+/* Main Content Styles */
+.main-content {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  flex-grow: 1;
+}
+
+/* Responsive Breakpoints */
+/* Mobile Devices */
+@media (max-width: 768px) {
+  .dashboard {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+}
+
+/* Laptop and Above */
+@media (min-width: 769px) {
+  .dashboard {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .sidebar {
+    width: 250px; /* Fixed width for sidebar */
+    flex-shrink: 0;
+  }
+
+ 
+}
+
+/* Laptop L (1440px) */
+@media (min-width: 1440px) {
+  .sidebar {
+    width: 300px;
+  }
+
+ 
+}
+
+/* 4K and Above */
+@media (min-width: 2560px) {
+  .container {
+    max-width: 2000px;
+  }
+
+  .sidebar {
+    width: 350px;
+  }
+
+  .nav-button {
+    padding: 1rem 1.25rem;
+    font-size: 1.1rem;
+  }
+}
+
+/* Additional 8K Breakpoint */
+@media (min-width: 7680px) {
+  .sidebar {
+    width: 400px;
+  }
+
+}
+/* Add these styles to your existing CSS */
+
+.order-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.order-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.order-id {
+  color: #4285f4;
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.order-status {
+  font-size: 0.9rem;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.status-pending { background-color: #feefc3; color: #994c00; }
+.status-completed { background-color: #e6f4ea; color: #137333; }
+
+.order-amount {
+  font-size: 1.1rem;
+  color: #202124;
+  font-weight: 500;
+  margin: 10px 0;
+}
+
+.order-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-view {
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.btn-cancel {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.btn-return {
+  background-color: #198754;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.btn-pdf {
+  background-color: transparent;
+  color: #4285f4;
+  border: 1px solid #4285f4;
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .order-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .order-actions {
+    flex-wrap: wrap;
+  }
+  
+  .btn-view, .btn-cancel, .btn-return, .btn-pdf {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+.modal-dialog {
+  max-width: 700px;
+}
+
+.modal-content {
+  border-radius: 12px;
+}
+
+.modal-header {
+  padding: 1.5rem;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.badge {
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+}
+
+.card {
+  border: 1px solid rgba(0,0,0,0.1);
+  box-shadow: none;
+}
+
+.bg-light {
+  background-color: #f8f9fa !important;
+}
+   </style>
 </head>
 <body>
  
@@ -50,48 +325,148 @@
 
         <!-- Main Content -->
         <div class="main-content">
-          <h2 class="section-title bg-success text-light">Dashboard</h2>
-          <div class="table-responsive">
-            <table class="table table-striped table-bordered">
-              <thead>
-                <tr>
-                  <th>No.</th>
-                  <th>Date</th>
-                  <th>Order Status</th>
-                  <th>Payment Status</th>
-                  <th>Total</th>
-                  <th>Order Details</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>November 30, 2024</td>
-                  <td>processing</td>
-                  <td>paid</td>
-                  <td>₹3999</td>
-                  <td><a href="#">View</a></td>
-                  <td><a href="#">Cancel Order</a></td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>November 30, 2024</td>
-                  <td>returned</td>
-                  <td>paid</td>
-                  <td>₹3999</td>
-                  <td><a href="#">View</a></td>
-                  <td>
-                    <a href="#">Cancel Order</a>
-                    <a href="#">1</a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <h2 class="section-title">Your Orders</h2>
+          
+          <% if (orders && orders.length > 0) { %>
+            <% orders.forEach(order => { %>
+              <div class="order-card">
+                <div class="order-header">
+                  <a href="#" class="order-id">Order ID: #<%= order.orderId %></a>
+                  <span class="order-status status-<%= order.status.toLowerCase() %>">
+                    <%= order.status %>
+                  </span>
+                </div>
+                
+                <div class="order-amount">
+                  Total Amount: ₹<%= order.total %>
+                </div>
+                
+                <div class="order-actions">
+                  <button class="btn btn-view" 
+                          data-bs-toggle="modal" 
+                          data-bs-target="#orderModal<%= order.orderId %>">
+                    View Order
+                  </button>
+                  
+                  <% if (order.status.toLowerCase() === 'pending') { %>
+
+                    <button class="btn btn-cancel">Cancel Order</button>
+
+                  <% } %>
+                  
+                  <% if (order.status.toLowerCase() === 'completed') { %>
+                    <button class="btn btn-return">Return Order</button>
+                  <% } %>
+                  
+                  <button class="btn btn-pdf">Get PDF Receipt</button>
+                </div>
+              </div>
+
+            <!-- Order Details Modal -->
+<div class="modal fade" id="orderModal<%= order.orderId %>" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header border-bottom-0">
+        <h5 class="modal-title fs-4">Order Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="container">
+          <!-- Order ID and Status Section -->
+          <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <p class="text-muted mb-1">Order ID:</p>
+                <p class="fw-bold fs-5">#<%= order.orderId %></p>
+              </div>
+              <div>
+                <p class="text-muted mb-1">Status:</p>
+                <span class="badge rounded-pill <%= order.status.toLowerCase() === 'pending' ? 'bg-warning' : 'bg-success' %>">
+                  <%= order.status %>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Total Amount and Payment Section -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <p class="text-muted mb-1">Total Amount:</p>
+              <p class="fw-bold">Rs. <%= order.total %></p>
+            </div>
+            <div class="col-md-6">
+              <p class="text-muted mb-1">Payment Method:</p>
+              <p class="fw-bold"><%= order.paymentMethod %></p>
+            </div>
+          </div>
+
+          <!-- Items Section -->
+          <div class="mb-4">
+            <h6 class="fw-bold mb-3">Items:</h6>
+            <% order.items.forEach(item => { %>
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="row align-items-center">
+                    <div class="col-md-8">
+                      <h6 class="card-title mb-1"><%= item.name %></h6>
+                      <p class="card-text text-muted">
+                        Quantity: <%= item.quantity %>
+                      </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                      <p class="fw-bold mb-0">Rs. <%= item.price %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+
+          <!-- Order Summary -->
+          <div class="card bg-light">
+            <div class="card-body">
+              <h6 class="fw-bold mb-3">Order Summary</h6>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Subtotal:</span>
+                <span>Rs. <%= order.subtotal %></span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Shipping:</span>
+                <span>Rs. <%= order.shipping %></span>
+              </div>
+              <% if (order.discount) { %>
+                <div class="d-flex justify-content-between mb-2">
+                  <span>Discount:</span>
+                  <span>-Rs. <%= order.discount %></span>
+                </div>
+              <% } %>
+              <div class="d-flex justify-content-between fw-bold mt-2 pt-2 border-top">
+                <span>Total:</span>
+                <span>Rs. <%= order.total %></span>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+          <% }); %>
+        <% } else { %>
+          <tr>
+            <td colspan="6" class="text-center">No orders found</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
 
-        
+
+
+
+        <!---------------->
       </div>
     </div>
   </div>
@@ -105,7 +480,210 @@
 
 
   <!-- Bootstrap JS and Dependencies -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+  <script>
+    // Filter orders based on status
+    // Main initialization when document is ready
+document.addEventListener('DOMContentLoaded', function() {
+  initializeOrderButtons();
+  initializeTooltips();
+  initializeModals();
+});
+
+// Initialize all order-related buttons
+function initializeOrderButtons() {
+  // Handle view order buttons
+  const viewButtons = document.querySelectorAll('.btn-view');
+  viewButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      // Modal is handled by Bootstrap data attributes
+      // Any additional view logic can go here
+    });
+  });
+
+  // Handle cancel order buttons
+  const cancelButtons = document.querySelectorAll('.btn-cancel');
+  cancelButtons.forEach(button => {
+    button.addEventListener('click', handleOrderCancellation);
+  });
+
+  // Handle return order buttons
+  const returnButtons = document.querySelectorAll('.btn-return');
+  returnButtons.forEach(button => {
+    button.addEventListener('click', handleOrderReturn);
+  });
+
+  // Handle PDF receipt buttons
+  const pdfButtons = document.querySelectorAll('.btn-pdf');
+  pdfButtons.forEach(button => {
+    button.addEventListener('click', handlePdfGeneration);
+  });
+}
+
+// Initialize Bootstrap tooltips
+function initializeTooltips() {
+  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+}
+
+// Initialize Bootstrap modals
+function initializeModals() {
+  const orderModals = document.querySelectorAll('.modal');
+  orderModals.forEach(modal => {
+    modal.addEventListener('show.bs.modal', function (event) {
+      // Add any dynamic modal content loading here if needed
+    });
+  });
+}
+
+// Handle order cancellation
+async function handleOrderCancellation(event) {
+  const orderCard = this.closest('.order-card');
+  const orderId = orderCard.querySelector('.order-id').textContent.split('#')[1];
+
+  const result = await Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, cancel it!'
+  });
+
+  if (result.isConfirmed) {
+    try {
+      const response = await fetch(`/order/cancel/${orderId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        await Swal.fire({
+          title: 'Cancelled!',
+          text: 'Your order has been cancelled.',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false
+        });
+        window.location.reload();
+      } else {
+        await Swal.fire({
+          title: 'Error!',
+          text: data.message || 'Failed to cancel order',
+          icon: 'error'
+        });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      await Swal.fire({
+        title: 'Error!',
+        text: 'Something went wrong!',
+        icon: 'error'
+      });
+    }
+  }
+}
+
+// Handle order return
+async function handleOrderReturn(event) {
+  const orderCard = this.closest('.order-card');
+  const orderId = orderCard.querySelector('.order-id').textContent.split('#')[1];
+
+  const { value: reason } = await Swal.fire({
+    title: 'Return Order',
+    input: 'textarea',
+    inputLabel: 'Reason for Return',
+    inputPlaceholder: 'Please provide a reason for returning this order...',
+    inputAttributes: {
+      'aria-label': 'Return reason'
+    },
+    showCancelButton: true,
+    inputValidator: (value) => {
+      if (!value) {
+        return 'You need to provide a reason for return!'
+      }
+    }
+  });
+
+  if (reason) {
+    try {
+      const response = await fetch(`/order/return/${orderId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ reason })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        await Swal.fire({
+          title: 'Return Requested!',
+          text: 'Your return request has been submitted.',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false
+        });
+        window.location.reload();
+      } else {
+        await Swal.fire({
+          title: 'Error!',
+          text: data.message || 'Failed to submit return request',
+          icon: 'error'
+        });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      await Swal.fire({
+        title: 'Error!',
+        text: 'Something went wrong!',
+        icon: 'error'
+      });
+    }
+  }
+}
+
+// Handle PDF generation
+async function handlePdfGeneration(event) {
+  const orderCard = this.closest('.order-card');
+  const orderId = orderCard.querySelector('.order-id').textContent.split('#')[1];
+
+  try {
+    const response = await fetch(`/order/pdf/${orderId}`);
+    
+    if (response.ok) {
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `order-${orderId}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } else {
+      throw new Error('Failed to generate PDF');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    await Swal.fire({
+      title: 'Error!',
+      text: 'Failed to generate PDF receipt',
+      icon: 'error'
+    });
+  }
+}
+  </script>
 </body>
 </html>

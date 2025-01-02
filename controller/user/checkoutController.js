@@ -191,7 +191,9 @@ module.exports = {
     
             console.log('Order placed successfully:', newOrder);
 
-            const orderId = newOrder.id;
+            const orderId = newOrder._id;
+            console.log("orderId--->"+orderId);
+            
             res.json({ success: true, orderId });
         } catch (error) {
             console.error('Error in placeOrder:', error.message);
@@ -202,31 +204,32 @@ module.exports = {
     
     async loadPaymentSuccess(req, res) {
         try {
-            const { orderId } = req.query;
+            const orderId = req.params.orderId;
+            
+            console.log("orderID-->", orderId);
             
             if (!orderId) {
                 return res.status(400).render('error', {
                     message: 'Invalid Order ID'
                 });
             }
-
+    
             const order = await orderModel.findById(orderId)
-                .populate('userId')
-                
-
+                .populate('userId');
+    
             if (!order) {
                 return res.status(404).render('error', {
                     message: 'Order not found'
                 });
             }
-
+    
             res.render('user/success', {
                 orderId: order._id,
                 amount: order.totalAmount,
                 paymentStatus: order.paymentStatus,
                 orderDate: order.orderDate
             });
-
+    
         } catch (error) {
             console.error('Error in loadPaymentSuccess:', error);
             res.status(500).render('error', {
@@ -234,7 +237,7 @@ module.exports = {
                 error: process.env.NODE_ENV === 'development' ? error : {}
             });
         }
-    },
+    }
 
 
     

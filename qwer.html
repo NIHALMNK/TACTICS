@@ -1,435 +1,476 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout Page</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        /* Common styles */
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tactics - Responsive Dashboard</title>
+ 
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+ 
+  <!-- <link rel="stylesheet" href="/css/user/order.css"> -->
+   <style>
+     /* Base Responsive Styles */
+ body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+}
 
-        .checkout-container {
-            max-width: 1440px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+/* Navbar Styles */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1050;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 80px;
+}
 
-        .checkout-card {
-            border-radius: 15px;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-        }
+/* Profile Session Container */
+.profile-session-container {
+  padding-top: 80px; /* Accommodate fixed navbar */
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
 
-        /* Custom Radio Button */
-        .custom-radio {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #3AA39F;
-            border-radius: 50%;
-            position: relative;
-            margin-right: 10px;
-        }
+.dashboard {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+}
 
-        .custom-radio.selected::after {
-            content: '';
-            width: 12px;
-            height: 12px;
-            background: #3AA39F;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+/* Sidebar Styles */
+.sidebar {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+}
 
-        /* Responsive Breakpoints */
-        
-        /* Small - 320px */
-        @media (min-width: 320px) {
-            .checkout-container {
-                padding: 10px;
-            }
-            
-            .address-section, .summary-section {
-                padding: 15px;
-            }
+.nav-button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
 
-            .section-title {
-                font-size: 1.2rem;
-            }
+.nav-button svg {
+  margin-right: 0.75rem;
+  width: 1.25rem;
+  height: 1.25rem;
+}
 
-            .address-card {
-                padding: 10px;
-                margin-bottom: 10px;
-            }
-        }
+.nav-button:hover {
+  background-color: #f3f4f6;
+}
 
-        /* Medium - 375px */
-        @media (min-width: 375px) {
-            .checkout-container {
-                padding: 15px;
-            }
+.nav-button.active {
+  background-color: #0d9488;
+  color: white;
+}
 
-            .section-title {
-                font-size: 1.3rem;
-            }
+/* Main Content Styles */
+.main-content {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  flex-grow: 1;
+}
 
-            .address-card {
-                padding: 15px;
-            }
-        }
+/* Responsive Breakpoints */
+/* Mobile Devices */
+@media (max-width: 768px) {
+  .dashboard {
+    flex-direction: column;
+  }
 
-        /* Large - 425px */
-        @media (min-width: 425px) {
-            .section-title {
-                font-size: 1.4rem;
-            }
+  .sidebar {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
 
-            .address-details p {
-                margin-bottom: 8px;
-            }
-        }
+}
 
-        /* Tablet - 768px */
-        @media (min-width: 768px) {
-            .checkout-container {
-                padding: 20px;
-            }
+/* Laptop and Above */
+@media (min-width: 769px) {
+  .dashboard {
+    display: flex;
+    flex-direction: row;
+  }
 
-            .section-title {
-                font-size: 1.5rem;
-            }
+  .sidebar {
+    width: 250px; /* Fixed width for sidebar */
+    flex-shrink: 0;
+  }
 
-            .checkout-layout {
-                display: flex;
-                gap: 20px;
-            }
+ 
+}
 
-            .address-section {
-                flex: 2;
-            }
+/* Laptop L (1440px) */
+@media (min-width: 1440px) {
+  .sidebar {
+    width: 300px;
+  }
 
-            .summary-section {
-                flex: 1;
-            }
-        }
+ 
+}
 
-        /* Laptop - 1024px */
-        @media (min-width: 1024px) {
-            .checkout-container {
-                padding: 30px;
-            }
+/* 4K and Above */
+@media (min-width: 2560px) {
+  .container {
+    max-width: 2000px;
+  }
 
-            .section-title {
-                font-size: 1.6rem;
-            }
+  .sidebar {
+    width: 350px;
+  }
 
-            .address-card {
-                padding: 20px;
-            }
-        }
+  .nav-button {
+    padding: 1rem 1.25rem;
+    font-size: 1.1rem;
+  }
+}
 
-        /* Laptop L - 1440px */
-        @media (min-width: 1440px) {
-            .checkout-container {
-                padding: 40px;
-            }
+/* Additional 8K Breakpoint */
+@media (min-width: 7680px) {
+  .sidebar {
+    width: 400px;
+  }
 
-            .checkout-layout {
-                gap: 30px;
-            }
-        }
+}
+/*========================================*/
+.section-title {
+  padding: 10px;
+  text-align: center;
+}
 
-        /* 4K - 2560px */
-        @media (min-width: 2560px) {
-            .checkout-container {
-                max-width: 2000px;
-                padding: 60px;
-            }
+@media (max-width: 320px) {
+  .table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .table thead th, .table td {
+    padding: 5px;
+    font-size: 12px;
+  }
+}
 
-            .section-title {
-                font-size: 2rem;
-            }
+@media (min-width: 375px) and (max-width: 424px) {
+  .table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .table thead th, .table td {
+    padding: 8px;
+    font-size: 14px;
+  }
+}
 
-            .address-card {
-                padding: 30px;
-            }
-        }
+@media (min-width: 425px) {
+  .table thead th, .table td {
+    padding: 10px;
+    font-size: 16px;
+  }
+}
 
 
-        .coupon-section {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
+/* Order Page Specific Styles */
+.table {
+  margin-bottom: 0;
+}
 
-        .coupon-section .input-group {
-            margin-bottom: 10px;
-        }
+.badge {
+  padding: 0.5em 0.75em;
+  font-weight: 500;
+}
 
-        .coupon-error {
-            color: #dc3545;
-            font-size: 0.875rem;
-            display: none;
-            margin-top: 5px;
-        }
+.order-timeline {
+  padding: 2rem 1rem;
+}
 
-        .coupon-success {
-            color: #198754;
-            font-size: 0.875rem;
-            display: none;
-            margin-top: 5px;
-        }
+.progress {
+  background-color: #e9ecef;
+  z-index: -1;
+}
 
-        .applied-coupon {
-            background-color: #e8f5e9;
-            padding: 8px;
-            border-radius: 4px;
-            margin-top: 10px;
-            display: none;
-        }
-    </style>
+.modal-dialog {
+  margin: 1.75rem auto;
+}
+
+.table > :not(caption) > * > * {
+  padding: 0.75rem;
+}
+
+/* Status Badge Colors */
+.badge.pending { background-color: #6c757d; }
+.badge.processing { background-color: #ffc107; }
+.badge.shipped { background-color: #0dcaf0; }
+.badge.delivered { background-color: #198754; }
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .order-timeline {
+    padding: 1rem 0.5rem;
+  }
+  
+  .table > :not(caption) > * > * {
+    padding: 0.5rem;
+  }
+}
+   </style>
 </head>
 <body>
-
-      <!-------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+ 
+    <!-------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
  <%- include('./layout/NAV.ejs') %>
  <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-    <div class="checkout-container">
-        <div class="checkout-layout">
-            <!-- Left Section: Address -->
-            <div class="address-section bg-white p-4 checkout-card">
-                <h2 class="section-title mb-4">Shipping Address</h2>
-                
-                <!-- Address List -->
-                <div class="address-list">
-                    <% addresses.forEach((address, index) => { %>
-                        <div class="address-card border rounded p-3 mb-3">
-                            <div class="d-flex align-items-center">
-                                <div class="custom-radio <%= index === 0 ? 'selected' : '' %>"></div>
-                                <div class="address-details">
-                                    <p class="mb-2"><strong><%= address.name %></strong></p>
-                                    <p class="mb-2"><%= address.street %></p>
-                                    <p class="mb-2"><%= address.city %>, <%= address.state %></p>
-                                    <p class="mb-2"><%= address.pincode %></p>
-                                    <p class="mb-0">Phone: <%= address.phone %></p>
-                                </div>
-                            </div>
-                            <div class="address-actions mt-3">
-                                <button class="btn btn-outline-primary btn-sm me-2">Edit</button>
-                                <button class="btn btn-outline-danger btn-sm">Delete</button>
-                            </div>
-                        </div>
-                    <% }) %>
-                </div>
+  
 
-                <!-- Add New Address Button -->
-                <button class="btn btn-primary w-100 mt-3" data-bs-toggle="modal" data-bs-target="#addressModal">
-                    Add New Address
+  <div class="profile-session-container">
+    <div class="container-fluid">
+      <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <a href="/dashboard" class="w-100">
+            <button class="nav-button w-100">dashboard</button>
+          </a>
+          <a href="/order" class="w-100">
+            <button class="nav-button active w-100">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              Orders
+            </button>
+          </a>
+          <a href="/profile" class="w-100">
+            <button class="nav-button w-100">Update Profile</button>
+          </a>
+          <a href="/address" class="w-100">
+            <button class="nav-button w-100">My Address</button>
+          </a>
+          <a href="/wallet" class="w-100">
+            <button class="nav-button w-100">Wallet</button>
+          </a>
+          <a href="/logout" class="w-100">
+            <button class="nav-button w-100">Logout</button>
+          </a>
+        </div>
+
+        <!-- Main Content -->
+        <!-- Main Content -->
+<div class="main-content">
+  <h2 class="section-title">My Orders</h2>
+  
+  <!-- Order Status Filter -->
+  <div class="mb-4">
+    <select class="form-select w-auto">
+      <option value="all">All Orders</option>
+      <option value="pending">Pending</option>
+      <option value="processing">Processing</option>
+      <option value="shipped">Shipped</option>
+      <option value="delivered">Delivered</option>
+    </select>
+  </div>
+
+  <!-- Orders Table -->
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Date</th>
+          <th>Items</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (orders && orders.length > 0) { %>
+          <% orders.forEach(order => { %>
+            <tr>
+              <td>#<%= order.orderId %></td>
+              <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
+              <td><%= order.items.length %> items</td>
+              <td>₹<%= order.total %></td>
+              <td>
+                <span class="badge <%= order.status.toLowerCase() === 'delivered' ? 'bg-success' : 
+                                    order.status.toLowerCase() === 'shipped' ? 'bg-info' :
+                                    order.status.toLowerCase() === 'processing' ? 'bg-warning' : 'bg-secondary' %>">
+                  <%= order.status %>
+                </span>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-primary" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#orderModal<%= order.orderId %>">
+                  View Details
                 </button>
+              </td>
+            </tr>
 
-                <!-- Payment Methods -->
-                <div class="payment-section mt-4">
-                    <h3 class="section-title mb-3">Payment Method</h3>
-                    <div class="payment-options">
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="radio" name="payment" id="cod">
-                            <label class="form-check-label" for="cod">
-                                Cash on Delivery
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="payment" id="online">
-                            <label class="form-check-label" for="online">
-                                Online Payment
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Section: Order Summary -->
-            <div class="summary-section bg-white p-4 checkout-card">
-                <h2 class="section-title mb-4">Order Summary</h2>
-
-              
-                
-                
-                <!-- Price Details -->
-                <div class="price-details">
-                    <div class="d-flex justify-content-between mb-3">
-                        <span>Subtotal</span>
-                        <span>₹<%= subtotal %></span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-3">
-                        <span>Shipping</span>
-                        <span>₹<%= shipping %></span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-3">
-                        <span>Discount</span>
-                        <span class="text-success">-₹<%= discount %></span>
-                    </div>
-                    <hr>
-                    <div class="d-flex justify-content-between mb-3">
-                        <strong>Total</strong>
-                        <strong>₹<%= total %></strong>
-                    </div>
-                </div>
-
-                 <!-- Updated Coupon Section -->
-    <div class="coupon-section mb-4">
-        <h6 class="mb-3">Have a coupon?</h6>
-        <div class="input-group">
-            <input type="text" 
-                   class="form-control" 
-                   id="couponInput" 
-                   placeholder="Enter coupon code"
-                   pattern="[A-Za-z0-9]+"
-                   maxlength="10">
-            <button class="btn btn-success" id="applyCoupon">Apply</button>
-        </div>
-        <div id="couponError" class="coupon-error">
-            Invalid coupon code. Please try again.
-        </div>
-        <div id="couponSuccess" class="coupon-success">
-            Coupon applied successfully!
-        </div>
-        <div id="appliedCoupon" class="applied-coupon">
-            <div class="d-flex justify-content-between align-items-center">
-                <span id="appliedCouponCode"></span>
-                <button class="btn btn-sm btn-link text-danger p-0" id="removeCoupon">Remove</button>
-            </div>
-        </div>
-    </div>
-
-
-                <!-- Checkout Button -->
-                <button class="btn btn-primary w-100">Place Order</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Address Modal -->
-    <div class="modal fade" id="addressModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add New Address</h5>
+            <!-- Order Details Modal -->
+            <div class="modal fade" id="orderModal<%= order.orderId %>" tabindex="-1">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Order #<%= order.orderId %> Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="addressForm">
-                        <div class="mb-3">
-                            <label class="form-label">Full Name</label>
-                            <input type="text" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Phone Number</label>
-                            <input type="tel" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Street Address</label>
-                            <input type="text" class="form-control" required>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label class="form-label">City</label>
-                                <input type="text" class="form-control" required>
+                  </div>
+                  <div class="modal-body">
+                    <!-- Order Timeline -->
+                    <div class="order-timeline mb-4">
+                      <div class="d-flex justify-content-between position-relative">
+                        <% const states = ['Ordered', 'Processing', 'Shipped', 'Delivered']; %>
+                        <% const currentIndex = states.indexOf(order.status); %>
+                        
+                        <% states.forEach((state, index) => { %>
+                          <div class="text-center">
+                            <div class="rounded-circle <%= index <= currentIndex ? 'bg-success' : 'bg-secondary' %> text-white d-inline-flex align-items-center justify-content-center" 
+                                 style="width: 40px; height: 40px;">
+                              <i class="bi bi-check"></i>
                             </div>
-                            <div class="col">
-                                <label class="form-label">State</label>
-                                <input type="text" class="form-control" required>
+                            <div class="mt-2"><%= state %></div>
+                          </div>
+                          <% if (index < states.length - 1) { %>
+                            <div class="progress position-absolute" 
+                                 style="width: calc(100% - 80px); top: 20px; left: 40px; height: 2px;">
+                              <div class="progress-bar bg-success" 
+                                   style="width: <%= index < currentIndex ? '100%' : '0%' %>"></div>
                             </div>
+                          <% } %>
+                        <% }); %>
+                      </div>
+                    </div>
+
+                    <!-- Order Items -->
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% order.items.forEach(item => { %>
+                            <tr>
+                              <td><%= item.name %></td>
+                              <td><%= item.quantity %></td>
+                              <td>₹<%= item.price %></td>
+                              <td>₹<%= item.price * item.quantity %></td>
+                            </tr>
+                          <% }); %>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="card mt-3">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <h6>Shipping Address</h6>
+                            <p class="mb-0"><%= order.shippingAddress %></p>
+                          </div>
+                          <div class="col-md-6">
+                            <h6>Order Summary</h6>
+                            <div class="d-flex justify-content-between">
+                              <span>Subtotal:</span>
+                              <span>₹<%= order.subtotal %></span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                              <span>Shipping:</span>
+                              <span>₹<%= order.shipping %></span>
+                            </div>
+                            <div class="d-flex justify-content-between fw-bold mt-2">
+                              <span>Total:</span>
+                              <span>₹<%= order.total %></span>
+                            </div>
+                          </div>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Pincode</label>
-                            <input type="text" class="form-control" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Save Address</button>
-                    </form>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
-        </div>
+          <% }); %>
+        <% } else { %>
+          <tr>
+            <td colspan="6" class="text-center">No orders found</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+
+        <!---------------->
+      </div>
     </div>
-
-     <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-    <!------footer------->
-    <%- include('./layout/FOOTER.ejs') %>
-      <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-      
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Initialize custom radio buttons
-        document.querySelectorAll('.custom-radio').forEach(radio => {
-            radio.addEventListener('click', () => {
-                document.querySelectorAll('.custom-radio').forEach(r => r.classList.remove('selected'));
-                radio.classList.add('selected');
-            });
-        });
-
-        // Form validation
-        const addressForm = document.getElementById('addressForm');
-        addressForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            // Add your form submission logic here
-            $('#addressModal').modal('hide');
-        });
+  </div>
 
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const couponInput = document.getElementById('couponInput');
-            const applyCouponBtn = document.getElementById('applyCoupon');
-            const couponError = document.getElementById('couponError');
-            const couponSuccess = document.getElementById('couponSuccess');
-            const appliedCoupon = document.getElementById('appliedCoupon');
-            const appliedCouponCode = document.getElementById('appliedCouponCode');
-            const removeCouponBtn = document.getElementById('removeCoupon');
+   <!------footer------->
+   <%- include('./layout/FOOTER.ejs') %>
+   <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+   
 
-            applyCouponBtn.addEventListener('click', function() {
-                const couponCode = couponInput.value.trim();
-                
-                // Reset messages
-                couponError.style.display = 'none';
-                couponSuccess.style.display = 'none';
 
-                // Basic validation
-                if (couponCode === '') {
-                    couponError.textContent = 'Please enter a coupon code';
-                    couponError.style.display = 'block';
-                    return;
-                }
 
-                // Here you would typically validate the coupon code with your backend
-                // For demo purposes, we'll just simulate a successful application
-                couponSuccess.style.display = 'block';
-                appliedCoupon.style.display = 'block';
-                appliedCouponCode.textContent = couponCode;
-                
-                // Disable input and apply button
-                couponInput.disabled = true;
-                applyCouponBtn.disabled = true;
-            });
+  <!-- Bootstrap JS and Dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+  <script>
+    // Filter orders based on status
+document.querySelector('.form-select').addEventListener('change', function(e) {
+  const status = e.target.value;
+  const rows = document.querySelectorAll('tbody tr');
+  
+  rows.forEach(row => {
+    const statusCell = row.querySelector('td:nth-child(5)');
+    if (status === 'all' || statusCell.textContent.trim().toLowerCase() === status) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+});
 
-            removeCouponBtn.addEventListener('click', function() {
-                // Reset everything
-                couponInput.value = '';
-                couponInput.disabled = false;
-                applyCouponBtn.disabled = false;
-                couponSuccess.style.display = 'none';
-                appliedCoupon.style.display = 'none';
-            });
+// Initialize tooltips
+const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl);
+});
 
-            // Add input validation
-            couponInput.addEventListener('input', function(e) {
-                // Remove any characters that aren't letters or numbers
-                this.value = this.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
-            });
-        });
-    </script>
+// Handle modal data
+const orderModals = document.querySelectorAll('.modal');
+orderModals.forEach(modal => {
+  modal.addEventListener('show.bs.modal', function (event) {
+    // Add any dynamic modal content loading here if needed
+  });
+});
+  </script>
 </body>
 </html>
