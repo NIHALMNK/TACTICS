@@ -5,6 +5,7 @@ const logController = require('../controller/user/logontroller');
 const cartController = require('../controller/user/cartController');
 const checkoutController = require('../controller/user/checkoutController');
 const orderController = require('../controller/user/orderController');
+const forgotPasswordController=require('../controller/user/forgotPasswordController')
 const nocache = require('nocache');
 
 
@@ -116,6 +117,12 @@ router.get('/order/success/:orderId', checkoutController.loadPaymentSuccess);
 router.get('/order/success',checkoutController .loadPaymentSuccess);
 
 
+
+router.get('/forgot-password', forgotPasswordController.loadForgotPassword);
+router.post('/forgot-password/send-otp', forgotPasswordController.sendResetOTP);
+router.post('/forgot-password/verify-otp', forgotPasswordController.verifyResetOTP);
+router.post('/forgot-password/reset', forgotPasswordController.resetPassword);
+router.post('/forgot-password/resend-otp', forgotPasswordController.resendOTP);
 
 
 

@@ -3,94 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Success</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Forgot Password - Tactics</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <style>
-        .success-checkmark {
-            animation: scale-up 0.5s ease-in-out;
+        .forgot-password-container {
+            max-width: 500px;
+            margin: 2rem auto;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            background: white;
         }
-
-        .success-text {
-            animation: fade-in 1s ease-in;
+        .steps {
+            display: none;
         }
-
-        .action-buttons {
-            animation: slide-up 0.7s ease-out;
+        .steps.active {
+            display: block;
         }
-
-        @keyframes scale-up {
-            0% { transform: scale(0); }
-            70% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+        .otp-inputs {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0;
         }
-
-        @keyframes fade-in {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slide-up {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .btn-custom {
-            transition: transform 0.3s ease;
-        }
-
-        .btn-custom:hover {
-            transform: translateY(-3px);
-        }
-
-        @media (max-width: 768px) {
-            .success-container {
-                width: 90% !important;
-                padding: 1.5rem !important;
-            }
-            
-            .success-checkmark {
-                width: 80px !important;
-                height: 80px !important;
-            }
-
-            .btn-custom {
-                width: 100%;
-                margin: 0.5rem 0 !important;
-            }
+        .otp-inputs input {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 8px;
         }
     </style>
 </head>
-<body class="bg-light">
-    <div class="container min-vh-100 d-flex align-items-center justify-content-center">
-        <div class="success-container bg-white rounded-4 shadow-sm p-5 text-center" style="width: 600px">
-            <div class="success-checkmark mb-4">
-                <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="45" stroke="#28a745" stroke-width="8"/>
-                    <path d="M30 50L45 65L70 35" stroke="#28a745" stroke-width="8" stroke-linecap="round"/>
-                </svg>
-            </div>
-            
-            <div class="success-text">
-                <h2 class="mb-3">Payment Successful!</h2>
-                <p class="text-muted mb-4">Your transaction has been completed successfully. Thank you for your payment.</p>
+<body>
+    <%- include('./layout/NAV.ejs') %>
+
+    <div class="container">
+        <div class="forgot-password-container">
+            <!-- Email Step -->
+            <div class="steps active" id="emailStep">
+                <h2 class="text-center mb-4">Forgot Password</h2>
+                <p class="text-muted text-center">Enter your email address to receive a verification code</p>
                 
-                <div class="order-details mb-4">
-                    <p class="mb-1">Order ID: <%= orderId %></p>
-                    <p class="mb-1">Amount Paid: $<%= amount %></p>
-                </div>
+                <form id="emailForm">
+                    <div class="mb-3">
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Send Verification Code</button>
+                </form>
             </div>
 
-            <div class="action-buttons d-flex flex-wrap justify-content-center gap-3">
-                <a href="/" class="btn btn-primary btn-lg btn-custom px-4">
-                    Back to Home
-                </a>
-                <a href="/invoice/<%= orderId %>" class="btn btn-outline-primary btn-lg btn-custom px-4">
-                    Download Invoice
-                </a>
+            <!-- OTP Step -->
+            <div class="steps" id="otpStep">
+                <h2 class="text-center mb-4">Enter Verification Code</h2>
+                <p class="text-muted text-center">We've sent a code to your email</p>
+                
+                <form id="otpForm">
+                    <div class="otp-inputs">
+                        <input type="text" maxlength="1" required>
+                        <input type="text" maxlength="1" required>
+                        <input type="text" maxlength="1" required>
+                        <input type="text" maxlength="1" required>
+                        <input type="text" maxlength="1" required>
+                        <input type="text" maxlength="1" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Verify Code</button>
+                </form>
+            </div>
+
+            <!-- New Password Step -->
+            <div class="steps" id="passwordStep">
+                <h2 class="text-center mb-4">Create New Password</h2>
+                <p class="text-muted text-center">Enter your new password</p>
+                
+                <form id="passwordForm">
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="newPassword" 
+                               placeholder="New password" required minlength="8">
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="confirmPassword" 
+                               placeholder="Confirm password" required minlength="8">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Reset Password</button>
+                </form>
             </div>
         </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <%- include('./layout/FOOTER.ejs') %>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const emailForm = document.getElementById('emailForm');
+            const otpForm = document.getElementById('otpForm');
+            const passwordForm = document.getElementById('passwordForm');
+            
+            // Handle email submission
+            emailForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                try {
+                    const response = await fetch('/forgot-password/send-otp', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: emailForm.email.value })
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        showStep('otpStep');
+                    } else {
+                        alert(data.message);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                }
+            });
+            
+            // Handle OTP verification
+            otpForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const otp = Array.from(otpForm.querySelectorAll('input'))
+                    .map(input => input.value)
+                    .join('');
+                    
+                try {
+                    const response = await fetch('/forgot-password/verify-otp', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ otp })
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        showStep('passwordStep');
+                    } else {
+                        alert(data.message);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                }
+            });
+            
+            // Handle password reset
+            passwordForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (passwordForm.newPassword.value !== passwordForm.confirmPassword.value) {
+                    alert('Passwords do not match');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/forgot-password/reset', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ password: passwordForm.newPassword.value })
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        alert('Password reset successful!');
+                        window.location.href = '/login';
+                    } else {
+                        alert(data.message);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                }
+            });
+            
+            // Helper function to show steps
+            function showStep(stepId) {
+                document.querySelectorAll('.steps').forEach(step => {
+                    step.classList.remove('active');
+                });
+                document.getElementById(stepId).classList.add('active');
+            }
+            
+            // Handle OTP input
+            const otpInputs = otpForm.querySelectorAll('input');
+            otpInputs.forEach((input, index) => {
+                input.addEventListener('input', () => {
+                    if (input.value && index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                });
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !input.value && index > 0) {
+                        otpInputs[index - 1].focus();
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
