@@ -47,12 +47,32 @@
         </div>
 
         <!-- Main Content -->
-        <div class="main-content">
-          <h2 class="section-title">Dashboard</h2>
-          <p>
-            Welcome to your dashboard! Here you can manage your orders, profile, and more.
-          </p>
-        </div>
+<div class="container w-75 h-100 my-5 py-4 rounded shadow-lg bg-light">
+
+  <div class="dash">
+    <!-- Header Section -->
+    <div class="head1 text-center mb-4">
+      <h2 class="dashboard-title text-success fw-bold">Dashboard</h2>
+    </div>
+
+    <!-- Profile Overview Section -->
+    <div class="profile-overview mb-5">
+      <h3 class="section-title text-secondary border-bottom pb-2"><%= user.name %></h3>
+      <div class="profile-info mt-4">
+        <p class="mb-3"><strong>Name:</strong> <span class="text-dark"><%= user.name %></span></p>
+        <p class="mb-3"><strong>Email:</strong> <span class="text-dark"><%= user.email %></span></p>
+
+        <% if (user.phone) { %>
+        <p class="mb-3"><strong>Phone:</strong> <span class="text-dark"><%= user.phone %></span></p>
+        <% } else { %>
+        <p class="mb-3"><strong>Phone:</strong> <span class="text-muted">Not saved</span></p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
       </div>
     </div>
   </div>
