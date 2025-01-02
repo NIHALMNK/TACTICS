@@ -53,8 +53,8 @@ module.exports = {
            
             
             const totals = validItems.reduce((acc, item) => {
-                acc.subtotal += item.productId.offerPrice * item.quantity; //offer price*quantity
-                acc.mrp += item.productId.price * item.quantity;  // product price*quantity
+                acc.subtotal += item.productId.offerPrice * item.quantity; 
+                acc.mrp += item.productId.price * item.quantity;  
                 return acc;
             }, { subtotal: 0, mrp: 0 });
     

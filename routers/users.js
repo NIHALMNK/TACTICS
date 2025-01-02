@@ -3,6 +3,7 @@ const router = express.Router();
 const userController = require('../controller/user/userController');
 const logController = require('../controller/user/logontroller');
 const cartController = require('../controller/user/cartController');
+const checkoutController = require('../controller/user/checkoutController');
 const nocache = require('nocache');
 
 
@@ -80,7 +81,7 @@ router.post('/cart/remove', cartController.removeFromCart);
 router.post('/cart/update', cartController.updateQuantity);
 
 
-
+router.post('/checkout/load',checkoutController.loadCheckout);
 
 
 
