@@ -59,7 +59,7 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Coupon',
         default: null
-    }, // Coupon reference
+    }, 
 
     createdAt: {
         type: Date,
