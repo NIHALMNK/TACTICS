@@ -97,6 +97,9 @@ router.get('/profile', userController.loadProfile);
 router.put('/profile/update', userController.updateProfile);
 router.put('/profile/change-password', userController.updatePassword);
 
+
+
+
 // address routes
 router.get('/address', userController.loadAddress);
 router.post('/address/create', userController.createAddress);
@@ -104,6 +107,7 @@ router.put('/address/:addressId', userController.updateAddress);
 router.delete('/address/:addressId', userController.removeAddress);
 // wallet routes
 router.get('/wallet', userController.loadWallet);
+
 
 // cart routes
 router.get('/cart',cartController.LoadCart);

@@ -9,13 +9,11 @@ const orderController = {
       try {
         const userId = req.session.user.id;
 
-        console.log("userId====>"+userId);
         
         const orders = await Order.find({ userId })
         .populate('orderItems.productId')
           .sort({ createdAt: -1 });
 
-          console.log("orders++++++++++>"+orders.addressId);
           
   
         const formattedOrders = orders.map(order => {
@@ -42,7 +40,6 @@ const orderController = {
           const discount = totals.mrp - totals.subtotal;
           const total = totals.subtotal + shipping;
 
-          console.log("total=====> "+total);
           
   
           return {
@@ -85,7 +82,6 @@ const orderController = {
     getOrderDetails: async (req, res) => {
       try {
         const orderId = req.params.orderId;
-        console.log("orderId====>"+orderId);
         
         const order = await Order.findById(orderId)
           .populate('orderItems.productId')
@@ -194,7 +190,6 @@ const orderController = {
           });
         }
     
-        // Update product quantities back to stock
         for (const item of order.orderItems) {
           const product = await Product.findById(item.productId);
           if (product) {
@@ -203,7 +198,6 @@ const orderController = {
           }
         }
     
-        // Update order status to cancelled
         order.status = 'Cancelled';
         await order.save();
     
@@ -222,7 +216,6 @@ const orderController = {
   },
 };
 
-// Helper function to format address
 function formatAddress(addressObj) {
   if (!addressObj) return 'Address not available';
   return `${addressObj.house}, ${addressObj.street}, ${addressObj.city}, ${addressObj.state}, ${addressObj.pinCode}`;

@@ -71,6 +71,18 @@
             </div>
           </div>
 
+          <div class="mb-3">
+            <label for="phone" class="form-label profile-label">PHONE NUMBER</label>
+            <div class="profile-value-container">
+              <div class="profile-value" id="phoneValue"><%= user.phone || 'Not Set' %></div>
+              <button class="edit-btn" data-field="phone">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
          
           <% if (user.password) { %>
           <div class="mb-3">

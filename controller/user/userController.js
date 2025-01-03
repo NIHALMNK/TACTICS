@@ -186,99 +186,79 @@ module.exports = {
     }
   },
 
-  // Update user profile
   async updateProfile(req, res) {
     try {
-      const { name } = req.body;
+      const { name, phone } = req.body;
       const userId = req.session.user.id;
-      // console.log(req.session);
-
-
-
-      // Find the user by ID
+  
       const user = await User.findById(userId);
-      // console.log("the update page page"+req.session.user.name);
-
+  
       if (!user) {
-        return res.status(404).json({ message: "o1---->" + "User not found" });
+        return res.status(404).json({ message: "User not found" });
       }
-
-      // Update name if changed
+  
+      // Update name if provided
       if (name) {
         user.name = name;
       }
-
-
-      // Save the updated user
+  
+      // Update phone if provided
+      if (phone !== undefined) {
+        user.phone = phone;
+      }
+  
       await user.save();
-
+  
       // Update session user information
       req.session.user = {
         ...req.session.user,
         name: user.name,
-        email: user.email
+        phone: user.phone
       };
-
+  
       return res.status(200).json({
         message: "Profile updated successfully",
-        user: { name: user.name, email: user.email }
+        user: { name: user.name, email: user.email, phone: user.phone }
       });
     } catch (error) {
       console.error("Error updating profile:", error);
       res.status(500).json({ message: "Server error" });
     }
   },
-
-  // Update user password
   async updatePassword(req, res) {
     try {
       const { currentPassword, newPassword } = req.body;
-      const userId = req.session.user?.id;
-
-      if (!userId) {
-        return res.status(401).json({ message: "User not logged in or session expired" });
-      }
-
-
-
-      // Find the user by ID
+      const userId = req.session.user.id;
+  
       const user = await User.findById(userId);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-
-
-      // Verify the current password matches the stored password
-      const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
-      if (!isPasswordValid) {
+  
+      // Verify current password
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
         return res.status(400).json({ message: "Current password is incorrect" });
       }
-
-      // Validate the new password
-      if (newPassword.length < 8) {
-        return res.status(400).json({ message: "New password must be at least 8 characters long" });
-      }
-
-      // Hash the new password and save it
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-      user.password = hashedPassword;
+  
+      // Hash new password
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(newPassword, salt);
+  
       await user.save();
-
+  
       return res.status(200).json({ message: "Password updated successfully" });
     } catch (error) {
       console.error("Error updating password:", error);
-      res.status(500).json({ message: "Server error. Please try again later." });
+      res.status(500).json({ message: "Server error" });
     }
   },
-
-
   //====================================================>
 
   // Load Address Page
   async loadAddress(req, res) {
     try {
       const userId = req.session.user.id;
-      // console.log("the error is this -------->"+req.session.user);
 
       const user = await User.findById(userId);
 
