@@ -181,7 +181,15 @@
                         <tr>
                             <td><%= index + 1 %></td>
                             <td><%= order._id %></td>
-                            <td><%= order.userId.name %></td>
+                            <% if (order.userId.name) { %>
+                                <td><%= order.userId.name %></td>
+                             
+                            <% }else{ %>
+                                <td>NO user</td>
+
+                             <% } %>   
+
+
                             <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
                             <td>₹ <%= order.totalAmount.toFixed(2) %></td>
                             <td>
