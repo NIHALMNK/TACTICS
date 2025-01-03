@@ -6,6 +6,7 @@ const adminRouter = require('./routers/adminRouters/adminRouter.js');
 const CategoryRouter = require('./routers/adminRouters/CategoryRouter.js');
 const productRouter = require('./routers/adminRouters/ProductRouter.js');
 const UserManegementRouter = require('./routers/adminRouters/UserManegementRouter.js');
+const orderRouter=require('./routers/adminRouters/orderRouter.js')
 
 
 //=======user-routers============>
@@ -43,9 +44,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use((error, req, res, next)=>{
 
-})
 
 
 app.use(express.urlencoded({ extended: true }));
@@ -58,7 +57,13 @@ app.use(require('./middleware/ban'))
 
 
 app.use('/', userRouter);
-app.use('/admin', adminRouter,CategoryRouter,productRouter,UserManegementRouter);
+// app.use('/admin', adminRouter,CategoryRouter,productRouter,UserManegementRouter,orderRouter);
+// Replace the problematic line with individual router declarations
+app.use('/admin', adminRouter);
+app.use('/admin', CategoryRouter);
+app.use('/admin', productRouter);
+app.use('/admin', UserManegementRouter);
+app.use('/admin', orderRouter);
 
 
 

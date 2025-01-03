@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Order Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg-color: #2c3e50;
+            --container-bg-color: #34495e;
+            --text-color: #ecf0f1;
+            --hover-bg-color: #2f4a5a;
+            --modal-bg-color: #2c3e50;
+        }
+
+        body {
+            background-color: var(--primary-bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .table {
+            color: var(--text-color);
+        }
+
+        .table th, .table td {
+            padding: 15px;
+            vertical-align: middle;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .table thead th {
+            background-color: var(--container-bg-color);
+            border-bottom: none;
+        }
+
+        .table tbody tr {
+            background-color: var(--primary-bg-color);
+        }
+
+        .table tbody tr:hover {
+            background-color: var(--hover-bg-color);
+        }
+
+        .btn-view {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+        }
+
+        .btn-view:hover {
+            background-color: #2980b9;
+        }
+
+        /* Modal Styles */
+        .modal-content {
+            background-color: var(--modal-bg-color);
+            color: var(--text-color);
+        }
+
+        .modal-header {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-footer {
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.875rem;
+        }
+
+        .status-pending { background-color: #f1c40f; color: #2c3e50; }
+        .status-completed { background-color: #2ecc71; }
+        .status-cancelled { background-color: #e74c3c; }
+        .status-returned { background-color: #95a5a6; }
+        .status-shipping { background-color: #3498db; }
+
+
+        
+        .modal-content {
+            background-color: var(--modal-bg-color);
+            color: var(--text-color);
+        }
+
+        .modal-header {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-footer {
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-color);
+        }
+
+        .form-control:disabled {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-select {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-color);
+        }
+
+        .order-item {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .order-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            border-color: #3498db;
+        }
+
+        .btn-success {
+            background-color: #2ecc71;
+            border-color: #2ecc71;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            border-color: #e74c3c;
+        }
+
+        .btn-secondary {
+            background-color: #95a5a6;
+            border-color: #95a5a6;
+        }
+    </style>
+</head>
+<body>
+      <!-- Include Sidebar (similar to reference code) -->
+  <%- include('./layout/aside.ejs') %>
+    
+    <div class="main-content">
+        <h1 class="mb-4">Order Management</h1>
+        
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>INDEX</th>
+                        <th>ORDER NO</th>
+                        <th>USER NAME</th>
+                        <th>DATE</th>
+                        <th>PRICE</th>
+                        <th>PAYMENT STATUS</th>
+                        <th>STATUS</th>
+                        <th>PAYMENT MODE</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% orders.forEach((order, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= order._id %></td>
+                            <td><%= order.userId.name %></td>
+                            <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
+                            <td>₹ <%= order.totalAmount.toFixed(2) %></td>
+                            <td>
+                                <span class="status-badge status-<%= order.paymentStatus.toLowerCase() %>">
+                                    <%= order.paymentStatus %>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="status-badge status-<%= order.status.toLowerCase() %>">
+                                    <%= order.status %>
+                                </span>
+                            </td>
+                            <td><%= order.paymentMethod %></td>
+                            <td>
+                                <button class="btn-view" onclick="viewOrderDetails('<%= order._id %>')">View</button>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+ <!-- Modal for Viewing Order Details -->
+ <div class="modal fade" id="orderDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Order Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="orderForm">
+                    <div class="mb-3">
+                        <label for="orderNo" class="form-label">Order No</label>
+                        <input type="text" class="form-control" id="orderNo" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">User Name</label>
+                        <input type="text" class="form-control" id="userName" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Order Items</label>
+                        <div id="orderItemsContainer"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="shippingStatus" class="form-label">Shipping Status</label>
+                        <select class="form-select" id="shippingStatus">
+                            <option value="Pending">Pending</option>
+                            <option value="Shipping">Shipping</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Returned">Returned</option>
+                            <option value="Requested">Requested</option>
+                            <option value="Rejected">Rejected</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="paymentStatus" class="form-label">Payment Status</label>
+                        <select class="form-select" id="paymentStatus">
+                            <option value="Pending">Pending</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Failed">Failed</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="totalAmount" class="form-label">Total Amount</label>
+                        <input type="text" class="form-control" id="totalAmount" disabled>
+                    </div>
+                    <div class="return-request-section d-none" id="returnRequestSection">
+                        <div class="mb-3">
+                            <label for="reason" class="form-label">Return Reason</label>
+                            <textarea class="form-control" id="reason" rows="3" readonly></textarea>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <button type="button" class="btn btn-danger" id="rejectReturnBtn">Reject Return</button>
+                            <button type="button" class="btn btn-success" id="acceptReturnBtn">Accept Return</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="updateStatusBtn">Update Status</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+         async function viewOrderDetails(orderId) {
+            try {
+                const response = await fetch(`/admin/orders/${orderId}`);
+                if (!response.ok) throw new Error('Failed to fetch order details');
+                
+                const data = await response.json();
+                const order = data.order;
+
+                // Populate modal fields
+                document.getElementById('orderNo').value = order._id;
+                document.getElementById('userName').value = order.userId.name;
+                document.getElementById('shippingStatus').value = order.status;
+                document.getElementById('paymentStatus').value = order.paymentStatus;
+                document.getElementById('totalAmount').value = `₹${order.totalAmount.toFixed(2)}`;
+
+                // Generate order items HTML
+                const orderItemsContainer = document.getElementById('orderItemsContainer');
+                orderItemsContainer.innerHTML = order.orderItems.map(item => `
+                    <div class="order-item">
+                        <div class="d-flex align-items-center">
+                            <img src="${item.productId.images[0]}" alt="${item.productId.name}" class="me-3">
+                            <div>
+                                <h6 class="mb-1">${item.productId.name}</h6>
+                                <div>Quantity: ${item.quantity}</div>
+                                <div>Price: ₹${item.price.toFixed(2)}</div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Show/hide return request section based on status
+                const returnRequestSection = document.getElementById('returnRequestSection');
+                if (order.status === 'Requested') {
+                    returnRequestSection.classList.remove('d-none');
+                    document.getElementById('reason').value = order.returnReason || 'No reason provided';
+                } else {
+                    returnRequestSection.classList.add('d-none');
+                }
+
+                // Show modal
+                const modal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
+                modal.show();
+            } catch (error) {
+                console.error('Error fetching order details:', error);
+                alert('Failed to load order details');
+            }
+        }
+
+        // Handle status updates
+        document.getElementById('updateStatusBtn').addEventListener('click', async () => {
+            const orderId = document.getElementById('orderNo').value;
+            const shippingStatus = document.getElementById('shippingStatus').value;
+            const paymentStatus = document.getElementById('paymentStatus').value;
+
+            try {
+                // Update shipping status
+                await fetch('/admin/orders/status', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orderId, status: shippingStatus })
+                });
+
+                // Update payment status
+                await fetch('/admin/orders/payment-status', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orderId, paymentStatus })
+                });
+
+                // Reload page or update UI
+                window.location.reload();
+            } catch (error) {
+                console.error('Error updating order:', error);
+                alert('Failed to update order status');
+            }
+        });
+
+        // Handle return request actions
+        document.getElementById('acceptReturnBtn')?.addEventListener('click', async () => {
+            handleReturnRequest('approve');
+        });
+
+        document.getElementById('rejectReturnBtn')?.addEventListener('click', async () => {
+            handleReturnRequest('reject');
+        });
+
+        async function handleReturnRequest(action) {
+            const orderId = document.getElementById('orderNo').value;
+            const reason = document.getElementById('reason').value;
+
+            try {
+                const response = await fetch('/admin/orders/return-request', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orderId, action, refundReason: reason })
+                });
+
+                if (!response.ok) throw new Error('Failed to process return request');
+
+                window.location.reload();
+            } catch (error) {
+                console.error('Error handling return request:', error);
+                alert('Failed to process return request');
+            }
+        }
+    </script>
+</body>
+</html>
