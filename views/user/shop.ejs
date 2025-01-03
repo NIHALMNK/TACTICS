@@ -553,6 +553,130 @@ document.addEventListener('DOMContentLoaded', () => {
         loadMoreButton.style.display = 'none';
     }
 });
+
+
+
+
+
+
+
+
+
+async function updateFilters() {
+    try {
+        // Get current filter values
+        const sort = document.querySelector('input[name="sort"]:checked')
+            ?.parentElement?.textContent?.trim().toLowerCase() || 'default';
+        
+        const priceRange = document.querySelector('input[name="price"]:checked')
+            ?.parentElement?.textContent?.trim() || 'all';
+            
+        const nameRange = document.querySelector('input[name="NameRange"]:checked')
+            ?.parentElement?.textContent?.trim() || 'all';
+            
+        const search = document.querySelector('.search-input').value.trim();
+        
+        // Get category from URL if exists
+        const urlParams = new URLSearchParams(window.location.search);
+        const category = urlParams.get('category');
+
+        // Construct query parameters
+        const queryParams = new URLSearchParams({
+            sort,
+            priceRange,
+            nameRange,
+            search,
+            page: 1 
+        });
+
+        if (category) {
+            queryParams.append('category', category);
+        }
+
+        // Fetch filtered products
+        const response = await fetch(`/filter?${queryParams.toString()}`);
+        if (!response.ok) throw new Error('Filter request failed');
+        
+        const data = await response.json();
+
+        // Clear existing products
+        const productsContainer = document.querySelector('.row');
+        productsContainer.innerHTML = '';
+
+        // Render new products
+        if (data.products.length > 0) {
+            data.products.forEach(product => {
+                const productHTML = `
+                    <div class="col-md-3 mb-4 d-flex justify-content-center">
+                        <div class="product-card card">
+                            ${product.discount ? `<div class="discount-badge">${product.discount}% OFF</div>` : ''}
+                            
+                            <a href="/product-detail/${product._id}">
+                                <img src="${product.images[0]}" alt="${product.name}" class="product-image main-image">
+                                <img src="${product.images[1] || product.images[0]}" alt="${product.name} Back" class="product-image hover-image">
+                            </a>
+                            
+                            <div class="card-icons">
+                                <div class="card-icon wishlist-icon">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <div class="card-icon cart-icon">
+                                    <i class="fas fa-shopping-bag"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="product-details">
+                                <h5 class="card-title">${product.name}</h5>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-danger fw-bold">
+                                        $${(product.offerPrice || product.price).toFixed(2)}
+                                    </span>
+                                    
+                                    ${product.price ? `
+                                    <span class="text-muted text-decoration-line-through">
+                                        $${product.price.toFixed(2)}
+                                    </span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                productsContainer.insertAdjacentHTML('beforeend', productHTML);
+            });
+
+            // Update load more button
+            const loadMoreButton = document.querySelector('.button-load');
+            if (loadMoreButton) {
+                loadMoreButton.style.display = data.currentPage >= data.totalPages ? 'none' : 'block';
+                loadMoreButton.setAttribute('data-total-pages', data.totalPages);
+            }
+        } else {
+            productsContainer.innerHTML = '<div class="col-12"><p class="text-center">No products found.</p></div>';
+        }
+
+        // Reattach event listeners
+        attachEventListeners();
+
+    } catch (error) {
+        console.error('Error updating filters:', error);
+        alert('Error filtering products. Please try again.');
+    }
+}
+
+// Helper function to reattach event listeners
+function attachEventListeners() {
+    document.querySelectorAll('.wishlist-icon').forEach(icon => {
+        icon.addEventListener('click', function() {
+            this.classList.toggle('text-danger');
+        });
+    });
+
+    document.querySelectorAll('.cart-icon').forEach(icon => {
+        icon.addEventListener('click', function() {
+            alert('Added to cart!');
+        });
+    });
+}
 </script>
 
 

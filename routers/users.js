@@ -6,6 +6,7 @@ const cartController = require('../controller/user/cartController');
 const checkoutController = require('../controller/user/checkoutController');
 const orderController = require('../controller/user/orderController');
 const forgotPasswordController=require('../controller/user/forgotPasswordController')
+const filterController=require('../controller/user/filterController')
 const nocache = require('nocache');
 
 
@@ -35,6 +36,10 @@ router.get('/home',userController.loadHome);
 // In your router file
 router.get('/shop', userController.loadShop);
 router.get('/shop/products', userController.loadShop);
+
+//==================================================================================================
+router.get('/filter', filterController.filterProducts);
+//==================================================================================================
 
 
 // contacts routes
