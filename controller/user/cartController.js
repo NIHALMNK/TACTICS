@@ -15,7 +15,6 @@ module.exports = {
                 return res.redirect('/login');
             }
     
-            // Added 'images' to the selected fields
             const cart = await cartModel.findOne({ userId: userID })
                 .populate({
                     path: 'items.productId',
@@ -23,7 +22,6 @@ module.exports = {
                     select: 'offerPrice price name stockManagement images' // Added images field
                 });
     
-            // Handle empty cart case
             if (!cart || !Array.isArray(cart.items) || cart.items.length === 0) {
                 return res.render("user/cart", {
                     cart: { items: [] },
@@ -39,14 +37,12 @@ module.exports = {
                 });
             }
     
-            // Pagination
             const page = parseInt(req.query.page) || 1;
             const limit = 3;
             const offset = (page - 1) * limit;
             const totalItems = cart.items.length;
             const totalPages = Math.ceil(totalItems / limit);
     
-            // Filter out items where product might be null (deleted products)
             const validItems = cart.items.filter(item => item.productId != null);
             const paginatedItems = validItems.slice(offset, offset + limit);
     
@@ -58,7 +54,6 @@ module.exports = {
                 return acc;
             }, { subtotal: 0, mrp: 0 });
     
-            // Calculate shipping based on subtotal
             let shipping = 0;
             if (totals.subtotal > 0 && totals.subtotal <= 1000) {
                 shipping = 200;
@@ -71,7 +66,6 @@ module.exports = {
             const discount = totals.mrp - totals.subtotal;
             const total = totals.subtotal + shipping;
     
-            // Add error handling for missing images
             const itemsWithDefaultImage = paginatedItems.map(item => {
                 if (!item.productId.images || !item.productId.images.length) {
                     item.productId.images = ['']; 
@@ -148,7 +142,6 @@ module.exports = {
             
             let {id} = req.session.user;
             if(!id) {
-                // console.log("User not logged in");
                 return res.redirect('/login');
             }
 
@@ -174,7 +167,6 @@ module.exports = {
                 });
             }
     
-            // Save the cart
             await cart.save();
     
             res.status(200).json({ success: true, message: 'Item added to cart' });
@@ -205,7 +197,6 @@ async getStock(req, res) {
 
         
 
-        // Find the product by ID
         const product = await productModel.find({ _id: itemId });
         // console.log("product--------->", product);
         
@@ -214,7 +205,6 @@ async getStock(req, res) {
             return res.status(404).json({ success: false, message: 'Product not found' });
         }
 
-        // Find the stock for the specified size
         const sizeStock = product[0].stockManagement.find(stock => stock.size === size);
 
         // console.log("sizeStock--------->", sizeStock);
@@ -255,12 +245,10 @@ async getStock(req, res) {
                 });
             }
     
-            // First try to find by _id (since your productId seems to be cart item's _id)
             let itemIndex = cart.items.findIndex(item => 
                 item._id.toString() === productId && item.size === size
             );
     
-            // If not found by _id, try finding by productId
             if (itemIndex === -1) {
                 itemIndex = cart.items.findIndex(item => 
                     item.productId.toString() === productId && item.size === size
@@ -274,7 +262,6 @@ async getStock(req, res) {
                 });
             }
     
-            // Remove the item from the cart
             cart.items.splice(itemIndex, 1);
 
             await cart.save();
@@ -297,10 +284,8 @@ async getStock(req, res) {
     },
     
 //====================================>
-// Add this to your controller file
 async updateQuantity(req, res) {
     try {
-        // console.log("req.body of update products ===>",req.body);
         
         const { itemId, size, quantity } = req.body;
         const userId = req.session.user?.id;
@@ -319,7 +304,6 @@ async updateQuantity(req, res) {
             });
         }
 
-        // Find the cart
         const cart = await cartModel.findOne({ userId })
             .populate({
                 path: 'items.productId',
@@ -334,7 +318,6 @@ async updateQuantity(req, res) {
             });
         }
 
-        // Find the item in cart
         const cartItem = cart.items.find(item => 
             item._id.toString() === itemId && item.size === size
         );
@@ -346,7 +329,6 @@ async updateQuantity(req, res) {
             });
         }
 
-        // Check stock availability
         const product = await productModel.findById(cartItem.productId._id);
         // console.log("product of update---------> " + product);
         
@@ -364,20 +346,16 @@ async updateQuantity(req, res) {
             });
         }
 
-        // Update quantity
         cartItem.quantity = quantity;
 
 
-        // Save cart
         await cart.save();
 
-        // Calculate new totals
         const totals = cart.items.reduce((acc, item) => {
             acc.subtotal += item.productId.offerPrice * item.quantity;
             return acc;
         }, { subtotal: 0 });
 
-        // Calculate shipping
         let shipping = 0;
         if (totals.subtotal > 0 && totals.subtotal <= 1000) {
             shipping = 200;

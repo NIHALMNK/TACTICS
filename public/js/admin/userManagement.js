@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentPage = 1;
     let totalPages = 1;
 
-    // Fetch user data and render it dynamically
     async function fetchUserData(page = 1) {
         try {
             const response = await fetch(`/admin/api/userManagement?page=${page}`);
@@ -28,10 +27,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const paginationContainer = document.querySelector('.pagination');
         if (!paginationContainer) return;
 
-        // Clear existing pagination
         paginationContainer.innerHTML = '';
 
-        // Previous page button
         if (current > 1) {
             const prevLi = document.createElement('li');
             prevLi.className = 'page-item';
@@ -47,9 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
             paginationContainer.appendChild(prevLi);
         }
 
-        // Page number buttons
         for (let i = 1; i <= total; i++) {
-            // Only show first, last, and pages close to current page
             if (
                 i === 1 || 
                 i === total || 
@@ -70,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        // Next page button
         if (current < total) {
             const nextLi = document.createElement('li');
             nextLi.className = 'page-item';
@@ -87,12 +81,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Modified renderUserTable to match your existing implementation
     function renderUserTable(users) {
         const tableBody = document.querySelector('table tbody');
-        tableBody.innerHTML = ''; // Clear the table first
+        tableBody.innerHTML = ''; 
     
-        // Filter out admins from the user list
         const nonAdminUsers = users.filter(user => user.role !== 'admin');
     
         if (nonAdminUsers.length === 0) {
@@ -120,7 +112,6 @@ document.addEventListener('DOMContentLoaded', function () {
             tableBody.appendChild(row);
         });
     
-        // Reattach event listeners to the new buttons
         attachEventListeners();
     }
 
@@ -128,20 +119,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function attachEventListeners() {
         document.querySelectorAll('.btn-ban').forEach(button => {
-            button.removeEventListener('click', banUserHandler);  // Remove old listener to avoid duplicates
-            button.addEventListener('click', banUserHandler);  // Attach new listener
+            button.removeEventListener('click', banUserHandler);  
+            button.addEventListener('click', banUserHandler);  
         });
 
         document.querySelectorAll('.btn-view').forEach(button => {
-            button.removeEventListener('click', viewUserDetailsHandler);  // Remove old listener to avoid duplicates
-            button.addEventListener('click', viewUserDetailsHandler);  // Attach new listener
+            button.removeEventListener('click', viewUserDetailsHandler);  
+            button.addEventListener('click', viewUserDetailsHandler);  
         });
     }
 
     async function banUserHandler() {
-        const email = this.getAttribute('data-id'); // Get the user's email from the data-id attribute
+        const email = this.getAttribute('data-id'); 
     
-        // Display the SweetAlert confirmation dialog
         const result = await Swal.fire({
             title: 'Are you sure?',
             text: ' Are you sure you want to',
@@ -152,7 +142,6 @@ document.addEventListener('DOMContentLoaded', function () {
             reverseButtons: true
         });
     
-        // Check if the user confirmed the action
         if (result.isConfirmed) {
             try {
                 const response = await fetch(`/admin/userManagement/ban?email=${email}`, {
@@ -162,7 +151,6 @@ document.addEventListener('DOMContentLoaded', function () {
     
                 const result = await response.json();
     
-                // SweetAlert for success notification
                 Swal.fire({
                     title: 'Success!',
                     text: result.message,
@@ -170,7 +158,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     confirmButtonText: 'OK'
                 });
     
-                // Update button text and styles
                 if (result.isDeleted) {
                     this.textContent = 'Unban';
                     this.classList.remove('btn-danger');
@@ -184,7 +171,6 @@ document.addEventListener('DOMContentLoaded', function () {
             } catch (error) {
                 console.error('Error toggling ban status:', error.message);
     
-                // SweetAlert for error notification
                 Swal.fire({
                     title: 'Error!',
                     text: `Failed to toggle ban status: ${error.message}`,
@@ -196,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
     async function viewUserDetailsHandler() {
-        const email = this.getAttribute('data-id');  // Get the user's email from the data-id attribute
+        const email = this.getAttribute('data-id');  
         try {
             const response = await fetch(`/admin/userManagement/view?email=${email}`, {
                 method: 'GET',
@@ -204,7 +190,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             const userDetails = await response.json();
     
-            // Display user details
             document.querySelector('.userInfoView').innerHTML = `
                 <h4>User Details</h4>
                 <p><strong>Username:</strong> ${userDetails.username}</p>
@@ -216,7 +201,6 @@ document.addEventListener('DOMContentLoaded', function () {
         } catch (error) {
             // console.log('Error fetching user details:', error);
             
-            // SweetAlert for error notification
             Swal.fire({
                 title: 'Error!',
                 text: 'Failed to retrieve user details.',
@@ -227,6 +211,5 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
 
-    // Initial load
     fetchUserData();
 });

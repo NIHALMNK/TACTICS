@@ -206,7 +206,7 @@
        <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // DOM Elements
+
 const filterToggleBtn = document.getElementById('filter-toggle-btn');
 const filterContainer = document.querySelector('.filter-container');
 const colorCircles = document.querySelectorAll('.color-circle');
@@ -214,8 +214,8 @@ const tags = document.querySelectorAll('.tag');
 const searchInput = document.querySelector('.search-input');
 const sortRadios = document.querySelectorAll('input[name="sort"]');
 const priceRadios = document.querySelectorAll('input[name="price"]');
+const nameRadios=document.querySelectorAll('input[name="NameRange"]')
 
-// State management
 let activeFilters = {
 sort: 'default',
 price: 'all',
@@ -224,18 +224,17 @@ tags: [],
 search: ''
 };
 
-// Toggle filter container
+
 filterToggleBtn.addEventListener('click', () => {
 filterContainer.classList.toggle('active');
 });
 
-// Color selection
 colorCircles.forEach(circle => {
 circle.addEventListener('click', () => {
-    // Toggle selected state
+   
     circle.classList.toggle('selected');
     
-    // Update colors in activeFilters
+   
     const color = circle.title.toLowerCase();
     if (circle.classList.contains('selected')) {
         activeFilters.colors.push(color);
@@ -247,13 +246,13 @@ circle.addEventListener('click', () => {
 });
 });
 
-// Tag selection
+
 tags.forEach(tag => {
 tag.addEventListener('click', () => {
-    // Toggle active state
+   
     tag.classList.toggle('active');
     
-    // Update tags in activeFilters
+   
     const tagText = tag.textContent.toLowerCase();
     if (tag.classList.contains('active')) {
         activeFilters.tags.push(tagText);
@@ -265,20 +264,19 @@ tag.addEventListener('click', () => {
 });
 });
 
-// Search functionality
 let searchTimeout;
 searchInput.addEventListener('input', (e) => {
-// Clear previous timeout
+
 clearTimeout(searchTimeout);
 
-// Set new timeout for search (debouncing)
+
 searchTimeout = setTimeout(() => {
     activeFilters.search = e.target.value.toLowerCase().trim();
     updateFilters();
 }, 300);
 });
 
-// Sort radio buttons
+
 sortRadios.forEach(radio => {
 radio.addEventListener('change', (e) => {
     activeFilters.sort = e.target.parentElement.textContent.trim().toLowerCase();
@@ -286,7 +284,7 @@ radio.addEventListener('change', (e) => {
 });
 });
 
-// Price range radio buttons
+
 priceRadios.forEach(radio => {
 radio.addEventListener('change', (e) => {
     activeFilters.price = e.target.parentElement.textContent.trim().toLowerCase();
@@ -294,22 +292,28 @@ radio.addEventListener('change', (e) => {
 });
 });
 
-// Handle filter updates
+nameRadios.forEach(radio => {
+radio.addEventListener('change', (e) => {
+    activeFilters.price = e.target.parentElement.textContent.trim().toLowerCase();
+    updateFilters();
+});
+});
+
+
 function updateFilters() {
-// Store filters in localStorage for persistence
+
 localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
 
-// Dispatch custom event for filter changes
+
 const filterEvent = new CustomEvent('filterUpdate', {
     detail: { filters: activeFilters }
 });
 document.dispatchEvent(filterEvent);
 
-// Log current filters (for demonstration)
-// console.log('Active Filters:', activeFilters);
+
 }
 
-// Handle outside clicks to close filter container
+
 document.addEventListener('click', (e) => {
 const isClickInside = filterContainer.contains(e.target) || 
                      filterToggleBtn.contains(e.target);
@@ -319,21 +323,20 @@ if (!isClickInside && filterContainer.classList.contains('active')) {
 }
 });
 
-// Initialize filters from localStorage if available
+
 function initializeFilters() {
 const savedFilters = localStorage.getItem('activeFilters');
 if (savedFilters) {
     const parsedFilters = JSON.parse(savedFilters);
     activeFilters = { ...activeFilters, ...parsedFilters };
     
-    // Restore UI state
+
     restoreUIState();
 }
 }
 
-// Restore UI state from activeFilters
 function restoreUIState() {
-// Restore colors
+
 colorCircles.forEach(circle => {
     const color = circle.title.toLowerCase();
     if (activeFilters.colors.includes(color)) {
@@ -341,7 +344,7 @@ colorCircles.forEach(circle => {
     }
 });
 
-// Restore tags
+
 tags.forEach(tag => {
     const tagText = tag.textContent.toLowerCase();
     if (activeFilters.tags.includes(tagText)) {
@@ -349,29 +352,29 @@ tags.forEach(tag => {
     }
 });
 
-// Restore sort selection
+
 sortRadios.forEach(radio => {
     if (radio.parentElement.textContent.trim().toLowerCase() === activeFilters.sort) {
         radio.checked = true;
     }
 });
 
-// Restore price selection
+
 priceRadios.forEach(radio => {
     if (radio.parentElement.textContent.trim().toLowerCase() === activeFilters.price) {
         radio.checked = true;
     }
 });
 
-// Restore search
+
 if (activeFilters.search) {
     searchInput.value = activeFilters.search;
 }
 }
 
-// Clear all filters
+
 function clearFilters() {
-// Reset state
+
 activeFilters = {
     sort: 'default',
     price: 'all',
@@ -380,33 +383,33 @@ activeFilters = {
     search: ''
 };
 
-// Reset UI
+
 colorCircles.forEach(circle => circle.classList.remove('selected'));
 tags.forEach(tag => tag.classList.remove('active'));
-sortRadios[0].checked = true; // Select default sort
-priceRadios[0].checked = true; // Select all prices
+sortRadios[0].checked = true; 
+priceRadios[0].checked = true;
 searchInput.value = '';
 
-// Update filters
+
 updateFilters();
 }
 
-// Add clear filters button functionality
+
 const clearFiltersBtn = document.createElement('button');
 clearFiltersBtn.className = 'btn';
 clearFiltersBtn.textContent = 'Clear Filters';
 clearFiltersBtn.addEventListener('click', clearFilters);
 filterContainer.querySelector('.filter-grid').appendChild(clearFiltersBtn);
 
-// Initialize filters on page load
+
 document.addEventListener('DOMContentLoaded', initializeFilters);
 
-// Handle responsive behavior
+
 function handleResponsive() {
 const isMobile = window.innerWidth <= 768;
 
 if (isMobile) {
-    // Close filter container when selecting on mobile
+  
     filterContainer.addEventListener('click', (e) => {
         if (e.target.matches('input[type="radio"], .tag, .color-circle')) {
             setTimeout(() => {
@@ -417,7 +420,7 @@ if (isMobile) {
 }
 }
 
-// Initialize responsive behavior
+
 handleResponsive();
 window.addEventListener('resize', handleResponsive);
 
@@ -435,7 +438,7 @@ document.querySelectorAll('.wishlist-icon').forEach(icon => {
         });
 
 //--------------------lode more-->
-// Load More Products Functionality
+
 document.addEventListener('DOMContentLoaded', () => {
     const productsContainer = document.querySelector('.row');
     const loadMoreButton = document.querySelector('.button-load');
@@ -487,7 +490,7 @@ document.addEventListener('DOMContentLoaded', () => {
             productsContainer.appendChild(productColumn);
         });
 
-        // Re-attach event listeners for new wishlist and cart icons
+        
         productsContainer.querySelectorAll('.wishlist-icon').forEach(icon => {
             icon.addEventListener('click', function() {
                 this.classList.toggle('text-danger');
@@ -501,14 +504,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Fetch more products
+  
     async function loadMoreProducts() {
-        // Disable button during loading
+       
         loadMoreButton.disabled = true;
         loadMoreButton.querySelector('.button-content').textContent = 'Loading...';
 
         try {
-            // Construct URL with pagination and category
+           
             const url = `/shop/products?page=${currentPage + 1}${categoryName ? `&category=${categoryName}` : ''}`;
             
             const response = await fetch(url);
@@ -519,18 +522,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
             
-            // Render new products
+           
             renderProducts(data.products);
             
-            // Update current page
+            
             currentPage = data.currentPage;
             totalPages = data.totalPages;
 
-            // Restore button text
+           
             loadMoreButton.querySelector('.button-content').textContent = 'Load more...';
             loadMoreButton.disabled = false;
 
-            // Hide load more button if no more pages
+            
             if (currentPage >= totalPages) {
                 loadMoreButton.style.display = 'none';
             }
@@ -538,17 +541,17 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Error loading more products:', error);
             
-            // Restore button and hide it
+           
             loadMoreButton.querySelector('.button-content').textContent = 'Load more...';
             loadMoreButton.disabled = false;
             loadMoreButton.style.display = 'none';
         }
     }
 
-    // Add event listener to load more button
+    
     loadMoreButton.addEventListener('click', loadMoreProducts);
 
-    // Initially hide load more button if only one page
+    
     if (totalPages <= 1) {
         loadMoreButton.style.display = 'none';
     }
@@ -564,7 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function updateFilters() {
     try {
-        // Get current filter values
+     
         const sort = document.querySelector('input[name="sort"]:checked')
             ?.parentElement?.textContent?.trim().toLowerCase() || 'default';
         
@@ -575,12 +578,13 @@ async function updateFilters() {
             ?.parentElement?.textContent?.trim() || 'all';
             
         const search = document.querySelector('.search-input').value.trim();
+        console.log(nameRange);
         
-        // Get category from URL if exists
+      
         const urlParams = new URLSearchParams(window.location.search);
         const category = urlParams.get('category');
 
-        // Construct query parameters
+       
         const queryParams = new URLSearchParams({
             sort,
             priceRange,
@@ -593,17 +597,17 @@ async function updateFilters() {
             queryParams.append('category', category);
         }
 
-        // Fetch filtered products
+       
         const response = await fetch(`/filter?${queryParams.toString()}`);
         if (!response.ok) throw new Error('Filter request failed');
         
         const data = await response.json();
 
-        // Clear existing products
+       
         const productsContainer = document.querySelector('.row');
         productsContainer.innerHTML = '';
 
-        // Render new products
+        
         if (data.products.length > 0) {
             data.products.forEach(product => {
                 const productHTML = `
@@ -644,7 +648,7 @@ async function updateFilters() {
                 productsContainer.insertAdjacentHTML('beforeend', productHTML);
             });
 
-            // Update load more button
+            
             const loadMoreButton = document.querySelector('.button-load');
             if (loadMoreButton) {
                 loadMoreButton.style.display = data.currentPage >= data.totalPages ? 'none' : 'block';
@@ -654,7 +658,7 @@ async function updateFilters() {
             productsContainer.innerHTML = '<div class="col-12"><p class="text-center">No products found.</p></div>';
         }
 
-        // Reattach event listeners
+        
         attachEventListeners();
 
     } catch (error) {
@@ -663,7 +667,7 @@ async function updateFilters() {
     }
 }
 
-// Helper function to reattach event listeners
+
 function attachEventListeners() {
     document.querySelectorAll('.wishlist-icon').forEach(icon => {
         icon.addEventListener('click', function() {

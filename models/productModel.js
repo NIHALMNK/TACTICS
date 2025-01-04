@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// Subschema for stock management
+
 const stockSchema = new mongoose.Schema({
     size: {
         type: String,
@@ -15,7 +15,6 @@ const stockSchema = new mongoose.Schema({
     }
 });
 
-// Main schema for product
 const productSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -106,7 +105,7 @@ const productSchema = new mongoose.Schema({
     }
 });
 
-// Pre-save middleware to update the `updatedAt` field
+
 productSchema.pre('save', function (next) {
     this.updatedAt = Date.now();
     next();

@@ -12,12 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let passwordChanged = false;
   let phoneChanged = false;
 
-  // Edit button functionality
   editButtons.forEach(button => {
     button.addEventListener('click', (e) => {
       const field = e.currentTarget.dataset.field;
 
-      // Handle password field separately
       if (field === 'password') {
         passwordModal.classList.add('show');
         return;
@@ -29,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const currentValue = valueElement.textContent;
       const inputValue = currentValue === 'Not Set' ? '' : currentValue;
 
-      // Create input field
       valueElement.outerHTML = `
         <input 
           type="${field === 'phone' ? 'tel' : 'text'}"
@@ -44,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const inputElement = document.getElementById(`${field}Value`);
       inputElement.focus();
 
-      // Add event listeners for saving
       inputElement.addEventListener('blur', () => saveEdit(field, currentValue));
       inputElement.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') saveEdit(field, currentValue);
@@ -56,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputElement = document.getElementById(`${field}Value`);
     const newValue = inputElement.value.trim();
 
-    // Don't update if value hasn't changed
     if (newValue === oldValue) {
       inputElement.outerHTML = `
         <div class="profile-value" id="${field}Value">${oldValue}</div>
@@ -64,20 +59,16 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Validate input
     if (validateInput(field, newValue)) {
-      // For phone field, handle empty value
       const displayValue = field === 'phone' && !newValue ? 'Not Set' : newValue;
       
       inputElement.outerHTML = `
         <div class="profile-value" id="${field}Value">${displayValue}</div>
       `;
 
-      // Set changed flags
       if (field === 'name') nameChanged = true;
       if (field === 'phone') phoneChanged = true;
     } else {
-      // Revert to old value if validation fails
       inputElement.outerHTML = `
         <div class="profile-value" id="${field}Value">${oldValue}</div>
       `;
@@ -106,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return true;
 
       case 'phone':
-        if (value === '') return true; // Allow empty for "Not Set"
+        if (value === '') return true; 
         if (!phonePattern.test(value)) {
           Swal.fire({
             icon: 'error',
@@ -122,7 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Password Modal Functionality
   updatePasswordBtn.addEventListener('click', () => {
     const currentPassword = document.getElementById('currentPassword');
     const newPassword = document.getElementById('newPassword');
@@ -196,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Cancel Password Modal
   cancelPasswordBtn.addEventListener('click', () => {
     passwordModal.classList.remove('show');
     ['currentPassword', 'newPassword', 'confirmPassword'].forEach(id => {
@@ -205,7 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Save Profile Changes
   doneButton.addEventListener('click', () => {
     const updatedName = document.getElementById('nameValue').textContent;
     const updatedPhone = document.getElementById('phoneValue').textContent;

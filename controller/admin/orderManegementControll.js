@@ -1,5 +1,5 @@
 const order = require('../../models/orderModel')
-// const user = require('../../models/userRegister')
+
 const product = require('../../models/productModel')
 
 module.exports = {
@@ -7,21 +7,21 @@ module.exports = {
     async loadOrder(req, res) {
         try {
             const page = parseInt(req.query.page) || 1
-            const limit = 8 // Items per page
+            const limit = 8 
             const skip = (page - 1) * limit
 
-            // Get total count for pagination
+          
             const totalOrders = await order.countDocuments()
             const totalPages = Math.ceil(totalOrders / limit)
 
-            // Fetch orders with pagination and populate necessary fields
+            
             const orders = await order.find()
-                .populate('userId', 'name email') // Only get name and email from user
+                .populate('userId', 'name email') 
                 .populate({
                     path: 'orderItems.productId',
-                    select: 'name price images' // Select specific fields from product
+                    select: 'name price images' 
                 })
-                .sort({ createdAt: -1 }) // Sort by newest first
+                .sort({ createdAt: -1 }) 
                 .skip(skip)
                 .limit(limit)
 
@@ -39,7 +39,7 @@ module.exports = {
         }
     },
 
-    // Get single order details for modal
+   
     async getOrderDetails(req, res) {
         try {
             const orderId = req.params.id
@@ -70,7 +70,7 @@ module.exports = {
         }
     },
 
-    // Update order status
+   
     async updateOrderStatus(req, res) {
         try {
             const { orderId, status } = req.body
@@ -110,7 +110,7 @@ module.exports = {
         }
     },
 
-    // Update payment status
+   
     async updatePaymentStatus(req, res) {
         try {
             const { orderId, paymentStatus } = req.body
@@ -150,7 +150,6 @@ module.exports = {
         }
     },
 
-    // Handle order return requests
     async handleReturnRequest(req, res) {
         try {
             const { orderId, action, refundReason } = req.body
@@ -171,7 +170,7 @@ module.exports = {
                 })
             }
 
-            // Update order based on action
+           
             const status = action === 'approve' ? 'Returned' : 'Rejected'
             orderToUpdate.status = status
             if (refundReason) {
@@ -193,7 +192,7 @@ module.exports = {
         }
     },
 
-    // Search orders
+   
     async searchOrders(req, res) {
         try {
             const { query } = req.query

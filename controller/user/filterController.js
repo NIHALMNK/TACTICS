@@ -1,4 +1,3 @@
-// controllers/filterController.js
 const productModel = require('../../models/productModel');
 const categoryModel = require('../../models/categoryModel');
 
@@ -17,15 +16,15 @@ const filterController = {
             const limit = 8;
             const skip = (page - 1) * limit;
 
-            // Base query
+           
             let query = { isDeleted: false };
 
-            // Search filter
+            
             if (search) {
                 query.name = { $regex: search, $options: 'i' };
             }
 
-            // Category filter
+           
             if (category) {
                 const categoryDoc = await categoryModel.findOne({
                     name: category,
@@ -36,7 +35,7 @@ const filterController = {
                 }
             }
 
-            // Price range filter
+            
             if (priceRange && priceRange !== 'all') {
                 const priceRanges = {
                     '$0.00 - $50.00': { $gte: 0, $lte: 50 },
@@ -51,7 +50,6 @@ const filterController = {
                 }
             }
 
-            // Sort configuration
             let sortConfig = {};
             switch (sort) {
                 case 'popularity':
@@ -70,10 +68,10 @@ const filterController = {
                     sortConfig = { price: -1 };
                     break;
                 default:
-                    sortConfig = { createdAt: -1 }; // Default sort
+                    sortConfig = { createdAt: -1 }; 
             }
 
-            // Name range sort
+          
             if (nameRange) {
                 switch (nameRange.toLowerCase()) {
                     case 'a-z':
@@ -85,11 +83,12 @@ const filterController = {
                 }
             }
 
-            // Count total products for pagination
+            
             const totalProducts = await productModel.countDocuments(query);
             const totalPages = Math.ceil(totalProducts / limit);
 
-            // Fetch filtered products
+            
+          
             const products = await productModel
                 .find(query)
                 .populate('category')
@@ -97,7 +96,7 @@ const filterController = {
                 .skip(skip)
                 .limit(limit);
 
-            // Get all categories for the filter UI
+         
             const categories = await categoryModel.find({ isDeleted: false });
 
             const response = {

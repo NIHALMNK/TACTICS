@@ -12,7 +12,7 @@ const nocache = require('nocache');
 
 
 
-// Registration routes
+
 router.get('/register', logController.loadRegister);
 router.post('/register/check-user', logController.checkUser);
 router.post('/register/resendOtp', logController.resendOTP);
@@ -33,7 +33,6 @@ router.get('/logout', logController.logout);
 router.get('/home',userController.loadHome);
 
 //shop routes
-// In your router file
 router.get('/shop', userController.loadShop);
 router.get('/shop/products', userController.loadShop);
 
@@ -71,14 +70,10 @@ router.get('/dashboard', userController.loadDashboard);
 
 
 //orders routes
-// View all orders
 router.get('/order', orderController.loadOrders);
 
-// Get specific order details
 router.get('/order/:orderId', orderController.getOrderDetails);
 
-// Cancel order
-// router.post('/order/:orderId/cancel', orderController.cancelOrder);
 
 // Request return
 router.post('/order/:orderId/return', orderController.requestReturn);

@@ -25,7 +25,6 @@ document.querySelectorAll('.unlist').forEach(button => {
 
                 if (data.success) {
                     Swal.fire('Unlinked!', 'The category has been unlinked.', 'success');
-                    // Reload current page with search params preserved
                     window.location.reload(); 
                 } else {
                     Swal.fire('Error', data.message || 'Error unlinking category.', 'error');
@@ -38,7 +37,6 @@ document.querySelectorAll('.unlist').forEach(button => {
     });
 });
 
-// Navigation buttons
 document.getElementById('btn-add-cat').addEventListener('click', () => {
     window.location.href = '/admin/category/add'; 
 });
@@ -47,7 +45,6 @@ document.getElementById('btn-del-cat').addEventListener('click', () => {
     window.location.href = '/admin/category/del'; 
 });
 
-// Real-time search with pagination support
 const searchInput = document.querySelector('.search-box input');
 searchInput.addEventListener('input', function () {
     const searchTerm = searchInput.value.toLowerCase();
@@ -64,7 +61,6 @@ searchInput.addEventListener('input', function () {
         }
     });
 
-    // Hide pagination if search results are empty
     const paginationContainer = document.querySelector('.pagination-container');
     if (paginationContainer) {
         paginationContainer.style.display = visibleRowCount > 0 ? 'block' : 'none';

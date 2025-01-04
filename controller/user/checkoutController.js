@@ -8,13 +8,11 @@ module.exports = {
         try {
             const userId = req.session.user.id;
             
-            // Fetch user data with addresses
             const userData = await User.findById(userId);
             if (!userData) {
                 return res.status(404).redirect('/login');
             }
 
-            // Fetch cart data with product details
             const cart = await cartModel.findOne({ userId })
                 .populate({
                     path: 'items.productId',
@@ -26,17 +24,14 @@ module.exports = {
                 return res.redirect('/cart');
             }
 
-            // Filter out items where product might be null (deleted products)
             const validItems = cart.items.filter(item => item.productId != null);
 
-            // Calculate totals using the same logic as cart page
             const totals = validItems.reduce((acc, item) => {
                 acc.subtotal += item.productId.offerPrice * item.quantity;
                 acc.mrp += item.productId.price * item.quantity;
                 return acc;
             }, { subtotal: 0, mrp: 0 });
 
-            // Calculate shipping based on subtotal (matching cart page logic)
             let shipping = 0;
             if (totals.subtotal > 0 && totals.subtotal <= 1000) {
                 shipping = 200;
@@ -46,15 +41,12 @@ module.exports = {
                 shipping = 100;
             }
 
-            // Calculate discount (MRP - Offer Price total)
             const discount = totals.mrp - totals.subtotal;
 
-            // Calculate final total
             const total = totals.subtotal + shipping;
 
             // console.log("address id -----------> "+userData.address[0].id);
 
-            // Format addresses for display
             const addresses = userData.address.map(addr => ({
                 id: addr.id,
                 name: userData.name,
@@ -73,7 +65,6 @@ module.exports = {
             console.log("address -----------> "+addresses);
             
 
-            // Add error handling for missing images
             const itemsWithDefaultImage = validItems.map(item => {
                 if (!item.productId.images || !item.productId.images.length) {
                     item.productId.images = [''];
@@ -81,7 +72,6 @@ module.exports = {
                 return item;
             });
 
-            // Render checkout page with all necessary data
             res.render('user/checkout', {
                 addresses,
                 cartItems: itemsWithDefaultImage,
@@ -117,7 +107,6 @@ module.exports = {
             console.log("selectedPayment:", selectedPayment);
             console.log("userId:", userId);
     
-            // Retrieve the cart for the logged-in user
             const cart = await cartModel.findOne({ userId })
                 .populate({
                     path: 'items.productId',
@@ -129,10 +118,8 @@ module.exports = {
                 return res.redirect('/cart');
             }
     
-            // Filter out invalid or deleted products
             const validItems = cart.items.filter(item => item.productId && item.productId.stockManagement.length > 0);
     
-            // Calculate order totals
             const totals = validItems.reduce((acc, item) => {
                 const productStock = item.productId.stockManagement.find(stock => stock.size === item.size);
                 if (!productStock || productStock.quantity < item.quantity) {
@@ -156,10 +143,7 @@ module.exports = {
             const discount = totals.mrp - totals.subtotal;
             const total = totals.subtotal + shipping;
     
-            // Deduct stock
-           
-    
-            // Create the order
+            
             const newOrder = await orderModel.create({
                 userId,
                 addressId: addressid,
@@ -173,7 +157,6 @@ module.exports = {
                 paymentStatus: selectedPayment === 'Cash on Delivery' ? 'Pending' : 'Completed',
             });
     
-            // Clear the cart
             cart.items = [];
             await cart.save();
 

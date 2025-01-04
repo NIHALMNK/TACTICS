@@ -1,15 +1,12 @@
-// Form submission handler
 document.getElementById("productForm").addEventListener("submit", async function (event) {
   event.preventDefault();
 
-  // Clear previous error messages
   const errorMessages = document.querySelectorAll(".error-message");
   errorMessages.forEach((msg) => msg.remove());
 
   const productId = document.getElementById("productId").value;
   const formData = new FormData();
   
-  // Add all form data
   formData.append("productName", document.getElementById("productName").value);
   formData.append("productPrice", document.getElementById("productPrice").value);
   formData.append("productOfferPrice", document.getElementById("offerPrice").value || document.getElementById("productPrice").value);
@@ -22,7 +19,6 @@ document.getElementById("productForm").addEventListener("submit", async function
   formData.append("productType", document.getElementById("productType").value);
   formData.append("productStockManagement", document.getElementById("productStockManagement").value);
 
-  // Validation
   let hasError = false;
 
   function showError(inputId, message) {
@@ -38,7 +34,6 @@ document.getElementById("productForm").addEventListener("submit", async function
       hasError = true;
   }
 
-  // Validate fields
   if (!productId) {
       console.error("Missing product ID. This field is required for updates.");
       hasError = true;
@@ -67,7 +62,6 @@ document.getElementById("productForm").addEventListener("submit", async function
       return;
   }
 
-  // Add images
   const fileInputs = document.querySelectorAll('input[type="file"][name="productImages[]"]');
   fileInputs.forEach((input, index) => {
       if (input.files[0]) {
@@ -104,7 +98,6 @@ document.getElementById("productForm").addEventListener("submit", async function
   }
 });
 
-// Image Cropping Logic
 let cropper = null;
 let currentInput = null;
 
@@ -195,7 +188,6 @@ function handleCrop() {
   }, 'image/jpeg', 0.9);
 }
 
-// Stock Management
 document.addEventListener('DOMContentLoaded', function() {
   const categorySelect = document.getElementById('productType');
   const stockContainer = document.getElementById('stockManagementContainer');
@@ -265,7 +257,6 @@ document.addEventListener('DOMContentLoaded', function() {
   categorySelect.addEventListener('change', createStockFields);
   createStockFields();
 
-  // Event Listeners
   document.querySelectorAll('input[type="file"][name="productImages[]"]').forEach(input => {
       input.addEventListener('change', handleImageSelect);
   });

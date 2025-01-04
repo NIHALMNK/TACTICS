@@ -8,7 +8,6 @@ const bcrypt = require('bcrypt');
 module.exports = {
 
 
-  // Load home page
   async loadHome(req, res) {
     try {
       const products = await productModel
@@ -22,9 +21,8 @@ module.exports = {
   },
 
 
-  //load contacts
+  //load shop
 
-  // In your userController
   async loadShop(req, res) {
     try {
       const categoryName = req.query.category;
@@ -197,19 +195,17 @@ module.exports = {
         return res.status(404).json({ message: "User not found" });
       }
   
-      // Update name if provided
       if (name) {
         user.name = name;
       }
   
-      // Update phone if provided
       if (phone !== undefined) {
         user.phone = phone;
       }
   
       await user.save();
   
-      // Update session user information
+      
       req.session.user = {
         ...req.session.user,
         name: user.name,
@@ -235,13 +231,11 @@ module.exports = {
         return res.status(404).json({ message: "User not found" });
       }
   
-      // Verify current password
       const isMatch = await bcrypt.compare(currentPassword, user.password);
       if (!isMatch) {
         return res.status(400).json({ message: "Current password is incorrect" });
       }
   
-      // Hash new password
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(newPassword, salt);
   
@@ -266,7 +260,6 @@ module.exports = {
         return res.status(404).send("User not found");
       }
 
-      // Pagination for addresses
       const page = parseInt(req.query.page) || 1;
       const limit = 1;
 
@@ -332,7 +325,6 @@ module.exports = {
     }
   },
 
-  // Update Existing Address
   async updateAddress(req, res) {
 
     try {
@@ -356,7 +348,6 @@ module.exports = {
         return res.status(404).json({ message: "Address not found" });
       }
 
-      // Update address fields
       user.address[addressIndex] = {
         ...user.address[addressIndex],
         house: house,
@@ -383,7 +374,6 @@ module.exports = {
     }
   },
 
-  // Remove Address
   async removeAddress(req, res) {
     try {
       const userId = req.session.user.id;
@@ -394,7 +384,6 @@ module.exports = {
         return res.status(404).json({ message: "User not found" });
       }
 
-      // Filter out the address to remove
       user.address = user.address.filter(
         addr => addr._id.toString() !== addressId
       );
@@ -442,7 +431,6 @@ module.exports = {
 
 
 
-  //end{code}
 
 
 

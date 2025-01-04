@@ -1,7 +1,6 @@
 let cropper;
 let croppedImageBlob = null;
 
-// Input Validation Functions
 function validateName() {
     const nameError = document.getElementById('nameError');
     const nameValue = categoryName.value.trim();
@@ -52,7 +51,6 @@ categoryImage.addEventListener('change', function (event) {
     }
 });
 
-// Crop Confirmation
 document.getElementById('cropConfirmBtn').addEventListener('click', function () {
     if (cropper) {
         cropper.getCroppedCanvas().toBlob((blob) => {
@@ -72,7 +70,6 @@ document.getElementById('cropConfirmBtn').addEventListener('click', function () 
     }
 });
 
-// Remove Image
 removeImageBtn.addEventListener('click', function () {
     roundPreview.src = '';
     roundPreview.style.display = 'none';
@@ -84,7 +81,6 @@ removeImageBtn.addEventListener('click', function () {
     validateImage(); 
 });
 
-// Form Submission
 categoryForm.addEventListener('submit', function (e) {
     e.preventDefault(); 
 

@@ -57,8 +57,8 @@ app.use(require('./middleware/ban'))
 
 
 app.use('/', userRouter);
-// app.use('/admin', adminRouter,CategoryRouter,productRouter,UserManegementRouter,orderRouter);
-// Replace the problematic line with individual router declarations
+
+
 app.use('/admin', adminRouter);
 app.use('/admin', CategoryRouter);
 app.use('/admin', productRouter);

@@ -1,27 +1,23 @@
 const User = require('../../models/userRegister');  
 
 
-// Load User Management Page with Pagination
+
 const loadUserManagementPage = async (req, res) => {
     try {
         if (!req.session.admin) {
             return res.status(200).render('admin/login', { message: "" });
         }
 
-        // Pagination parameters
         const page = parseInt(req.query.page) || 1;
-        const limit = 10; // Number of users per page
+        const limit = 10; 
         const skip = (page - 1) * limit;
 
-        // Fetch total users count
         const totalUsers = await User.countDocuments({});
         
-        // Calculate total pages dynamically
         const totalPages = Math.ceil(totalUsers / limit);
 
-        // Fetch paginated users
         const users = await User.find({})
-            .sort({ createdAt: -1 }) // Sort by most recent first
+            .sort({ createdAt: -1 }) 
             .skip(skip)
             .limit(limit);
 
@@ -38,20 +34,16 @@ const loadUserManagementPage = async (req, res) => {
     }
 };
 
-// Modified getUsersAsJson to support pagination
 const getUsersAsJson = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = 5;
         const skip = (page - 1) * limit;
 
-        // Fetch total users count
         const totalUsers = await User.countDocuments({});
         
-        // Calculate total pages dynamically
         const totalPages = Math.ceil(totalUsers / limit);
 
-        // Fetch paginated users
         const users = await User.find({})
             .sort({ createdAt: -1 })
             .skip(skip)
@@ -71,7 +63,6 @@ const getUsersAsJson = async (req, res) => {
 
 
 
-// user ban
 const userBan = async (req, res) => {
     try {
         const email = req.query.email; 
@@ -92,7 +83,6 @@ const userBan = async (req, res) => {
         user.isDeleted = !user.isDeleted;
         await user.save(); 
         const status = user.isDeleted ? 'banned' : 'unbanned';
-        // console.log(`User ${status}: ${email}`);
         return res.status(200).json({ message: `User ${status} successfully`, isDeleted: user.isDeleted });
 
     } catch (error) {
@@ -102,7 +92,6 @@ const userBan = async (req, res) => {
 };
 
 
-// View User Details
 const viewUserDetails = async (req, res) => {
     try {
         const email = req.query.email;  

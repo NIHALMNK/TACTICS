@@ -1,4 +1,3 @@
-// forgotPasswordController.js
 const User = require("../../models/userRegister");
 const OTP = require("../../models/otpModel");
 const bcrypt = require("bcrypt");
@@ -6,7 +5,6 @@ const sendEmail = require("../../utils/mail");
 const otpGenerator = require("otp-generator");
 
 module.exports = {
-  // Load forgot password page
   loadForgotPassword: async (req, res) => {
     try {
       res.render("user/forgotPassword", { message: null });
@@ -16,12 +14,10 @@ module.exports = {
     }
   },
 
-  // Send OTP for password reset
   sendResetOTP: async (req, res) => {
     try {
       const { email } = req.body;
       
-      // Check if user exists
       const user = await User.findOne({ email });
       if (!user) {
         return res.status(404).json({
@@ -30,14 +26,12 @@ module.exports = {
         });
       }
 
-      // Generate OTP
       const otp = otpGenerator.generate(6, {
         upperCaseAlphabets: false,
         lowerCaseAlphabets: false,
         specialChars: false
       });
 
-      // Save OTP with extended expiration (3 minutes)
       await OTP.findOneAndUpdate(
         { email },
         {
@@ -45,15 +39,13 @@ module.exports = {
           otp,
           createdAt: Date.now(),
           expiresAt: new Date(Date.now() + 3 * 60 * 1000),
-          attempts: 0 // Reset attempts counter on new OTP
+          attempts: 0
         },
         { upsert: true }
       );
 
-      // Send OTP email
       await sendEmail(email, otp);
 
-      // Save email in session for verification
       req.session.resetEmail = email;
 
       res.json({ success: true, message: "Reset OTP sent successfully!" });
@@ -63,16 +55,14 @@ module.exports = {
     }
   },
 
-  // Resend OTP
   resendOTP: async (req, res) => {
     try {
       const { email } = req.body;
 
-      // Verify if previous OTP exists and check cooldown
       const existingOTP = await OTP.findOne({ email });
       if (existingOTP) {
         const timeSinceLastOTP = Date.now() - existingOTP.createdAt;
-        const cooldownPeriod = 60 * 1000; // 1 minute cooldown
+        const cooldownPeriod = 60 * 1000; 
 
         if (timeSinceLastOTP < cooldownPeriod) {
           const remainingTime = Math.ceil((cooldownPeriod - timeSinceLastOTP) / 1000);
@@ -83,14 +73,12 @@ module.exports = {
         }
       }
 
-      // Generate new OTP
       const otp = otpGenerator.generate(6, {
         upperCaseAlphabets: false,
         lowerCaseAlphabets: false,
         specialChars: false
       });
 
-      // Update OTP record
       await OTP.findOneAndUpdate(
         { email },
         {
@@ -98,12 +86,11 @@ module.exports = {
           otp,
           createdAt: Date.now(),
           expiresAt: new Date(Date.now() + 3 * 60 * 1000),
-          attempts: 0 // Reset attempts counter
+          attempts: 0 
         },
         { upsert: true }
       );
 
-      // Send new OTP email
       await sendEmail(email, otp);
 
       res.json({ 
@@ -119,7 +106,6 @@ module.exports = {
     }
   },
 
-  // Verify reset OTP
   verifyResetOTP: async (req, res) => {
     try {
       const { otp } = req.body;
@@ -134,7 +120,6 @@ module.exports = {
 
       const otpRecord = await OTP.findOne({ email });
       
-      // Check if OTP record exists
       if (!otpRecord) {
         return res.status(401).json({
           success: false,
@@ -142,26 +127,23 @@ module.exports = {
         });
       }
 
-      // Check if OTP is expired
       if (otpRecord.expiresAt < Date.now()) {
-        await OTP.deleteOne({ email }); // Clean up expired OTP
+        await OTP.deleteOne({ email }); 
         return res.status(401).json({
           success: false,
           message: "Verification code has expired."
         });
       }
 
-      // Check maximum attempts
       const maxAttempts = 5;
       if (otpRecord.attempts >= maxAttempts) {
-        await OTP.deleteOne({ email }); // Clean up after max attempts
+        await OTP.deleteOne({ email }); 
         return res.status(401).json({
           success: false,
           message: "Maximum verification attempts reached. Please request a new code."
         });
       }
 
-      // Verify OTP
       if (otpRecord.otp !== otp) {
         await OTP.updateOne(
           { email },
@@ -173,7 +155,6 @@ module.exports = {
         });
       }
 
-      // OTP verified successfully
       res.json({ success: true, message: "Verification successful!" });
     } catch (error) {
       console.error("Error verifying reset OTP:", error);
@@ -181,7 +162,6 @@ module.exports = {
     }
   },
 
-  // Reset password
   resetPassword: async (req, res) => {
     try {
       const { password } = req.body;
@@ -194,19 +174,15 @@ module.exports = {
         });
       }
 
-      // Hash new password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Update user password
       await User.findOneAndUpdate(
         { email },
         { password: hashedPassword }
       );
 
-      // Clean up OTP record
       await OTP.deleteOne({ email });
 
-      // Clear session
       delete req.session.resetEmail;
 
       res.json({

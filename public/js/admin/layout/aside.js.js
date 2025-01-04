@@ -1,4 +1,3 @@
-// scripts/sidebar.js
 document.addEventListener('DOMContentLoaded', () => {
     const sidebar = document.getElementById('sidebar');
     const sidebarLogo = sidebar.querySelector('.sidebar-logo');

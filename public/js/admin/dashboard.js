@@ -1,4 +1,3 @@
- // Transaction History Pie Chart
  const transactionChartCtx = document.getElementById('transactionChart').getContext('2d');
  new Chart(transactionChartCtx, {
      type: 'pie',
@@ -11,7 +10,6 @@
      }
  });
 
- // Customer Fulfillment Line Chart
  const customerChartCtx = document.getElementById('customerChart').getContext('2d');
  new Chart(customerChartCtx, {
      type: 'line',

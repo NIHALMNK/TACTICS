@@ -28,28 +28,26 @@ module.exports = {
               return res.status(200).render('admin/login', { message: "" });
           }
       
-          // Pagination setup
+         
           let page = parseInt(req.query.page) || 1;
-          const limit = 5; // Number of categories per page
+          const limit = 5; 
       
-          // Find total number of non-deleted categories
+         
           const totalCategories = await Category.countDocuments({ isDeleted: false });
           const totalPages = Math.ceil(totalCategories / limit);
       
-          // Ensure page is within valid range
+     
           page = Math.max(1, Math.min(page, totalPages));
       
           const skip = (page - 1) * limit;
       
-          // Find categories for current page
+         
           const categories = await Category.find({ isDeleted: false })
             .skip(skip)
             .limit(limit)
-            .sort({ createdAt: -1 }); // Sort by most recent first
-          
-          // If current page is empty, find the last page with categories
+            .sort({ createdAt: -1 }); 
+
           if (categories.length === 0 && totalPages > 0) {
-            // Recursively find the last page with categories
             let lastNonEmptyPage = page;
             while (lastNonEmptyPage > 0) {
               lastNonEmptyPage--;
@@ -59,7 +57,6 @@ module.exports = {
                 .sort({ createdAt: -1 });
               
               if (lastPageCategories.length > 0) {
-                // Redirect to the last page with categories
                 return res.redirect(`/admin/category?page=${lastNonEmptyPage + 1}`);
               }
             }
@@ -108,15 +105,13 @@ async updateCategory(req, res) {
   let categoryImage;
  
   try {
-      // Check for existing category with the same name (case-insensitive)
       const existingCategory = await Category.findOne({
           name: { $regex: new RegExp(`^${categoryName}$`, 'i') },
-          _id: { $ne: categoryId }, // Exclude current category
+          _id: { $ne: categoryId }, 
           isDeleted: false
       });
 
       if (existingCategory) {
-          // Clean up uploaded file if there's a duplicate
           if (req.file) {
               const fs = require('fs');
               fs.unlink(req.file.path, (err) => {
@@ -131,7 +126,6 @@ async updateCategory(req, res) {
 
       const category = await Category.findById(categoryId);
       if (!category) {
-          // Clean up uploaded file if category not found
           if (req.file) {
               const fs = require('fs');
               fs.unlink(req.file.path, (err) => {
@@ -260,7 +254,7 @@ async postAddCategoryPage(req, res) {
 async loadDelCategoryPage(req, res) {
     try {
         const deletedCategories = await Category.find({ isDeleted: true });
-        return res.render("admin/categoryDelete", { deletedProducts: deletedCategories }); // Pass the correct variable
+        return res.render("admin/categoryDelete", { deletedProducts: deletedCategories });
     } catch (error) {
         console.error("Error fetching deleted categories:", error);
         return res.status(500).send("Internal Server Error");

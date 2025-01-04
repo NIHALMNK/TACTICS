@@ -1,9 +1,7 @@
-// Delete Product Handler
 document.querySelectorAll('.btn-delete').forEach(button => {
     button.addEventListener('click', function (e) {
         const productId = e.target.getAttribute('data-id');
 
-        // Replace standard confirmation with SweetAlert
         Swal.fire({
             title: 'Are you sure?',
             text: 'You will be able to recover this product on view deleted products !',
@@ -52,7 +50,6 @@ document.querySelectorAll('.btn-delete').forEach(button => {
     });
 });
 
-// View Deleted Products (unchanged)
 document.getElementById('btn-del-prod').addEventListener('click', () => {
     window.location.href = '/admin/productManagement/deleted';
 });

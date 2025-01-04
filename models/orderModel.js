@@ -40,7 +40,7 @@ const orderSchema = new mongoose.Schema({
     paymentMethod: {
         type: String,
         enum: ['cod', 'Net Banking'],
-        default: 'Cash on Delivery'
+        default: 'cod'
     },
     paymentStatus: {
         type: String,

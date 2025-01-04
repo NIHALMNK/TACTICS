@@ -1,6 +1,5 @@
 const message = document.getElementById("message").value;
 
-// Show initial message if exists
 if (message) {
     swal({
         title: message,
@@ -20,13 +19,11 @@ document.addEventListener("DOMContentLoaded", function() {
         e.preventDefault();
         let isValid = true;
 
-        // Reset previous error states
         email.classList.remove('is-invalid');
         password.classList.remove('is-invalid');
         emailError.style.display = 'none';
         passwordError.style.display = 'none';
 
-        // Email validation
         const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;;
         if (!email.value.trim()) {
             showError(email, emailError, 'Please enter your email address');
@@ -42,7 +39,6 @@ document.addEventListener("DOMContentLoaded", function() {
             isValid = false;
         }
 
-        // Password validation: at least 8 characters, no spaces
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
         if (!password.value.trim()) {
             showError(password, passwordError, 'Please enter your password');
@@ -57,7 +53,6 @@ document.addEventListener("DOMContentLoaded", function() {
             isValid = false;
         }
 
-        // Show SweetAlert for overall empty fields
         if (!email.value.trim() && !password.value.trim()) {
             swal({
                 title: "All fields are empty!",
@@ -69,17 +64,14 @@ document.addEventListener("DOMContentLoaded", function() {
         
 
         if (isValid) {
-            // For demonstration purposes
             console.log('Form submitted successfully');
             console.log('Email:', email.value);
             // console.log('Password:', password.value);
-            // Submit the form
             e.target.submit();
         }
     });
 });
 
-// Helper function to show errors
 function showError(element, errorElement, message) {
     element.classList.add('is-invalid');
     errorElement.textContent = message;

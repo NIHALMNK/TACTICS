@@ -1,8 +1,6 @@
- // Image Cropping Logic
  let cropper;
  let currentInput;
 
- // Trigger cropping modal on image selection
  document.querySelectorAll(".productImagesAdd").forEach((input, index) => {
    input.addEventListener("change", function(event) {
      const file = event.target.files[0];
@@ -31,7 +29,6 @@
    });
  });
 
- // Handle cropping
  document.getElementById("cropButton").addEventListener("click", function() {
    if (cropper) {
      const croppedCanvas = cropper.getCroppedCanvas();
@@ -53,7 +50,6 @@
    }
  });
 
- // Utility: Convert data URL to Blob
  function dataURLToBlob(dataURL) {
    const parts = dataURL.split(",");
    const mime = parts[0].match(/:(.*?);/)[1];
@@ -67,19 +63,16 @@
    });
  }
 
- // Stock Management Logic
  document.addEventListener('DOMContentLoaded', function() {
    const categorySelect = document.getElementById('productType');
    const stockContainer = document.getElementById('stockManagementContainer');
    const stockManagementInput = document.getElementById('productStockManagement');
 
-   // Size configurations
    const sizeConfigs = {
      'bottomware': Array.from({length: 9}, (_, i) => (28 + (i * 2)).toString()),
      'topware': ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']
    };
 
-   // Function to create stock input fields
    function createStockFields() {
      const productType= categorySelect.value.toLowerCase();
     //  console.log("THIS IS MY PRODUCT TYPE-->"+productType);
@@ -115,7 +108,6 @@
      updateStockManagement();
    }
 
-   // Function to update hidden stock management input
    function updateStockManagement() {
  const stockData = [];
  document.querySelectorAll('.stock-input').forEach(input => {
@@ -127,16 +119,14 @@
          });
      }
  });
- stockManagementInput.value = JSON.stringify(stockData); // Ensure this is correctly serialized
+ stockManagementInput.value = JSON.stringify(stockData); 
 }
 
 
-   // Listen for category changes
    categorySelect.addEventListener('change', function() {
      createStockFields(this);
    });
 
-   // Initialize stock fields with current category
    createStockFields(categorySelect);
  });
 
@@ -170,7 +160,6 @@
     hasError = true;
   }
 
-  // Validation logic
   if (!productName) {
     showError("productName", "Product name is required.");
   }

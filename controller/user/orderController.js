@@ -3,7 +3,6 @@ const User = require('../../models/userRegister');
 const Product = require('../../models/productModel');
 
 const orderController = {
-  // Load orders page with order data
   
     loadOrders: async (req, res) => {
       try {
@@ -17,7 +16,6 @@ const orderController = {
           
   
         const formattedOrders = orders.map(order => {
-          // Calculate totals for each order
           const totals = order.orderItems.reduce((acc, item) => {
             const mrpTotal = item.productId.price * item.quantity;
             const offerTotal = item.productId.offerPrice * item.quantity;
@@ -27,7 +25,6 @@ const orderController = {
             return acc;
           }, { mrp: 0, subtotal: 0 });
   
-          // Calculate shipping based on subtotal
           let shipping = 0;
           if (totals.subtotal > 0 && totals.subtotal <= 1000) {
             shipping = 200;
@@ -48,7 +45,7 @@ const orderController = {
             items: order.orderItems.map(item => ({
               name: item.productId.name,
               quantity: item.quantity,
-              price: item.productId.offerPrice, // Using offer price instead of regular price
+              price: item.productId.offerPrice,
               mrp: item.productId.price,
               total: item.productId.offerPrice * item.quantity,
               mrpTotal: item.productId.price * item.quantity,
@@ -91,7 +88,6 @@ const orderController = {
           return res.status(404).json({ message: 'Order not found' });
         }
   
-        // Calculate totals for the specific order
         const totals = order.orderItems.reduce((acc, item) => {
           const mrpTotal = item.productId.price * item.quantity;
           const offerTotal = item.productId.offerPrice * item.quantity;
@@ -101,7 +97,6 @@ const orderController = {
           return acc;
         }, { mrp: 0, subtotal: 0 });
   
-        // Calculate shipping
         let shipping = 0;
         if (totals.subtotal > 0 && totals.subtotal <= 1000) {
           shipping = 200;
@@ -145,7 +140,6 @@ const orderController = {
     },
   
 
-  // Request return
   requestReturn: async (req, res) => {
     try {
       const { orderId } = req.params;

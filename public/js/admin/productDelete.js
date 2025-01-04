@@ -1,9 +1,7 @@
-// Load SweetAlert2
 
-// Recover Button Action
 $(".btn-recover").on("click", async function () {
     const productId = $(this).data("id");
-    ("Product ID for recover:", productId);  // Debugging
+    ("Product ID for recover:", productId); 
     try {
         const res = await fetch(`/admin/productManagement/recoverProducts/${productId}`, { method: "PATCH" });
         const result = await res.json();
@@ -33,12 +31,10 @@ $(".btn-recover").on("click", async function () {
     }
 });
 
-// Permanent Delete Button Action
 $(".btn-delete").on("click", async function () {
     const productId = $(this).data("id");
-    ("Product ID for delete:", productId);  // Debugging
+    ("Product ID for delete:", productId); 
 
-    // SweetAlert confirmation for deletion
     const result = await Swal.fire({
         title: 'Are you sure?',
         text: 'This product will be permanently deleted!',
