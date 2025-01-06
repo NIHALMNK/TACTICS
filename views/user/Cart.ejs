@@ -327,7 +327,12 @@
 									<%= item.productId.name %>
 								</h3>
 								<p class="product-size"><span>Size :</span>
-									<%= item.size %>
+									<b><%= item.size %></b>
+								</p>
+								<p class="product-total">
+									<span>total available stock :</span> <b>
+									<%= item.productId.stockManagement.find(stock=> stock.size === item.size).quantity %>
+								</b>
 								</p>
 								
 								<div class="product-actions d-flex  pt-3">
@@ -480,9 +485,7 @@
     });
 });
 //==================================================================================>
-// Add this frontend JavaScript code to your EJS file
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle quantity updates
     document.querySelectorAll('.quantity-control').forEach(control => {
         const decreaseBtn = control.querySelector('.btn-decrease');
         const increaseBtn = control.querySelector('.btn-increase');
@@ -498,6 +501,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const newQuantity = currentQuantity + change;
 
             if (newQuantity < 1) return;
+			if(newQuantity>10) {
+				return Swal.fire({
+                    title: 'info!',
+                    text: 'Cannot exceed more than 10 stock!',
+                    icon: 'info',
+                    confirmButtonText: 'OK'
+                });
+			}
+
+			
 
             try {
                 const response = await fetch('/cart/update', {
@@ -540,7 +553,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (totalElement) totalElement.textContent = `Rs. ${result.total}`;
                     }
                 } else {
-                    // Show error message
                     Swal.fire({
                         title: 'Error!',
                         text: result.message,

@@ -293,15 +293,25 @@ document.addEventListener('DOMContentLoaded', () => {
     increaseBtn.addEventListener('click', () => {
     const maxStock = parseInt(quantityInput.getAttribute('max'));
     const currentValue = parseInt(quantityInput.value);
+    
 
     if (currentValue < maxStock) {
         // Increment the value only if it's less than maxStock
         quantityInput.value = currentValue+1 ;
-    } else {
-        // Show SweetAlert if trying to exceed max stock
+    }else {
+        
         Swal.fire('Wait!', 'Cannot exceed available stock!', 'error');
 
     }
+
+   if(10<=currentValue ){
+    quantityInput.value = currentValue ;
+    Swal.fire('Wait!', 'Cannot exceed more than 10 stock!', 'error');
+    
+}
+
+    
+
 });
 
     // Handle "Decrease" button click
@@ -403,9 +413,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const productId = '<%= product._id %>';
         const userId = '<%= user%>';
 
-        // console.log(`selectedSize: ${selectedSize}`);
-        // console.log(`quantity: ${quantity}`);
-        // console.log(`productId: ${productId}`);
+        
 
         if(!userId) {
             Swal.fire('Error!', 'Please login to add items to cart.', 'error'); 
@@ -459,6 +467,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 Swal.fire('Stock Alert!', `Sorry, only ${stockData.stock} items are available for size ${selectedSize}.`, 'info');
                 return;
             }
+
+           
 
             // Now, proceed to add the item to the cart
             const response = await fetch('/product-detail/add-to-cart', {

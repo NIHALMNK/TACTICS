@@ -106,6 +106,18 @@ module.exports = {
             console.log("addressid:", addressid);
             console.log("selectedPayment:", selectedPayment);
             console.log("userId:", userId);
+
+
+            const user = await User.findById(userId);
+
+            console.log("----------------------------------------------------------------------------------------------------------------->");
+
+            console.log(user.name);
+            
+            
+            console.log("----------------------------------------------------------------------------------------------------------------->");
+            
+            
     
             const cart = await cartModel.findOne({ userId })
                 .populate({
@@ -142,10 +154,13 @@ module.exports = {
     
             const discount = totals.mrp - totals.subtotal;
             const total = totals.subtotal + shipping;
+
+
     
             
             const newOrder = await orderModel.create({
                 userId,
+                username:user.name,
                 addressId: addressid,
                 totalAmount: total,
                 orderItems: validItems.map(item => ({
@@ -154,10 +169,12 @@ module.exports = {
                     price: item.productId.offerPrice,
                 })),
                 paymentMethod: selectedPayment,
-                paymentStatus: selectedPayment === 'Cash on Delivery' ? 'Pending' : 'Completed',
+                paymentStatus: selectedPayment === 'cod' ? 'Pending' : 'Completed',
             });
     
             cart.items = [];
+           
+            
             await cart.save();
 
             for (let item of validItems) {

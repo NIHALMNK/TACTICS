@@ -707,9 +707,7 @@ document.querySelector(".btn-placeorder").addEventListener('click', async () => 
 
         const data = await response.json();
         
-        if (data.success && data.orderId) {
-            // await alert('Your order is successful!');
-          
+        if (data.success && data.orderId) {          
             window.location.href = `/order/success/${data.orderId}`;
         } else {
             alert(data.message || 'Something went wrong');

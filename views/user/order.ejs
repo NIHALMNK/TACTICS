@@ -493,14 +493,11 @@ document.addEventListener('DOMContentLoaded', function() {
   initializeModals();
 });
 
-// Initialize all order-related buttons
 function initializeOrderButtons() {
-  // Handle view order buttons
   const viewButtons = document.querySelectorAll('.btn-view');
   viewButtons.forEach(button => {
     button.addEventListener('click', function() {
-      // Modal is handled by Bootstrap data attributes
-      // Any additional view logic can go here
+     
     });
   });
 
@@ -536,7 +533,7 @@ function initializeModals() {
   const orderModals = document.querySelectorAll('.modal');
   orderModals.forEach(modal => {
     modal.addEventListener('show.bs.modal', function (event) {
-      // Add any dynamic modal content loading here if needed
+     
     });
   });
 }

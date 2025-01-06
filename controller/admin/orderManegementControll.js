@@ -114,6 +114,10 @@ module.exports = {
     async updatePaymentStatus(req, res) {
         try {
             const { orderId, paymentStatus } = req.body
+
+            
+            
+            
             const validPaymentStatuses = ['Pending', 'Completed', 'Failed']
 
             if (!validPaymentStatuses.includes(paymentStatus)) {
@@ -128,6 +132,9 @@ module.exports = {
                 { paymentStatus },
                 { new: true }
             )
+
+            
+            
 
             if (!updatedOrder) {
                 return res.status(404).json({

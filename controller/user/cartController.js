@@ -19,7 +19,7 @@ module.exports = {
                 .populate({
                     path: 'items.productId',
                     model: 'Product',
-                    select: 'offerPrice price name stockManagement images' // Added images field
+                    select: 'offerPrice price name stockManagement images isDeleted' 
                 });
     
             if (!cart || !Array.isArray(cart.items) || cart.items.length === 0) {
@@ -35,6 +35,14 @@ module.exports = {
                     offerTotal: 0,
                     discount: 0
                 });
+            }
+
+            const validproducts =cart.items.filter(item=>item.productId && !item.productId.isDeleted)
+
+            if (validproducts.length !== cart.items.length) {
+                cart.items = validproducts;
+                await cart.save();
+                
             }
     
             const page = parseInt(req.query.page) || 1;
@@ -337,6 +345,12 @@ async updateQuantity(req, res) {
         // console.log(`sizeStock----->${sizeStock}`);
         // console.log("quantityStock----->"+quantity);
         
+        if(10<quantity){
+            return res.status(400).json({ 
+                success: false, 
+                message: `Cannot exceed more than 10 stock!` 
+            });
+        }
         
 
         if (!sizeStock || sizeStock.quantity < quantity) {
