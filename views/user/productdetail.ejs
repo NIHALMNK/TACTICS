@@ -9,6 +9,63 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/user/productDetail.css">
+    <style>
+        .wishlist-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 12px 24px;
+          background-color: #ffffff;
+          border: 2px solid #e5e7eb;
+          border-radius: 50px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-family: Arial, sans-serif;
+          font-size: 16px;
+          font-weight: 500;
+          color: #374151;
+        }
+        
+        .wishlist-btn:hover {
+          background-color: #fee2e2;
+          border-color: #fecdd3;
+          color: #e11d48;
+        }
+        
+        .heart-icon {
+          fill: transparent;
+          stroke: currentColor;
+          stroke-width: 2;
+          width: 20px;
+          height: 20px;
+          transition: all 0.3s ease;
+        }
+        
+        .wishlist-btn:hover .heart-icon {
+          transform: scale(1.1);
+        }
+        
+        .wishlist-btn.active {
+          background-color: #ffe4e6;
+          border-color: #fecdd3;
+          color: #e11d48;
+        }
+        
+        .wishlist-btn.active .heart-icon {
+          fill: #e11d48;
+          stroke: #e11d48;
+        }
+        
+        @keyframes pulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.1); }
+          100% { transform: scale(1); }
+        }
+        
+        .wishlist-btn:active .heart-icon {
+          animation: pulse 0.3s ease;
+        }
+        </style>
 </head>
 <body>
     <!-- Navbar -->
@@ -100,11 +157,17 @@
 <!-- Description -->
 <p class="product-description"><%= product.description %></p>
 
-<!-- Wishlist Icon -->
-<button class="btn btn-light mb-3" id="wishlistBtn">
-    <i class="fas fa-heart"></i> Add to Wishlist
-</button>
 <h1></h1>
+<!----------wishlis-------------------->
+<button class="wishlist-btn"  onclick="wishlistItemAdd(event)">
+    <svg class="heart-icon" viewBox="0 0 24 24">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+    </svg>
+    
+  </button>
+<!------------------------------>
+
+  <h1></h1>
 
 <!-- Size Selector -->
 <div class="btn-group" role="group">
@@ -148,7 +211,7 @@
     
 
             <!-- Buy Now Button -->
-            <button class="btn btn-success" id="buyNowBtn">Buy Now</button>
+            <!-- <button class="btn btn-success" id="buyNowBtn">Buy Now</button> -->
             <button class="btn btn-primary" id="addToCartBtn">Add to Cart</button> 
         </div>
     </div>
@@ -178,15 +241,6 @@
                             <img src="<%= related.images[0] %>" alt="<%= related.name %>" class="related-product-image related-main-image">
                             <img src="<%= related.images[1] || related.images[0] %>" alt="<%= related.name %> Back" class="related-product-image related-hover-image">
                         </a>
-                        
-                        <div class="related-card-icons">
-                            <div class="related-card-icon related-wishlist-icon">
-                                <i class="fas fa-heart"></i>
-                            </div>
-                            <div class="related-card-icon related-cart-icon">
-                                <i class="fas fa-shopping-bag"></i>
-                            </div>
-                        </div>
                         
                         <div class="related-product-details">
                             <h5 class="card-title"><%= related.name %></h5>
@@ -329,11 +383,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 //======================================>
 
-document.querySelectorAll('.related-wishlist-icon').forEach(icon => {
-    icon.addEventListener('click', function () {
-        this.classList.toggle('text-danger');
-    });
-});
+// document.querySelectorAll('.related-wishlist-icon').forEach(icon => {
+//     icon.addEventListener('click', function () {
+//         this.classList.toggle('text-danger');
+//     });
+// });
 
 document.querySelectorAll('.related-cart-icon').forEach(icon => {
     icon.addEventListener('click', function () {
@@ -501,6 +555,59 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+//==============================================================================================>
+async function wishlistItemAdd(e){
+    try{
+
+        const sizeInputs = document.querySelectorAll('input[name="size"]');
+        const userId = '<%= user%>';
+        
+        
+        if(!userId) {
+            Swal.fire('Error!', 'Please login to add items to cart.', 'error'); 
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
+            return;
+        }
+
+       
+
+        console.log('HII')
+        // e.classList.toggle('active')
+        
+        const selectedSize = Array.from(sizeInputs).find(input => input.checked)?.id.split('-')[1];
+        
+        if (!selectedSize) {
+            Swal.fire('Wait!', 'Please select a size first!', 'error');
+            return;
+        }
+
+        
+        const productId = '<%= product._id %>';
+        
+        const response= await fetch('/addWishlist',{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({
+                selectedSize,
+                productId
+            })
+        })
+        
+    }catch(error){
+        console.error('Error:', error.message || error);
+            Swal.fire('Error!', 'There was an issue adding the item to the wishlist.', 'error');
+        
+    }
+
+
+
+
+}
 
 
 

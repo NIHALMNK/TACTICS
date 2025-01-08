@@ -68,6 +68,12 @@ app.use('/admin', orderRouter);
 
 
 
+
+
+app.get('/demo',(req,res)=>{
+    res.render('user/demo')
+})
+
 app.get('/*',(req,res)=>{
     res.render('error/erroralert')
   })

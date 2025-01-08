@@ -43,7 +43,7 @@ const orderSchema = new mongoose.Schema({
     },
     paymentMethod: {
         type: String,
-        enum: ['cod', 'Net Banking'],
+        enum: ['cod', 'razerpay'],
         default: 'cod'
     },
     paymentStatus: {

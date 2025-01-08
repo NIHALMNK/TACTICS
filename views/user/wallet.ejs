@@ -9,6 +9,82 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
  
   <link rel="stylesheet" href="/css/user/wallet.css">
+  <style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #12645d 0%, #0dc4b4 100%);
+        --secondary-gradient: linear-gradient(135deg, #FF6B6B 0%, #FF000F 100%);
+    }
+
+
+    .wallet-card {
+        background: var(--primary-gradient);
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+
+    .wallet-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-overlay {
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: rgba(255, 255, 255, 0.1);
+        transform: rotate(30deg);
+    }
+
+    .transaction-card {
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .transaction-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .chart-container {
+        height: 300px;
+        border-radius: 15px;
+        background: white;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .transaction-badge {
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-weight: 500;
+    }
+
+    .badge-credit {
+        background: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+    }
+
+    .badge-debit {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+    }
+
+    @media (max-width: 768px) {
+       
+        .main-content {
+            width: 100% !important;
+        }
+
+        .wallet-card {
+            width: 100% !important;
+        }
+    }
+</style>
 </head>
 <body>
     <!-------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
@@ -48,16 +124,104 @@
           </a>
         </div>
 
-        <!-- Main Content -->
-        <div class="main-content">
-          <h2 class="section-title">wallet</h2>
-          <p>
-           Lorem ipsum dolor sit, amet consectetur adipisicing elit. Magni, sunt! Optio, quam rem nihil molestiae est, in et sint vel quasi illum commodi mollitia sequi enim unde provident libero. Ea, error numquam, est ipsam provident deserunt mollitia magni neque a rem tempora hic sunt modi, enim quasi quod similique ad.
-          </p>
-        </div>
+       
+              <!-- Main Content -->
+              <div class="col-md-9 col-lg-10 p-4 main-content">
+                  <!-- Wallet Cards Row -->
+                  <div class="row mb-4">
+                      <div class="col-lg-6">
+                          <div class="wallet-card p-4 text-white">
+                              <div class="card-overlay"></div>
+                              <h5 class="mb-3">Current Balance</h5>
+                              
+                              <h2 id="wallet-balance" class="display-4 fw-bold mb-3">₹ <%= balance  %></h2>
+                              <div class="d-flex justify-content-between align-items-center">
+                                  <span>Virtual Wallet</span>
+                                  <span id="wallet-card-id">**** 1234</span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-lg-6">
+                          <div class="row g-3">
+
+                              <div class="col-6">
+                                  <div class="transaction-card p-3">
+                                      <h6 class="text-muted mb-2">Total Income</h6>
+                                      <h4 id="total-income" class="text-success mb-0">₹ 0</h4>
+                                  </div>
+                              </div>
+                              <div class="col-6">
+                                  <div class="transaction-card p-3">
+                                      <h6 class="text-muted mb-2">Total Spent</h6>
+                                      <h4 id="total-spent" class="text-danger mb-0">₹ 0</h4>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+  
+                  <!-- Transactions Table -->
+
+                  <div class="transaction-card p-4">
+                      <div class="d-flex justify-content-between align-items-center mb-4">
+                          <h4 class="mb-0">Transaction History</h4>
+                          <div class="dropdown">
+                              <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                  Filter
+                              </button>
+                              <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#" onclick="filterTransactions('all')">All</a></li>
+                                  <li><a class="dropdown-item" href="#" onclick="filterTransactions('credit')">Credits</a></li>
+                                  <li><a class="dropdown-item" href="#" onclick="filterTransactions('debit')">Debits</a></li>
+                              </ul>
+                          </div>
+                      </div>
+                      <div class="table-responsive">
+                          <table class="table table-hover">
+                              <thead>
+                                  <tr>
+                                      <th>#</th>
+                                      <th>Date</th>
+                                      <th>Description</th>
+                                      <th>Type</th>
+                                      <th>Amount</th>
+                                  </tr>
+                              </thead>
+                              <tbody id="transaction-history">
+                                  <% if (transactionHistory===null) { %>
+                                    <tr>
+                                      <th><p>there is no transaction-history</p></th> 
+                                  </tr>
+                                   
+                                   <% } else { %>
+                                    <% transactionHistory.forEach((items,index) => { %>
+                                     <p>there is no transaction-history</p><tr>
+                                      <th><p><b><%= index+1 %></b></p></th>
+                                      <th><p><%= new Date(items.transactionDate).toLocaleDateString('en-IN', { 
+                                        day: '2-digit', 
+                                        month: '2-digit', 
+                                        year: 'numeric' 
+                                    }) %></p></th>
+                                    
+                                      <th><%= items.description %></th>
+                                      <th><%= items.transactionType %></th>
+                                      <th><%= items.transactionAmount%></th>
+                                  </tr>
+                                     
+                                    <% }) %>
+                                  <% } %>
+                              </tbody>
+                          </table>
+                      </div>
+                      <nav aria-label="Transaction pagination" class="mt-4">
+                          <ul class="pagination justify-content-center" id="pagination-controls">
+                              <!-- Pagination will be inserted here -->
+                          </ul>
+                      </nav>
+                  </div>
+              </div>
+          </div>
       </div>
-    </div>
-  </div>
 
 
    <!------footer------->
@@ -70,5 +234,8 @@
   <!-- Bootstrap JS and Dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+  <script>
+   
+  </script>
 </body>
 </html>

@@ -411,15 +411,7 @@ module.exports = {
     }
   },
 
-  // load Wallet
-  async loadWallet(req, res) {
-    try {
-      res.render("user/wallet", { user: req.session.user });
-    } catch (error) {
-      console.error("Error loading wallet:", error);
-      res.status(500).send("Server Error");
-    }
-  },
+  
 
 
 

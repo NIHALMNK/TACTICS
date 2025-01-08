@@ -7,6 +7,8 @@ const checkoutController = require('../controller/user/checkoutController');
 const orderController = require('../controller/user/orderController');
 const forgotPasswordController=require('../controller/user/forgotPasswordController')
 const filterController=require('../controller/user/filterController')
+const walletController=require('../controller/user/walletController')
+const wishlistController=require('../controller/user/wishlistControoler')
 const nocache = require('nocache');
 
 
@@ -100,8 +102,7 @@ router.get('/address', userController.loadAddress);
 router.post('/address/create', userController.createAddress);
 router.put('/address/:addressId', userController.updateAddress);
 router.delete('/address/:addressId', userController.removeAddress);
-// wallet routes
-router.get('/wallet', userController.loadWallet);
+
 
 
 // cart routes
@@ -119,6 +120,21 @@ router.post('/checkout/placeorder',checkoutController.placeOrder);
 router.get('/order/success/:orderId', checkoutController.loadPaymentSuccess);
 
 router.get('/order/success',checkoutController .loadPaymentSuccess);
+
+
+//wishlist
+router.post('/addWishlist',wishlistController.addToWishlist)
+router.get('/wishlist',wishlistController.LoadWishlist)
+
+router.delete('/wishlist/delete/:id',wishlistController.removeFromWishlist)
+// router.post('/wishlist/cart/:id',wishlistController.addToCart)
+
+
+
+//load wallet
+
+router.get('/wallet', walletController.getWallet);
+
 
 
 
