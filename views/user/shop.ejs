@@ -428,6 +428,7 @@ window.addEventListener('resize', handleResponsive);
 document.querySelectorAll('.wishlist-icon').forEach(icon => {
             icon.addEventListener('click', function() {
                 this.classList.toggle('text-danger');
+                alert('Added to wishlist');
             });
         });
 
@@ -491,17 +492,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         
-        productsContainer.querySelectorAll('.wishlist-icon').forEach(icon => {
-            icon.addEventListener('click', function() {
-                this.classList.toggle('text-danger');
-            });
-        });
-
-        productsContainer.querySelectorAll('.cart-icon').forEach(icon => {
-            icon.addEventListener('click', function() {
-                alert('Added to cart!');
-            });
-        });
+        
     }
 
   
@@ -668,19 +659,7 @@ async function updateFilters() {
 }
 
 
-function attachEventListeners() {
-    document.querySelectorAll('.wishlist-icon').forEach(icon => {
-        icon.addEventListener('click', function() {
-            this.classList.toggle('text-danger');
-        });
-    });
 
-    document.querySelectorAll('.cart-icon').forEach(icon => {
-        icon.addEventListener('click', function() {
-            alert('Added to cart!');
-        });
-    });
-}
 </script>
 
 

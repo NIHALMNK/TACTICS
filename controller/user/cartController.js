@@ -128,6 +128,8 @@ module.exports = {
         try {
             
             const { productId, size, quantity } = req.body;
+
+            
     
             if (!productId || !size || !quantity) {
                 return res.status(400).json({ success: false, message: 'Missing required fields' });
@@ -160,6 +162,7 @@ module.exports = {
                 cart = new cartModel({ userId: id, items: [] });
             }
     
+            
             
             const cartItemIndex = cart.items.findIndex(item => item.productId.toString() === productId && item.size === size);
     

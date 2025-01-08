@@ -1,6 +1,8 @@
 const Order = require('../../models/orderModel');
 const User = require('../../models/userRegister');
 const Product = require('../../models/productModel');
+const wallet=require('../../models/walletModel');
+
 
 const orderController = {
   
@@ -65,7 +67,7 @@ const orderController = {
   
         res.render('user/order', { 
           orders: formattedOrders,
-          user: req.session.user
+          user: req.session.user.id
         });
       } catch (error) {
         console.error('Error loading orders:', error);
@@ -142,6 +144,8 @@ const orderController = {
 
   requestReturn: async (req, res) => {
     try {
+      
+
       const { orderId } = req.params;
       const { reason } = req.body;
       const order = await Order.findById(orderId);
@@ -167,6 +171,10 @@ const orderController = {
 
   async cancelOrder(req,res){
     try {
+      // console.log(req.session);
+      
+        const userId=req.session.user.id;
+
         const orderId = req.params.orderId;
         const order = await Order.findById(orderId);
     
@@ -193,6 +201,32 @@ const orderController = {
         }
     
         order.status = 'Cancelled';
+        const method=order.paymentMethod;
+        if (method==='razerpay'&&order.status === 'Cancelled'){
+          let walletdata=await wallet.findOne({userId})
+          if(!walletdata){
+            walletdata=await wallet.create({
+              userId:req.session.user.id,
+              balance:order.totalAmount,
+              transactionHistory:[{
+                transactionType:"refund",
+                transactionAmount:order.totalAmount,
+                transactionDate:new Date(),
+                description:order.refundReason
+              }],
+            });
+          }else{
+            walletdata.balance+=order.totalAmount,
+            walletdata.transactionHistory.push({
+              transactionType:"refund",
+                transactionAmount:order.totalAmount,
+                transactionDate:new Date(),
+                description:order.refundReason,
+            });
+            await walletdata.save()
+          }
+
+        }
         await order.save();
     
         res.json({ 
@@ -208,11 +242,17 @@ const orderController = {
         });
       }
   },
+
+
+ 
+  
 };
 
 function formatAddress(addressObj) {
   if (!addressObj) return 'Address not available';
   return `${addressObj.house}, ${addressObj.street}, ${addressObj.city}, ${addressObj.state}, ${addressObj.pinCode}`;
 }
+
+
 
 module.exports = orderController;
