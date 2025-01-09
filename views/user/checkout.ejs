@@ -233,6 +233,8 @@
      <!-- Update the address list section in checkout.ejs -->
 <div class="address-section bg-white p-4 checkout-card">
     <h2 class="section-title mb-4">Shipping Address</h2>
+
+  
    
     
     <!-- Address Carousel -->
@@ -265,13 +267,7 @@
                                     onclick="prepareModal('edit', this.getAttribute('data-address'))">
                                 Edit
                             </button>
-                            <!-- delete button---
-                            <button class="btn btn-outline-danger btn-sm"
-                                    onclick="removeAddress(' address._id %>')">
-                                Delete
-                            </button> 
                             
-                            -->
                         </div>
                     </div>
                 </div>
@@ -322,7 +318,13 @@
                 <div class="coupon-section mb-4">
                     <h6 class="mb-3">Have a coupon?</h6>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="couponInput" placeholder="Enter coupon code" pattern="[A-Za-z0-9]+" maxlength="10">
+                        <select class="form-select" id="status" >
+                            <% coupens.forEach(x => { %>
+
+                                <option value="<%= x.code %>"><%= x.code %></option>
+                            <% }) %>
+                            
+                        </select>
                         <button class="btn btn-success" id="applyCoupon">Apply</button>
                     </div>
                     <div id="couponError" class="coupon-error"></div>
@@ -715,6 +717,76 @@ document.querySelector(".btn-placeorder").addEventListener('click', async () => 
     } catch (error) {
         alert("Error: " + error.message);
     }
+});
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const applyCouponBtn = document.getElementById('applyCoupon');
+    const couponSelect = document.getElementById('status');
+    const couponError = document.getElementById('couponError');
+    const couponSuccess = document.getElementById('couponSuccess');
+    const appliedCoupon = document.getElementById('appliedCoupon');
+    const appliedCouponCode = document.getElementById('appliedCouponCode');
+    const removeCouponBtn = document.getElementById('removeCoupon');
+
+    const getCurrentTotal = () => {
+        const totalElement = document.querySelector('.price-details strong:last-child');
+        return parseFloat(totalElement.textContent.replace('₹', ''));
+    };
+
+    const updatePriceDetails = (subtotal, discount) => {
+        const discountElement = document.querySelector('.price-details .text-success');
+        const totalElement = document.querySelector('.price-details strong:last-child');
+        discountElement.textContent = `-₹${discount.toFixed(2)}`;
+        totalElement.textContent = `₹${(subtotal - discount).toFixed(2)}`;
+    };
+
+    applyCouponBtn.addEventListener('click', async function() {
+        const couponCode = couponSelect.value;
+        const currentTotal = getCurrentTotal();
+
+        try {
+            const response = await fetch('/checkout/validateCoupon', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: couponCode, totalAmount: currentTotal })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                couponError.style.display = 'none';
+                couponSuccess.textContent = `Coupon applied successfully! You saved ₹${data.discount.toFixed(2)}`;
+                couponSuccess.style.display = 'block';
+                appliedCoupon.style.display = 'block';
+                appliedCouponCode.textContent = `${couponCode} - ${data.discountType === 'percentage' ? data.discountValue + '%' : '₹' + data.discountValue} off`;
+                updatePriceDetails(currentTotal, data.discount);
+                couponSelect.disabled = true;
+                applyCouponBtn.disabled = true;
+            } else {
+                couponError.textContent = data.message;
+                couponError.style.display = 'block';
+                couponSuccess.style.display = 'none';
+            }
+        } catch (error) {
+            console.error('Error applying coupon:', error);
+            couponError.textContent = 'An error occurred while applying the coupon';
+            couponError.style.display = 'block';
+        }
+    });
+
+    removeCouponBtn.addEventListener('click', function() {
+        couponSelect.disabled = false;
+        applyCouponBtn.disabled = false;
+        couponSuccess.style.display = 'none';
+        appliedCoupon.style.display = 'none';
+        couponError.style.display = 'none';
+        const subtotal = getCurrentTotal() + parseFloat(document.querySelector('.price-details .text-success').textContent.replace('-₹', ''));
+        updatePriceDetails(subtotal, 0);
+    });
 });
 
     </script>

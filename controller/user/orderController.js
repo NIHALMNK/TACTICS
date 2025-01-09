@@ -109,6 +109,7 @@ const orderController = {
         }
   
         const discount = totals.mrp - totals.subtotal;
+
         const total = totals.subtotal + shipping;
   
         res.json({

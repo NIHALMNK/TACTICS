@@ -116,10 +116,10 @@ router.post('/cart/update', cartController.updateQuantity);
 
 router.get('/checkout',checkoutController.loadCheckout);
 router.post('/checkout/placeorder',checkoutController.placeOrder);
-
 router.get('/order/success/:orderId', checkoutController.loadPaymentSuccess);
-
 router.get('/order/success',checkoutController .loadPaymentSuccess);
+
+router.post('/checkout/validateCoupon',checkoutController.validateCoupon)
 
 
 //wishlist
