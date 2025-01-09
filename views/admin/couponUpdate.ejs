@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Coupon</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+  <!-- Keep the same CSS styles as they work well for both create and update -->
+  <style>
+    :root {
+      --primary-bg: #1a1c1e;
+      --container-bg: #282c34;
+      --text-color: #ecf0f1;
+      --primary-accent: #3498db;
+      --primary-accent-hover: #2980b9;
+      --danger: #e74c3c;
+      --danger-hover: #c0392b;
+      --success: #2ecc71;
+      --warning: #f1c40f;
+      --muted: #95a5a6;
+      --border-radius: 8px;
+    }
+
+    body {
+      background-color: var(--primary-bg);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-color);
+      padding-left: 90px;
+    }
+
+    .main-container {
+      padding: 2rem;
+      padding-left: calc(2rem + 90px);
+      min-height: 100vh;
+    }
+
+    .form-container {
+      background-color: var(--container-bg);
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .page-title {
+      color: var(--text-color);
+      font-size: 1.8rem;
+      margin-bottom: 2rem;
+      font-weight: 600;
+    }
+
+    /* Form Styling */
+    .form-label {
+      color: var(--text-color);
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-control,
+    .form-select {
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-color);
+      border-radius: var(--border-radius);
+      padding: 0.75rem;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: var(--primary-accent);
+      color: var(--text-color);
+      box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+    }
+
+    .form-control::placeholder {
+      color: var(--muted);
+    }
+
+    /* Input Group Styling */
+    .input-group .form-control {
+      border-right: none;
+    }
+
+    .input-group .btn {
+      border-top-right-radius: var(--border-radius) !important;
+      border-bottom-right-radius: var(--border-radius) !important;
+    }
+
+    /* Button Styling */
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-accent);
+      border-color: var(--primary-accent);
+      color: var(--text-color);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-accent-hover);
+      border-color: var(--primary-accent-hover);
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+      border-color: var(--danger);
+    }
+
+    .btn-danger:hover {
+      background-color: var(--danger-hover);
+      border-color: var(--danger-hover);
+    }
+
+    /* Invalid Feedback */
+    .invalid-feedback {
+      color: var(--danger);
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+
+    /* Form Control States */
+    .form-control.is-invalid,
+    .form-select.is-invalid {
+      border-color: var(--danger);
+      background-image: none;
+    }
+
+    .form-control.is-invalid:focus,
+    .form-select.is-invalid:focus {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 0.25rem rgba(231, 76, 60, 0.25);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        padding-left: 0;
+      }
+
+      .main-container {
+        padding: 1rem;
+      }
+
+      .form-container {
+        padding: 1.5rem;
+      }
+
+      .btn {
+        padding: 0.625rem 1.25rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .form-container {
+        padding: 1rem;
+      }
+
+      .page-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .d-flex.gap-3 {
+        flex-direction: column;
+        gap: 1rem !important;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+
+    /* Custom Date Input Styling */
+    input[type="date"] {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      opacity: 0.5;
+      cursor: pointer;
+    }
+
+    /* Number Input Arrows Styling */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      opacity: 1;
+      background: var(--container-bg);
+    }
+
+    :root {
+      --primary-bg: #1a1c1e;
+      --container-bg: #282c34;
+      --text-color: #ecf0f1;
+      --primary-accent: #3498db;
+      --primary-accent-hover: #2980b9;
+      --danger: #e74c3c;
+      --danger-hover: #c0392b;
+      --success: #2ecc71;
+      --warning: #f1c40f;
+      --muted: #95a5a6;
+      --border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Include Sidebar -->
+  <%- include('./layout/aside.ejs') %>
+
+  <div class="main-container">
+    <div class="form-container">
+      <h1 class="page-title">Update Coupon</h1>
+
+      <form id="couponForm">
+        <input type="hidden" id="couponId" value="<%= coupon._id %>">
+        <div class="row g-4">
+          <div class="col-md-12">
+            <label for="couponCode" class="form-label">Coupon Code*</label>
+            <div class="input-group">
+              <input type="text" class="form-control" id="couponCode" pattern="^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$" value="<%= coupon.code %>">
+              <button type="button" class="btn btn-primary" id="generateCode">Generate New</button>
+            </div>
+            <div class="invalid-feedback"></div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="discountType" class="form-label">Discount Type*</label>
+            <select class="form-select" id="discountType">
+              <option value="">Select type</option>
+              <option value="percentage" <%= coupon.discountType === 'percentage' ? 'selected' : '' %>>Percentage</option>
+              <option value="fixed" <%= coupon.discountType === 'fixed' ? 'selected' : '' %>>Fixed Amount</option>
+            </select>
+            <div class="invalid-feedback"></div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="discountValue" class="form-label">Discount Value*</label>
+            <input type="number" class="form-control" id="discountValue" min="0" value="<%= coupon.discountValue %>">
+            <div class="invalid-feedback"></div>
+          </div>
+
+          <div class="col-md-6" id="maxDiscountContainer" style="display: <%= coupon.discountType === 'percentage' ? 'block' : 'none' %>;">
+            <label for="maxDiscount" class="form-label">Maximum Discount*</label>
+            <input type="number" class="form-control" id="maxDiscount" min="0" value="<%= coupon.maxDiscount %>">
+            <div class="invalid-feedback"></div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="minPurchase" class="form-label">Minimum Purchase*</label>
+            <input type="number" class="form-control" id="minPurchase" min="0" value="<%= coupon.minPurchase %>">
+            <div class="invalid-feedback"></div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="startDate" class="form-label">Start Date*</label>
+            <input type="date" class="form-control" id="startDate" value="<%= new Date(coupon.startDate).toISOString().split('T')[0] %>">
+            <div class="invalid-feedback"></div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="endDate" class="form-label">End Date*</label>
+            <input type="date" class="form-control" id="endDate" value="<%= new Date(coupon.endDate).toISOString().split('T')[0] %>">
+            <div class="invalid-feedback"></div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="usageLimit" class="form-label">Usage Limit*</label>
+            <input type="number" class="form-control" id="usageLimit" min="1" value="<%= coupon.usageLimit %>">
+            <div class="invalid-feedback"></div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="status" class="form-label">Status*</label>
+            <select class="form-select" id="status" name="status">
+                <option value="Active" <%= coupon.isActive === 'Active' ? 'selected' : '' %>>Active</option>
+                <option value="Inactive" <%= coupon.isActive === 'Inactive' ? 'selected' : '' %>>Inactive</option>
+            </select>
+            <div class="invalid-feedback"></div>
+        </div>
+        
+
+          <div class="col-12 mt-4">
+            <div class="d-flex gap-3 justify-content-end flex-wrap">
+              <button type="button" class="btn btn-danger" id="cancelBtn">Cancel</button>
+              <button type="submit" class="btn btn-primary">Update Coupon</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        let form=   document.getElementById('couponForm')
+        
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                let isValid = true;
+                const fields = ['couponCode', 'discountType', 'discountValue', 'minPurchase', 
+                              'startDate', 'endDate', 'usageLimit', 'status'];
+
+                // if (discountTypeSelect.value === 'percentage') {
+                //     fields.push('maxDiscount');
+                // }
+                if(status==true){
+                    status="active"
+                }else{
+                    status="inactive"
+                }
+
+                fields.forEach(field => {
+                    if (!validateField(field)) {
+                        isValid = false;
+                    }
+                });
+
+                if (isValid) {
+                    try {
+                        const formData = {
+                            id: document.getElementById('couponId').value,
+                            code: document.getElementById('couponCode').value,
+                            discountType: document.getElementById('discountType').value,
+                            discountValue: parseFloat(document.getElementById('discountValue').value),
+                            minPurchase: parseFloat(document.getElementById('minPurchase').value),
+                            startDate: document.getElementById('startDate').value,
+                            endDate: document.getElementById('endDate').value,
+                            usageLimit: parseInt(document.getElementById('usageLimit').value),
+                            status: document.getElementById('status').value
+                        };
+
+                        if (discountTypeSelect.value === 'percentage') {
+                            formData.maxDiscount = parseFloat(document.getElementById('maxDiscount').value);
+                        }
+
+                        const response = await fetch(`/admin/couponManagement/update/${formData.id}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(formData)
+                        });
+
+                        if (response.ok) {
+                            await Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Coupon updated successfully',
+                                confirmButtonColor: '#3498db'
+                            });
+                            window.location.href = '/admin/couponManagement';
+                        } else {
+                            throw new Error('Failed to update coupon');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        await Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Failed to update coupon. Please try again.',
+                            confirmButtonColor: '#e74c3c'
+                        });
+                    }
+                }
+            });
+
+            // Add cancel button handler
+            document.getElementById('cancelBtn').addEventListener('click', () => {
+                window.location.href = '/admin/couponManagement';;
+
+            });
+        });
+    </script> -->
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('couponForm');
+      const discountTypeSelect = document.getElementById('discountType');
+      const maxDiscountContainer = document.getElementById('maxDiscountContainer');
+
+      const rules = {
+        couponCode: {
+          pattern: /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/,
+          message: 'Must be in format XXXX-XXXX-XXXX (uppercase letters and numbers only)'
+        },
+        discountValue: {
+          percentage: {
+            max: 100,
+            message: 'Percentage discount cannot exceed 100%'
+          },
+          fixed: {
+            max: 1000000,
+            message: 'Fixed discount cannot exceed 1,000,000'
+          }
+        },
+        dates: {
+          minGap: 24 * 60 * 60 * 1000,
+          maxGap: 365 * 24 * 60 * 60 * 1000
+        }
+      };
+
+      const tooltips = {};
+
+      function showTooltip(element, message) {
+        if (tooltips[element.id]) {
+          tooltips[element.id].remove();
+        }
+
+        const tooltip = document.createElement('div');
+        tooltip.className = 'tooltip';
+        tooltip.textContent = message;
+        tooltip.style.opacity = '0';
+
+        document.body.appendChild(tooltip);
+
+        const rect = element.getBoundingClientRect();
+        tooltip.style.top = `${rect.bottom + window.scrollY + 5}px`;
+        tooltip.style.left = `${rect.left + window.scrollX}px`;
+
+        requestAnimationFrame(() => {
+          tooltip.style.opacity = '1';
+        });
+
+        tooltips[element.id] = tooltip;
+      }
+
+      function hideTooltip(elementId) {
+        if (tooltips[elementId]) {
+          tooltips[elementId].remove();
+          delete tooltips[elementId];
+        }
+      }
+
+      discountTypeSelect.addEventListener('change', function() {
+        maxDiscountContainer.style.display =
+          this.value === 'percentage' ? 'block' : 'none';
+
+        if (this.value === 'percentage') {
+          document.getElementById('maxDiscount').required = true;
+        } else {
+          document.getElementById('maxDiscount').required = false;
+          document.getElementById('maxDiscount').value = '';
+        }
+        validateField('discountValue');
+      });
+
+      function validateField(fieldId) {
+        const field = document.getElementById(fieldId);
+        const feedback = field.nextElementSibling;
+        let isValid = true;
+        let message = '';
+
+        if (!field.value) {
+          isValid = false;
+          message = 'This field is required';
+        } else {
+          switch (fieldId) {
+            case 'couponCode':
+              if (!rules.couponCode.pattern.test(field.value)) {
+                isValid = false;
+                message = rules.couponCode.message;
+              }
+              break;
+
+            case 'discountValue':
+              const value = parseFloat(field.value);
+              const type = discountTypeSelect.value;
+
+              if (value <= 0) {
+                isValid = false;
+                message = 'Discount value must be greater than 0';
+              } else if (type === 'percentage' && value > rules.discountValue.percentage.max) {
+                isValid = false;
+                message = rules.discountValue.percentage.message;
+              } else if (type === 'fixed' && value > rules.discountValue.fixed.max) {
+                isValid = false;
+                message = rules.discountValue.fixed.message;
+              }
+              break;
+
+            case 'maxDiscount':
+              const maxValue = parseFloat(field.value);
+              const discountValue = parseFloat(document.getElementById('discountValue').value);
+
+              if (maxValue <= 0) {
+                isValid = false;
+                message = 'Maximum discount must be greater than 0';
+              } else if (maxValue < discountValue) {
+                isValid = false;
+                message = 'Maximum discount cannot be less than discount value';
+              }
+              break;
+
+            case 'startDate':
+            case 'endDate':
+              const startDate = new Date(document.getElementById('startDate').value);
+              const endDate = new Date(document.getElementById('endDate').value);
+              const today = new Date();
+              today.setHours(0, 0, 0, 0);
+
+              if (startDate < today) {
+                isValid = false;
+                message = 'Start date cannot be in the past';
+              } else if (startDate && endDate) {
+                const diff = endDate - startDate;
+                if (diff < rules.dates.minGap) {
+                  isValid = false;
+                  message = 'End date must be at least 1 day after start date';
+                } else if (diff > rules.dates.maxGap) {
+                  isValid = false;
+                  message = 'Coupon duration cannot exceed 1 year';
+                }
+              }
+              break;
+
+            case 'minPurchase':
+              const minPurchase = parseFloat(field.value);
+              if (minPurchase < 0) {
+                isValid = false;
+                message = 'Minimum purchase amount cannot be negative';
+              }
+              break;
+
+            case 'usageLimit':
+              const limit = parseInt(field.value);
+              if (limit < 1 || limit > 10000) {
+                isValid = false;
+                message = 'Usage limit must be between 1 and 10,000';
+              }
+              break;
+          }
+        }
+
+        field.classList.toggle('is-invalid', !isValid);
+        if (!isValid) {
+          feedback.textContent = message;
+          showTooltip(field, message);
+        } else {
+          hideTooltip(field.id);
+        }
+        return isValid;
+      }
+
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        let isValid = true;
+        const fields = ['couponCode', 'discountType', 'discountValue', 'minPurchase',
+          'startDate', 'endDate', 'usageLimit', 'status'
+        ];
+
+        if (discountTypeSelect.value === 'percentage') {
+          fields.push('maxDiscount');
+        }
+
+        fields.forEach(field => {
+          if (!validateField(field)) {
+            isValid = false;
+          }
+        });
+
+        if (isValid) {
+          try {
+            const formData = {
+              id: document.getElementById('couponId').value,
+              code: document.getElementById('couponCode').value,
+              discountType: document.getElementById('discountType').value,
+              discountValue: parseFloat(document.getElementById('discountValue').value),
+              minPurchase: parseFloat(document.getElementById('minPurchase').value),
+              startDate: document.getElementById('startDate').value,
+              endDate: document.getElementById('endDate').value,
+              usageLimit: parseInt(document.getElementById('usageLimit').value),
+               status: document.getElementById('status').value 
+            };
+
+            if (discountTypeSelect.value === 'percentage') {
+              formData.maxDiscount = parseFloat(document.getElementById('maxDiscount').value);
+            }
+
+            const response = await fetch(`/admin/couponManagement/update/${formData.id}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+              await Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Coupon updated successfully',
+                background: '#282c34',
+                color: '#ecf0f1',
+                confirmButtonColor: '#3498db'
+              });
+              window.location.href = '/admin/couponManagement';
+            } else {
+              throw new Error('Failed to update coupon');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            await Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'Failed to update coupon. Please try again.',
+              background: '#282c34',
+              color: '#ecf0f1',
+              confirmButtonColor: '#e74c3c'
+            });
+          }
+        } else {
+          await Swal.fire({
+            icon: 'error',
+            title: 'Validation Error',
+            text: 'Please check all fields and try again',
+            background: '#282c34',
+            color: '#ecf0f1',
+            confirmButtonColor: '#3498db'
+          });
+        }
+      });
+
+      document.getElementById('cancelBtn').addEventListener('click', () => {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: 'All changes will be lost',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, cancel',
+          cancelButtonText: 'No, keep editing',
+          background: '#282c34',
+          color: '#ecf0f1',
+          confirmButtonColor: '#e74c3c',
+          cancelButtonColor: '#3498db'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '/admin/couponManagement';
+          }
+        });
+      });
+
+      form.querySelectorAll('input, select').forEach(field => {
+        ['blur', 'input'].forEach(eventType => {
+          field.addEventListener(eventType, () => validateField(field.id));
+        });
+      });
+
+      window.addEventListener('beforeunload', () => {
+        Object.keys(tooltips).forEach(key => {
+          hideTooltip(key);
+        });
+      });
+    });
+  </script>
+
+</body>
+
+</html>

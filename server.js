@@ -6,7 +6,8 @@ const adminRouter = require('./routers/adminRouters/adminRouter.js');
 const CategoryRouter = require('./routers/adminRouters/CategoryRouter.js');
 const productRouter = require('./routers/adminRouters/ProductRouter.js');
 const UserManegementRouter = require('./routers/adminRouters/UserManegementRouter.js');
-const orderRouter=require('./routers/adminRouters/orderRouter.js')
+const orderRouter=require('./routers/adminRouters/orderRouter.js');
+const couponRouter=require('./routers/adminRouters/couponRouter.js');
 
 
 //=======user-routers============>
@@ -64,6 +65,7 @@ app.use('/admin', CategoryRouter);
 app.use('/admin', productRouter);
 app.use('/admin', UserManegementRouter);
 app.use('/admin', orderRouter);
+app.use('/admin', couponRouter);
 
 
 

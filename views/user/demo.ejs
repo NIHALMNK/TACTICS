@@ -3,169 +3,320 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wishlist</title>
+    <title>Coupon Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root {
+            --primary-bg: #1a1c1e;
+            --container-bg: #282c34;
+            --text-color: #ecf0f1;
+            --primary-accent: #3498db;
+            --primary-accent-hover: #2980b9;
+            --danger: #e74c3c;
+            --danger-hover: #c0392b;
+            --success: #2ecc71;
+            --warning: #f1c40f;
+            --muted: #95a5a6;
+            --border-radius: 8px;
+        }
+
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f5f7fa;
+            background-color: var(--primary-bg);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
         }
 
-        .wishlist-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem 0;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
+        .dashboard-wrapper {
+            min-height: 100vh;
             padding: 1rem;
         }
 
-        .product-card {
-            background: white;
-            border-radius: 1rem;
+        .dashboard-container {
+            background-color: var(--container-bg);
+            border-radius: var(--border-radius);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .wishlist-badge {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: white;
-            border-radius: 50%;
-            width: 2.5rem;
-            height: 2.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .wishlist-badge i {
-            color: #e74c3c;
-            font-size: 1.2rem;
-        }
-
-        .wishlist-badge:hover {
-            transform: scale(1.1);
-        }
-
-        .product-img-container {
-            position: relative;
-            padding-top: 100%;
-            overflow: hidden;
-        }
-
-        .product-img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .product-card:hover .product-img {
-            transform: scale(1.05);
-        }
-
-        .product-info {
             padding: 1.5rem;
+            margin: 0 auto;
         }
 
-        .product-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #2d3436;
-            margin-bottom: 0.5rem;
+        .page-header {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
         }
 
-        .product-price {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #2d3436;
-            margin-bottom: 1rem;
+        .header-title {
+            color: var(--text-color);
+            margin-bottom: 0;
         }
 
-        .product-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #636e72;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .add-to-cart-btn {
-            width: 100%;
-            padding: 0.8rem;
+        .add-coupon-btn {
+            background-color: var(--primary-accent);
+            color: var(--text-color);
+            border-radius: var(--border-radius);
+            padding: 0.75rem 1.25rem;
             border: none;
-            border-radius: 0.5rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-weight: 600;
             transition: all 0.3s ease;
         }
 
-        .add-to-cart-btn:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
+        .add-coupon-btn:hover {
+            background-color: var(--primary-accent-hover);
+            color: var(--text-color);
         }
 
-        .empty-wishlist {
-            text-align: center;
-            padding: 3rem;
-            color: #636e72;
+        .table-responsive-wrapper {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
         }
 
-        .empty-wishlist i {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            color: #b2bec3;
+        .table {
+            color: var(--text-color);
+            margin-bottom: 0;
         }
 
-        @media (max-width: 768px) {
-            .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        .table thead th {
+            color: var(--muted);
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            background-color: var(--container-bg);
+        }
+
+        .table td {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            background-color: var(--container-bg);
+            color: var(--text-color);
+        }
+
+        .coupon-code {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--primary-accent);
+            padding: 0.375rem 0.75rem;
+            border-radius: var(--border-radius);
+            font-family: monospace;
+        }
+
+        .status-badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+        }
+
+        .status-active {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success);
+        }
+
+        .btn-update {
+            background-color: rgba(241, 196, 15, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(241, 196, 15, 0.2);
+            padding: 0.375rem 0.75rem;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+        .btn-update:hover {
+            background-color: rgba(241, 196, 15, 0.2);
+        }
+
+        .text-muted {
+            color: var(--muted) !important;
+        }
+
+        .pagination {
+            margin-bottom: 0;
+        }
+
+        .page-link {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            margin: 0 0.25rem;
+            border-radius: var(--border-radius);
+        }
+
+        .page-link:hover {
+            background-color: var(--primary-accent);
+            border-color: var(--primary-accent);
+            color: var(--text-color);
+        }
+
+        .page-item.active .page-link {
+            background-color: var(--primary-accent);
+            border-color: var(--primary-accent);
+        }
+
+
+
+        /* Media Queries */
+        /* Small Mobile - 320px */
+        @media (max-width: 320px) {
+            .dashboard-container {
+                padding: 0.75rem;
+            }
+
+            .page-header {
+                padding: 1rem;
+            }
+
+            .header-title {
+                font-size: 1.25rem;
+            }
+
+            .add-coupon-btn {
+                width: 100%;
+                margin-top: 0.75rem;
+                padding: 0.5rem;
+            }
+        }
+
+        /* Medium Mobile - 375px */
+        @media (min-width: 321px) and (max-width: 375px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+
+            .table td {
+                padding: 0.5rem;
+            }
+        }
+
+        /* Large Mobile - 425px */
+        @media (min-width: 376px) and (max-width: 425px) {
+            .table-responsive-wrapper {
+                padding: 1rem;
+            }
+
+            .status-badge {
+                padding: 0.25rem 0.5rem;
+            }
+        }
+
+        /* Tablet - 768px */
+        @media (min-width: 426px) and (max-width: 768px) {
+            .dashboard-container {
+                max-width: 720px;
+            }
+        }
+
+        /* Laptop - 1024px */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .dashboard-container {
+                max-width: 960px;
+            }
+        }
+
+        /* Laptop L - 1440px */
+        @media (min-width: 1025px) and (max-width: 1440px) {
+            .dashboard-container {
+                max-width: 1320px;
+            }
+        }
+
+        /* 4K - 2560px */
+        @media (min-width: 1441px) {
+            .dashboard-container {
+                max-width: 2400px;
+            }
+
+            .header-title {
+                font-size: 2rem;
+            }
+
+            .table {
+                font-size: 1.1rem;
             }
         }
     </style>
 </head>
 <body>
-    <%- include('./layout/NAV.ejs') %>
+   
+<!-- Include Sidebar (similar to reference code) -->
+<%- include('../admin/layout/aside') %>
 
-    <div class="wishlist-header">
-        <h1>My Wishlist</h1>
-        <p>Keep track of all your favorite items</p>
-    </div>
-
-  
-            <!-- Empty State -->
-            <div class="empty-wishlist" >
-                <i class="far fa-heart"></i>
-                <h3>Your wishlist is empty</h3>
-                <p>Save items you love to your wishlist and review them anytime!</p>
+    <div class="dashboard-wrapper">
+        <div class="dashboard-container">
+            <div class="page-header">
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-6">
+                        <h1 class="header-title mb-md-0">Coupon Management</h1>
+                    </div>
+                    <div class="col-12 col-md-6 text-md-end">
+                        <button class="add-coupon-btn">
+                            <i class="fas fa-plus me-2"></i>
+                            Add New Coupon
+                        </button>
+                    </div>
+                </div>
             </div>
+
+            <div class="table-responsive-wrapper">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Coupon Code</th>
+                                <th>Discount</th>
+                                <th>Min Purchase</th>
+                                <th>Dates</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><span class="coupon-code">SUMMER23</span></td>
+                                <td>20%</td>
+                                <td>$50</td>
+                                <td>
+                                    <small class="text-muted d-block">Start: 01/01/2024</small>
+                                    <small class="text-muted d-block">End: 12/31/2024</small>
+                                </td>
+                                <td>
+                                    <span class="status-badge status-active">
+                                        <!-- <i class="fas fa-circle fa-xs me-1"></i> -->
+                                        Active
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn-update">
+                                        <i class="fas fa-edit me-1"></i>
+                                        Update
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 
-    <%- include('./layout/FOOTER.ejs') %>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

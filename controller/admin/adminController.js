@@ -35,7 +35,7 @@ module.exports ={
             const { email, password } = req.body;
     
             console.log('Admin email:', email);
-            console.log('Admin password:', password);
+            
     
             
             const admin = await User.findOne({ email });
