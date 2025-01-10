@@ -326,7 +326,6 @@
         <!-- Main Content -->
         <div class="main-content">
           <h2 class="section-title">Your Orders</h2>
-          
           <% if (orders && orders.length > 0) { %>
             <% orders.forEach(order => { %>
               <div class="order-card">
@@ -593,8 +592,16 @@ async function handleOrderCancellation(event) {
 
 // Handle order return
 async function handleOrderReturn(event) {
+
+  
   const orderCard = this.closest('.order-card');
   const orderId = orderCard.querySelector('.order-id').textContent.split('#')[1];
+
+
+  
+  
+  
+
 
   const { value: reason } = await Swal.fire({
     title: 'Return Order',
@@ -611,6 +618,8 @@ async function handleOrderReturn(event) {
       }
     }
   });
+  
+
 
   if (reason) {
     try {
@@ -619,8 +628,8 @@ async function handleOrderReturn(event) {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ reason })
-      });
+        body: JSON.stringify({ reason ,orderId })
+      });      
 
       const data = await response.json();
 

@@ -365,7 +365,7 @@
       <button type="button" class="btn btn-outline-success w-100 mb-3 payment-button" id="cod" data-payment="cod">
           Cash on Delivery
       </button>
-      <button type="button" class="btn btn-outline-success w-100 mb-3 payment-button" id="online" data-payment="razorpay">
+      <button type="button" class="btn btn-outline-success w-100 mb-3 payment-button" id="razorpay" data-payment="razorpay">
           Razorpay
       </button>
   </div>
@@ -440,6 +440,7 @@
       
     <!-- Add this in the head section of checkout.ejs -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.querySelectorAll('.custom-radio').forEach(radio => {
@@ -696,30 +697,90 @@ document.querySelector(".btn-placeorder").addEventListener('click', async () => 
             return;
         }
 
-        const response = await fetch("/checkout/placeorder", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                addressid: selectedAddress,
-                selectedPayment: selectedPayment,
-            })
-        });
+        if (selectedPayment === 'cod') {
+            // Your existing COD logic
+            const response = await fetch("/checkout/placeorder", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    addressid: selectedAddress,
+                    selectedPayment: selectedPayment,
+                })
+            });
 
-        const data = await response.json();
-        
-        if (data.success && data.orderId) {          
-            window.location.href = `/order/success/${data.orderId}`;
-        } else {
-            alert(data.message || 'Something went wrong');
+            const data = await response.json();
+            
+            if (data.success && data.orderId) {          
+                window.location.href = `/order/success/${data.orderId}`;
+            }
+        } else if (selectedPayment === 'razorpay') {
+            // Create Razorpay order
+            const orderResponse = await fetch("/checkout/create-razorpay-order", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    addressid: selectedAddress
+                })
+            });
+
+            const orderData = await orderResponse.json();
+            
+            if (!orderData.success) {
+                throw new Error(orderData.message);
+            }
+
+            // Initialize Razorpay payment
+            const options = {
+                key: orderData.key_id,
+                amount: orderData.amount,
+                currency: "INR",
+                name: "Your Store Name",
+                description: "Purchase Payment",
+                order_id: orderData.order_id,
+                handler: async function (response) {
+                    // Verify payment
+                    const verifyResponse = await fetch("/checkout/verify-payment", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            addressid: selectedAddress
+                        })
+                    });
+
+                    const verifyData = await verifyResponse.json();
+                    
+                    if (verifyData.success) {
+                        window.location.href = `/order/success/${verifyData.orderId}`;
+                    } else {
+                        alert('Payment verification failed');
+                    }
+                },
+                prefill: {
+                    name: "<%= user.name %>",
+                    email: "<%= user.email %>",
+                    contact: "<%= user.phone %>"
+                },
+                theme: {
+                    color: "#3AA39F"
+                }
+            };
+
+            const rzp = new Razorpay(options);
+            rzp.open();
         }
     } catch (error) {
         alert("Error: " + error.message);
     }
 });
-
-
 
 
 

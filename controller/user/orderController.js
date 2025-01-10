@@ -147,8 +147,12 @@ const orderController = {
     try {
       
 
-      const { orderId } = req.params;
-      const { reason } = req.body;
+      // const { orderId } = req.params;
+      const { reason, orderId} = req.body;
+
+
+      console.log(orderId);
+      
       const order = await Order.findById(orderId);
 
       if (!order) {
@@ -203,7 +207,7 @@ const orderController = {
     
         order.status = 'Cancelled';
         const method=order.paymentMethod;
-        if (method==='razerpay'&&order.status === 'Cancelled'){
+        if (method==='razorpay'&&order.status === 'Cancelled'){
           let walletdata=await wallet.findOne({userId})
           if(!walletdata){
             walletdata=await wallet.create({

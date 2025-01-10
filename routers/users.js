@@ -78,7 +78,7 @@ router.get('/order/:orderId', orderController.getOrderDetails);
 
 
 // Request return
-router.post('/order/:orderId/return', orderController.requestReturn);
+router.post('/order/return/:id', orderController.requestReturn);
 
 router.post('/order/cancel/:orderId', orderController.cancelOrder);
 
@@ -118,6 +118,9 @@ router.get('/checkout',checkoutController.loadCheckout);
 router.post('/checkout/placeorder',checkoutController.placeOrder);
 router.get('/order/success/:orderId', checkoutController.loadPaymentSuccess);
 router.get('/order/success',checkoutController .loadPaymentSuccess);
+
+router.post('/checkout/create-razorpay-order', checkoutController.createRazorpayOrder);
+router.post('/checkout/verify-payment', checkoutController.verifyRazorpayPayment);
 
 router.post('/checkout/validateCoupon',checkoutController.validateCoupon)
 

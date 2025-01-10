@@ -2,6 +2,11 @@ const mongoose = require('mongoose')
 
 
 const orderSchema = new mongoose.Schema({
+    orderId: {
+        type: String,
+        unique: true,
+        required: true
+    },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "users"
@@ -43,7 +48,7 @@ const orderSchema = new mongoose.Schema({
     },
     paymentMethod: {
         type: String,
-        enum: ['cod', 'razerpay'],
+        enum: ['cod', 'razorpay'],
         default: 'cod'
     },
     paymentStatus: {
@@ -74,5 +79,31 @@ const orderSchema = new mongoose.Schema({
         index: { expireAfterSeconds: 0 } 
     }
 })
+
+
+function generateOrderId() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+// Pre-validate middleware to set orderId
+orderSchema.pre('validate', async function(next) {
+    if (!this.orderId) {
+        let isUnique = false;
+        let newOrderId;
+        
+        // Keep trying until we get a unique orderId
+        while (!isUnique) {
+            newOrderId = generateOrderId();
+            // Check if this orderId already exists
+            const existingOrder = await this.constructor.findOne({ orderId: newOrderId });
+            if (!existingOrder) {
+                isUnique = true;
+            }
+        }
+        
+        this.orderId = newOrderId;
+    }
+    next();
+});
 
 module.exports = mongoose.model("Orders", orderSchema)
