@@ -78,7 +78,7 @@ router.get('/order/:orderId', orderController.getOrderDetails);
 
 
 // Request return
-router.post('/order/return/:id', orderController.requestReturn);
+router.post('/order/return/:orderId', orderController.requestReturn);
 
 router.post('/order/cancel/:orderId', orderController.cancelOrder);
 

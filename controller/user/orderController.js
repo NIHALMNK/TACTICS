@@ -150,24 +150,30 @@ const orderController = {
       // const { orderId } = req.params;
       const { reason, orderId} = req.body;
 
-
-      console.log(orderId);
+      
       
       const order = await Order.findById(orderId);
 
       if (!order) {
+        // console.log("Order not found");
+        
         return res.status(404).json({ message: 'Order not found' });
       }
 
+
       if (order.status !== 'Completed') {
+        // console.log("-=-=-DONE-=-=-");
+        
         return res.status(400).json({ message: 'Order cannot be returned' });
       }
-
+      
       order.status = 'Requested';
       order.refundReason = reason;
+      // console.log("------->order");
       await order.save();
 
-      res.json({ message: 'Return requested successfully' });
+     return res.json({ message: 'Return requested successfully' });
+
     } catch (error) {
       console.error('Error requesting return:', error);
       res.status(500).json({ message: 'Failed to request return' });

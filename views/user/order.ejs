@@ -631,12 +631,17 @@ async function handleOrderReturn(event) {
         body: JSON.stringify({ reason ,orderId })
       });      
 
+      
+      
+
       const data = await response.json();
+
+
 
       if (data.success) {
         await Swal.fire({
           title: 'Return Requested!',
-          text: 'Your return request has been submitted.',
+          text: data.message || 'Your return request has been submitted.',
           icon: 'success',
           timer: 2000,
           showConfirmButton: false
@@ -645,7 +650,7 @@ async function handleOrderReturn(event) {
       } else {
         await Swal.fire({
           title: 'Error!',
-          text: data.message || 'Failed to submit return request',
+          text: 'Failed to submit return request',
           icon: 'error'
         });
       }
