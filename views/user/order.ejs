@@ -422,6 +422,29 @@
             <% }); %>
           </div>
 
+          <!---Add address-->
+       <!-- Shipping Address Section -->
+<div class="mb-4">
+  <h6 class="fw-bold mb-3">Shipping Address</h6>
+  <div class="card">
+    <div class="card-body">
+      <% if (order.shippingAddress) { %>
+        <p class="mb-1"><strong>House/Building:</strong> <%= order.shippingAddress.house %></p>
+        <p class="mb-1"><strong>Street:</strong> <%= order.shippingAddress.street %></p>
+        <p class="mb-1"><strong>City:</strong> <%= order.shippingAddress.city %></p>
+        <p class="mb-1"><strong>District:</strong> <%= order.shippingAddress.district %></p>
+        <p class="mb-1"><strong>State:</strong> <%= order.shippingAddress.state %></p>
+        <% if (order.shippingAddress.landmark) { %>
+          <p class="mb-1"><strong>Landmark:</strong> <%= order.shippingAddress.landmark %></p>
+        <% } %>
+        <p class="mb-0"><strong>PIN Code:</strong> <%= order.shippingAddress.pinCode %></p>
+      <% } else { %>
+        <p class="mb-0 text-muted">Address details not available</p>
+      <% } %>
+    </div>
+  </div>
+</div>
+
           <!-- Order Summary -->
           <div class="card bg-light">
             <div class="card-body">

@@ -237,6 +237,9 @@
       </table>
     </div>
   </div>
+
+
+
   <!-- Modal for Viewing Order Details -->
   <div class="modal fade" id="orderDetailsModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
@@ -259,6 +262,29 @@
               <label class="form-label">Order Items</label>
               <div id="orderItemsContainer"></div>
             </div>
+
+
+            
+            <div class="mb-3">
+              <label class="form-label">Shipping Address</label>
+              <div class="address-details p-3 rounded" style="background-color: rgba(255, 255, 255, 0.05);">
+                <div class="row">
+                  <div class="col-md-6">
+                    <p><strong>House/Building:</strong> <span id="addressHouse"></span></p>
+                    <p><strong>Street:</strong> <span id="addressStreet"></span></p>
+                    <p><strong>City:</strong> <span id="addressCity"></span></p>
+                  </div>
+                  <div class="col-md-6">
+                    <p><strong>District:</strong> <span id="addressDistrict"></span></p>
+                    <p><strong>State:</strong> <span id="addressState"></span></p>
+                    <p><strong>Landmark:</strong> <span id="addressLandmark"></span></p>
+                    <p><strong>PIN Code:</strong> <span id="addressPinCode"></span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            
             <div class="mb-3">
               <label for="shippingStatus" class="form-label">Shipping Status</label>
               <select class="form-select" id="shippingStatus">
@@ -317,11 +343,32 @@
         const order = data.order;
 
 
+
         // Populate modal fields
         document.getElementById('orderNo').value = order._id;
         document.getElementById('userName').value = order.userId.name;
+
+        if (order.shippingAddress) {
+            const address = order.shippingAddress;
+            document.getElementById('addressHouse').textContent = address.house || 'N/A';
+            document.getElementById('addressStreet').textContent = address.street || 'N/A';
+            document.getElementById('addressCity').textContent = address.city || 'N/A';
+            document.getElementById('addressDistrict').textContent = address.district || 'N/A';
+            document.getElementById('addressState').textContent = address.state || 'N/A';
+            document.getElementById('addressLandmark').textContent = address.landmark || 'N/A';
+            document.getElementById('addressPinCode').textContent = address.pinCode || 'N/A';
+        } else {
+            // If no address is found, display "No address found" instead of "Address not available"
+            const addressFields = ['House', 'Street', 'City', 'District', 'State', 'Landmark', 'PinCode'];
+            addressFields.forEach(field => {
+                document.getElementById(`address${field}`).textContent = 'No address found';
+            });
+        }
+
+        
         const shippingStatusSelect = document.getElementById('shippingStatus');
         shippingStatusSelect.value = order.status;
+
 
         // Check if status should be locked
         const lockedStatuses = ['Cancelled', 'Rejected', 'Requested', 'Returned'];

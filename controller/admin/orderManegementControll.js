@@ -44,11 +44,15 @@ module.exports = {
         try {
             const orderId = req.params.id
             const orderDetails = await order.findById(orderId)
-                .populate('userId', 'name email')
-                .populate({
-                    path: 'orderItems.productId',
-                    select: 'name price images'
-                })
+            .populate({
+                path: 'userId',
+                model: 'users', 
+                select: 'name email address'
+            })
+            .populate({
+                path: 'orderItems.productId',
+                select: 'name price images'
+            });
 
             if (!orderDetails) {
                 return res.status(404).json({
@@ -57,10 +61,23 @@ module.exports = {
                 })
             }
 
+           // Safely get the shipping address
+           const userAddresses = orderDetails.userId?.address || [];
+           const shippingAddress = userAddresses.find(addr => 
+               addr._id.toString() === orderDetails.addressId.toString()
+           );
+   
+           const orderResponse = {
+            ...orderDetails.toObject(),
+            shippingAddress: shippingAddress || null
+        };
+
+
             res.json({
-                success: true,
-                order: orderDetails
-            })
+            success: true,
+            order: orderResponse
+        });
+        
         } catch (error) {
             console.error('Error in getOrderDetails:', error)
             res.status(500).json({

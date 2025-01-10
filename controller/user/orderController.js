@@ -9,15 +9,20 @@ const orderController = {
     loadOrders: async (req, res) => {
       try {
         const userId = req.session.user.id;
-
+        
+        // First get the user to access their addresses
+        const user = await User.findById(userId);
         
         const orders = await Order.find({ userId })
-        .populate('orderItems.productId')
+          .populate('orderItems.productId')
           .sort({ createdAt: -1 });
-
-          
   
         const formattedOrders = orders.map(order => {
+          // Find the matching address from user's address array
+          const shippingAddress = user.address.find(addr => 
+            addr._id.toString() === order.addressId.toString()
+          );
+  
           const totals = order.orderItems.reduce((acc, item) => {
             const mrpTotal = item.productId.price * item.quantity;
             const offerTotal = item.productId.offerPrice * item.quantity;
@@ -59,7 +64,15 @@ const orderController = {
             discount: discount,
             total: total,
             status: order.status,
-            shippingAddress: formatAddress(order.addressId),
+            shippingAddress: shippingAddress ? {
+              house: shippingAddress.house,
+              street: shippingAddress.street,
+              city: shippingAddress.city,
+              state: shippingAddress.state,
+              district: shippingAddress.district,
+              landmark: shippingAddress.landmark,
+              pinCode: shippingAddress.pinCode
+            } : null,
             paymentMethod: order.paymentMethod,
             paymentStatus: order.paymentStatus
           };
