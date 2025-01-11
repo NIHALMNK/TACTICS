@@ -57,21 +57,28 @@
               </div>
             </div>
 
-            <!-- Image Upload Section -->
-            <div class="form-group">
-              <label class="form-label">Product Images</label>
-              <div class="round-preview-container">
-                <% for (let i = 0; i < 4; i++) { %>
-                  <div class="image-upload-wrapper">
-                  <label for="image<%= i %>">
-                    <img id="roundPreview<%= i %>" class="round-preview" src="/default-image.png" alt="Preview <%= i + 1 %>" />
-                  </label>
-                  <input type="file" class="form-control productImagesAdd" id="image<%= i %>"   name="productImages<%= i+1 %>" accept="image/*" style="display: none;" />
-                  <p id="imageError<%= i %>" class="text-danger" style="display:none;">Please select a valid image file.</p>
-                </div>
-                <% } %>
+            <div class="form-group mb-4">
+              <label class="form-label d-block fw-bold mb-3">Product Images</label>
+              <div class="image-upload-grid">
+                  <% for (let i = 0; i < 4; i++) { %>
+                  <div class="image-upload-card">
+                      <div class="image-preview-wrapper">
+                          <label for="image<%= i %>" class="image-label">
+                              <img id="roundPreview<%= i %>" class="preview-image" src="/default-image.png" alt="Preview <%= i + 1 %>" />
+                              <div class="upload-overlay">
+                                  <i class="fas fa-camera camera-icon"></i>
+                                  <span class="upload-text">Click to Upload</span>
+                              </div>
+                          </label>
+                          <input type="file" class="form-control productImagesAdd" id="image<%= i %>" name="productImages<%= i+1 %>" accept="image/*" hidden>
+                      </div>
+                      <div class="image-number">Image <%= i + 1 %></div>
+                  </div>
+                  <% } %>
               </div>
-            </div>
+              <small class="text-muted mt-2">Upload up to 4 product images (Recommended size: 800x800px)</small>
+          </div>
+
 
             <div class="form-group">
               <label for="productDescription" class="form-label">Description</label>
@@ -156,24 +163,25 @@
       </div>
     </div>
 
-    <!-- Crop Image Modal -->
-    <div class="modal fade" id="cropImageModal" tabindex="-1" aria-labelledby="cropImageModalLabel" aria-hidden="true">
+     <!-- Image Crop Modal -->
+     <div class="modal fade" id="cropImageModal" tabindex="-1">
       <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="cropImageModalLabel">Crop Image</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title">Crop Image</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                  <div class="img-container">
+                      <img id="imageToCrop" src="" alt="Image to crop">
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-primary" id="cropButton">Crop & Save</button>
+              </div>
           </div>
-          <div class="modal-body">
-            <img id="imageToCrop" src="" alt="Image to crop" style="max-width: 100%;" />
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" id="cropButton" class="btn btn-primary">Crop Image</button>
-          </div>
-        </div>
       </div>
-    </div>
   </div>
 
 

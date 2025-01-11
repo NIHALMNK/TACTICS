@@ -8,7 +8,7 @@
   <!-- External CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/admin/productAdd.css">
+  <link rel="stylesheet" href="/css/admin/productUpdate.css">
 </head>
 
 <body>
@@ -57,29 +57,43 @@
               </div>
             </div>
 
-            <!-- Product Images -->
-            <div class="form-group">
-              <label class="form-label">Product Images</label>
-              <div class="round-preview-container">
-                <% for (let i = 0; i < 4; i++) { %>
-                <div class="image-upload-wrapper">
-                  <label for="productImages<%= i %>">
-                    <img id="roundPreview<%= i %>" class="round-preview"
-                         src="<%= product.images[i] || '/default-image.png' %>"
-                         alt="Preview <%= i + 1 %>" />
-                  </label>
-                  <div style="display: none;" class="file-input-container">
-                      <input type="file" class="form-control"
-                      id="productImages<%= i %>"
-                      name="productImages[]"
-                      accept="image/*"/>
+            <div class="form-group mb-4">
+              <label class="form-label fw-bold mb-3">Product Images</label>
+              <div class="image-update-grid">
+                  <% for (let i = 0; i < 4; i++) { %>
+                  <div class="image-update-card">
+                      <div class="image-preview-wrapper">
+                          <label for="productImages<%= i %>" class="image-label">
+                              <img id="roundPreview<%= i %>" 
+                                   class="preview-image" 
+                                   src="<%= product.images[i] || '/default-image.png' %>" 
+                                   alt="Preview <%= i + 1 %>" />
+                              <div class="upload-overlay">
+                                  <i class="fas fa-camera camera-icon"></i>
+                                  <span class="upload-text">Change Image</span>
+                                  <% if (product.images[i]) { %>
+                                      <button type="button" class="remove-image-btn" data-image-index="<%= i %>">
+                                          <!-- <i class="fas fa-trash-alt"></i> -->
+                                      </button>
+                                  <% } %>
+                              </div>
+                          </label>
+                          <div class="file-input-container" style="display: none;">
+                              <input type="file" 
+                                     class="form-control" 
+                                     id="productImages<%= i %>" 
+                                     name="productImages[]" 
+                                     accept="image/*"/>
+                          </div>
+                          <input type="hidden" name="existingImages[]" value="<%= product.images[i] %>" />
+                      </div>
+                      <div class="image-number">Image <%= i + 1 %></div>
                   </div>
-                  <input type="hidden" name="existingImages[]" value="<%= product.images[i] %>" />
-
-                </div>
-                <% } %>
+                  <% } %>
               </div>
-            </div>
+              <small class="text-muted mt-2">Click on an image to update it. Recommended size: 800x800px</small>
+          </div>
+          
 
             <!-- Product Details -->
             <div class="form-group">
