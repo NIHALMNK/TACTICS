@@ -8,7 +8,11 @@
     <link rel="stylesheet" href="/css/admin/userManagement.css">
 </head>
 <body>
-    <%- include('./layout/aside.ejs') %>
+    <%- include('./layout/asidebar.ejs') %>
+    <main class="main-content">
+        <div class="container-fluid">
+          
+     
     
     <div class="container-fluid">
         <div class="row">
@@ -20,7 +24,7 @@
                         <!-- Search Form -->
                         <form class="nav-link mt-2 mt-md-0 d-lg-flex search mb-4">
                             <input type="text" class="form-control" placeholder="Search users">
-                            <button class="btn ms-2">Search</button>
+                            <button class="btn ms-2 " id="search-btn">Search</button>
                         </form>
                         
                         <!-- Table to display user data -->
@@ -124,6 +128,11 @@
             </div>
         </div>
     </div>
+
+
+
+</div>
+</main>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/js/admin/userManagement.js"></script>

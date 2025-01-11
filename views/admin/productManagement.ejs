@@ -17,18 +17,21 @@
 
 <body>
 <!-- Include Sidebar (similar to reference code) -->
-<%- include('./layout/aside.ejs') %>
+<%- include('./layout/asidebar.ejs') %>
+
+<main class="main-content">
+  <div class="container-fluid">
 
   <div id="content">
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
-          <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
+          <div class="card" >
+            <div class="card-header d-flex justify-content-between align-items-center card-bdy" id="card-bdy">
               <h4 class="card-title mb-0">Product Management</h4>
               <div class="search-container">
                 <input type="text" class="form-control" placeholder="Search products">
-                <button class="btn btn-primary">
+                <button class="btn btn-success">
                   <i class="fas fa-search"></i> Search
                 </button>
               </div>
@@ -66,10 +69,10 @@
                       </td>
                       <td>
                         <div class="d-flex gap-2">
-                          <a href="/admin/productManagement/update/<%= product._id %>" class="btn btn-sm btn-action btn-primary">
+                          <a href="/admin/productManagement/update/<%= product._id %>" class="btn btn-sm btn-action btn-success">
                             <i class="fas fa-edit"></i> Edit
                           </a>
-                          <button class="btn btn-sm btn-action btn-delete" data-id="<%= product._id %>">
+                          <button class="btn btn-sm btn-action btn-danger  btn-delete" data-id="<%= product._id %>">
                             <i class="fas fa-trash"></i> Delete
                           </button>
                         </div>
@@ -84,7 +87,7 @@
             <!-- Pagination Controls -->
 
 
-            <div class="d-flex justify-content-center align-items-center mt-3">
+            <div class="d-flex justify-content-center align-items-center  page-bdy">
               <div class="pagination-container text-center">
                 <span class="me-2">Page <%= currentPage %> of <%= totalPages %></span>
                 <nav aria-label="Page navigation">
@@ -116,8 +119,10 @@
 
           </div>
 
+          <h1></h1>
+
           <div class="action-buttons">
-            <a href="/admin/productManagement/add" class="btn btn-create btn-action">
+            <a href="/admin/productManagement/add" class="btn btn-create btn-action btn-success ">
               <i class="fas fa-plus-circle"></i> Create New Product
             </a>
             <button class="btn btn-warning btn-action" id="btn-del-prod">
@@ -131,7 +136,8 @@
     </div>
   </div>
 
-
+</div>
+</main>
 
   <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
