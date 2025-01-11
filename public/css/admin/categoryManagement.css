@@ -1,20 +1,20 @@
 :root {
-    --primary-bg-color: #2c3e50;
-    --container-bg-color: #34495e;
-    --text-color: #ecf0f1;
-    --secondary-text-color: #ffffff;
-    --muted-text-color: #ffffff;
-    --primary-action-color: #1abc9c;
-    --primary-action-hover: #16a085;
-    --danger-action-color: #e74c3c;
-    --danger-action-hover: #c0392b;
-    --hover-bg-color: #2f4a5a;
+    --bg-dark: #1a1f26;
+    --bg-darker: #151a21;
+    --card-bg: #1B232D;
+    --border-color: #2d3643;
+    --text-color: #ffffff;
+    --text-muted: #8b949e;
+    --status-green: #22c55e;
+    --status-darkgreen: #2E8B57;
+    --status-red: #ef4444;
+    --hover-bg: #262d36;
 }
 
 body {
-    background-color: var(--primary-bg-color);
+    background-color: var(--bg-dark);
     color: var(--text-color);
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .main-content {
@@ -23,18 +23,28 @@ body {
 }
 
 .card {
-    border: none;
-    border-radius: 15px;
-    background-color: var(--container-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background-color: var(--card-bg);
     color: var(--text-color);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     margin-bottom: 20px;
 }
 
-.card-header {
-    border-bottom: 1px solid var(--muted-text-color);
+.card-body{
+    border-bottom: 1px solid var(--border-color);
     padding: 1.5rem;
-    background-color: var(--container-bg-color);
+    background-color: var(--card-bg);
+   
+    color: var(--text-color);
+}
+
+#card-header {
+    /* border-bottom: 1px solid var(--border-color); */
+    padding: 1.5rem;
+    background-color: var(--card-bg);
+    border-radius: 12px 12px 0 0;
+    color: var(--text-color);
 }
 
 .search-box {
@@ -42,11 +52,22 @@ body {
 }
 
 .search-box input {
-    background-color: var(--primary-bg-color);
+    background-color: var(--bg-darker);
     color: var(--text-color);
-    border: 1px solid var(--muted-text-color);
-    border-radius: 25px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
     padding: 12px 20px 12px 40px;
+    transition: all 0.2s ease;
+}
+
+.search-box input:focus {
+    border-color: var(--status-green);
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+    outline: none;
+}
+
+.search-box input::placeholder {
+    color: var(--text-muted);
 }
 
 .search-box i {
@@ -54,74 +75,114 @@ body {
     left: 15px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--muted-text-color);
+    color: var(--text-muted);
 }
 
 .table {
     color: var(--text-color);
+    margin-bottom: 0;
 }
 
-.table th {
+.table thead th {
     border-top: none;
-    background-color: var(--container-bg-color);
+    background-color: var(--bg-darker);
     color: var(--text-color);
+    font-weight: 500;
+    padding: 1rem;
+    font-size: 0.875rem;
 }
 
 .table td {
     vertical-align: middle;
-    background-color: var(--primary-bg-color);
+    background-color: var(--card-bg);
     color: var(--text-color);
-    font-weight: 600;
+    font-weight: 400;
+    padding: 1rem;
+    font-size: 0.875rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
-.table tr:hover {
-    background-color: var(--hover-bg-color);
+
+.table tbody tr td:nth-child(2n-1) {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+.table tbody tr td:nth-child(2n-2) {
+    background-color: var(--bg-darker);
+    color: var(--text-color);
+}
+.table tbody tr:hover td {
+    background-color: var(--border-color);
+    color: var(--text-color);
 }
 
-.btn-custom {
-    padding: 8px 20px;
-    border-radius: 25px;
+#btn-custom {
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
     font-weight: 500;
-    transition: all 0.3s;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    border: none;
+    background-color: var(--status-green);
 }
 
-.btn-custom:hover {
+#btn-custom:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    background-color: var(--status-darkgreen);
 }
 
-.btn-create {
-    background-color: var(--primary-action-color);
+#btn-add-cat {
+    background-color: var(--status-darkgreen);
     color: var(--text-color);
 }
 
-.btn-create:hover {
-    background-color: var(--primary-action-hover);
+#btn-add-cat:hover {
+    background-color: var(--status-green);
 }
 
-.btn-unlist {
-    background-color: var(--danger-action-color);
-    color: var(--text-color);
+#btn-unlist,#btn-del-cat {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--status-red);
 }
 
-.btn-unlist:hover {
-    background-color: var(--danger-action-hover);
+#btn-unlist,#btn-del-cat:hover {
+    background-color: rgba(239, 68, 68, 0.2);
 }
 
 .status-badge {
-    padding: 6px 12px;
-    border-radius: 15px;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
     font-size: 0.875rem;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.status-active {
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--status-green);
+}
+
+.status-inactive {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--status-red);
 }
 
 .action-buttons {
     display: flex;
-    gap: 10px;
+    gap: 0.5rem;
+}
+
+.table-responsive {
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
 }
 
 @media (max-width: 768px) {
     .main-content {
         margin-left: 0;
+        padding: 1rem;
     }
 
     .action-buttons {
@@ -130,6 +191,14 @@ body {
 
     .btn-custom {
         width: 100%;
-        margin-bottom: 5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .card {
+        margin-bottom: 1rem;
+    }
+
+    .search-box input {
+        font-size: 0.875rem;
     }
 }

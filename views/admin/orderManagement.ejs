@@ -8,174 +8,401 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-    :root {
-      --primary-bg-color: #2c3e50;
-      --container-bg-color: #34495e;
-      --text-color: #ecf0f1;
-      --hover-bg-color: #2f4a5a;
-      --modal-bg-color: #2c3e50;
-    }
-
-    body {
-      background-color: var(--primary-bg-color);
-      color: var(--text-color);
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    }
-
+   :root {
+    --bg-dark: #1a1f26;
+    --bg-darker: #151a21;
+    --card-bg: #1B232D;
+    --border-color: #2d3643;
+    --text-color: #ffffff;
+    --text-muted: #8b949e;
+    --status-green: #22c55e;
+    --status-darkgreen: #2E8B57;
+    --status-red: #ef4444;
+    --hover-bg: #262d36;
+  }
+  
+  /* Global Reset and Base Styles */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    background: var(--bg-dark);
+    color: var(--text-color);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  
+  .main-content {
+    padding: 2rem;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+  
+  /* Table Styles */
+  .table-responsive {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    background: transparent;
+    min-width: 800px;
+  }
+  
+  .table th {
+    background: var(--bg-darker);
+    text-align: left;
+    padding: 1rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.875rem;
+  }
+  
+  .table thead th {
+    background-color: var(--border-color);
+    color: var(--text-color);
+  }
+  
+  .table tbody tr td:nth-child(2n-1) {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+  }
+  
+  .table tbody tr td:nth-child(2n-2) {
+    background-color: var(--bg-dark);
+    color: var(--text-color);
+  }
+  
+  .table tbody tr:hover td {
+    background: var(--hover-bg);
+  }
+  
+  /* Status Badge Styles */
+  .status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: inline-block;
+  }
+  
+  .status-pending {
+    background: rgba(241, 196, 15, 0.1);
+    color: #f1c40f;
+  }
+  
+  .status-completed {
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--status-green);
+  }
+  
+  .status-cancelled {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--status-red);
+  }
+  
+  .status-returned {
+    background: rgba(139, 148, 158, 0.1);
+    color: var(--text-muted);
+  }
+  
+  .status-shipping {
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--status-darkgreen);
+  }
+  
+  /* Button Styles */
+  .btn-view {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--status-green);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-view:hover {
+    background: rgba(34, 197, 94, 0.2);
+  }
+  
+  /* Modal Styles */
+  .modal-content {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-color);
+  }
+  
+  .modal-header {
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem;
+  }
+  
+  .modal-footer {
+    border-top: 1px solid var(--border-color);
+    padding: 1.5rem;
+  }
+  
+  .form-control, .form-select {
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+  }
+  
+  .form-control:disabled {
+    background: var(--bg-darker);
+    opacity: 0.7;
+  }
+  
+  .address-details {
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1024px) {
     .main-content {
-      margin-left: 250px;
-      padding: 20px;
+      padding: 1rem;
     }
-
-    .table {
-      color: var(--text-color);
+  }
+  
+  @media (max-width: 768px) {
+    .table td, .table th {
+      padding: 0.75rem;
     }
-
-    .table th,
-    .table td {
-      padding: 15px;
-      vertical-align: middle;
-      border-color: rgba(255, 255, 255, 0.1);
-      background: #2c3e50;
-      color: #fff;
-    }
-
-    .table thead th {
-      background-color: var(--container-bg-color);
-      border-bottom: none;
-    }
-
-    .table tbody tr {
-      background-color: var(--primary-bg-color);
-    }
-
-    .table tbody tr:hover {
-      background-color: var(--hover-bg-color);
-    }
-
+    
     .btn-view {
-      background-color: #3498db;
-      color: white;
-      border: none;
-      padding: 5px 15px;
-      border-radius: 5px;
+      padding: 0.375rem 0.75rem;
+      font-size: 0.75rem;
     }
-
-    .btn-view:hover {
-      background-color: #2980b9;
+  }
+  
+  @media (max-width: 425px) {
+    .main-content {
+      padding: 0.5rem;
     }
-
-    /* Modal Styles */
-    .modal-content {
-      background-color: var(--modal-bg-color);
-      color: var(--text-color);
+  }
+  
+  
+  /* Modal Base Styles */
+  .modal-dialog {
+    max-width: 800px;
+  }
+  
+  .modal-content {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+  }
+  
+  .modal-header {
+    background: var(--bg-darker);
+    border-bottom: 1px solid var(--border-color);
+    border-radius: 12px 12px 0 0;
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .modal-title {
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 1.25rem;
+  }
+  
+  .modal-body {
+    padding: 1.5rem;
+    background: var(--card-bg);
+  }
+  
+  .modal-footer {
+    background: var(--bg-darker);
+    border-top: 1px solid var(--border-color);
+    border-radius: 0 0 12px 12px;
+    padding: 1.25rem 1.5rem;
+  }
+  
+  /* Form Controls */
+  .form-label {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .form-control, .form-select {
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+  }
+  
+  .form-control:disabled, .form-control[readonly],
+  .form-select:disabled {
+    background: var(--bg-darker);
+    opacity: 0.7;
+    color: var(--text-muted);
+  }
+  
+  .form-control:focus, .form-select:focus {
+    border-color: var(--status-green);
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+    outline: none;
+  }
+  
+  /* Address Details Section */
+  .address-details {
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-top: 0.5rem;
+  }
+  
+  .address-details p {
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--text-color);
+  }
+  
+  .address-details strong {
+    color: var(--text-muted);
+    font-weight: 500;
+    min-width: 120px;
+    display: inline-block;
+  }
+  
+  /* Button Styles */
+  .modal .btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: none;
+  }
+  
+  .modal .btn-primary {
+    background: var(--status-darkgreen);
+    color: white;
+  }
+  
+  .modal .btn-primary:hover {
+    background: var(--status-green);
+  }
+  
+  .modal .btn-secondary {
+    background: var(--border-color);
+    color: var(--text-color);
+  }
+  
+  .modal .btn-secondary:hover {
+    background: var(--hover-bg);
+  }
+  
+  .modal .btn-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--status-red);
+  }
+  
+  .modal .btn-danger:hover {
+    background: rgba(239, 68, 68, 0.2);
+  }
+  
+  .modal .btn-success {
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--status-green);
+  }
+  
+  .modal .btn-success:hover {
+    background: rgba(34, 197, 94, 0.2);
+  }
+  
+  /* Return Request Section */
+  .return-request-section {
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .return-request-section textarea {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    resize: none;
+  }
+  
+  /* Close Button */
+  .btn-close {
+    background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'%3E%3Cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3E%3C/svg%3E") center/1em auto no-repeat;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+  }
+  
+  .btn-close:hover {
+    opacity: 1;
+  }
+  
+  /* Order Items Container */
+  #orderItemsContainer {
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 0.5rem;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .modal-dialog {
+      margin: 0.5rem;
     }
-
-    .modal-header {
-      border-bottom-color: rgba(255, 255, 255, 0.1);
+    
+    .address-details .row {
+      flex-direction: column;
     }
-
-    .modal-footer {
-      border-top-color: rgba(255, 255, 255, 0.1);
+    
+    .address-details .col-md-6:first-child {
+      margin-bottom: 1rem;
     }
+  }
 
-    .status-badge {
-      padding: 5px 10px;
-      border-radius: 15px;
-      font-size: 0.875rem;
-    }
+  .order-item {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+  }
 
-    .status-pending {
-      background-color: #f1c40f;
-      color: #2c3e50;
-    }
-
-    .status-completed {
-      background-color: #2ecc71;
-    }
-
-    .status-cancelled {
-      background-color: #e74c3c;
-    }
-
-    .status-returned {
-      background-color: #95a5a6;
-    }
-
-    .status-shipping {
-      background-color: #3498db;
-    }
-
-
-
-    .modal-content {
-      background-color: var(--modal-bg-color);
-      color: var(--text-color);
-    }
-
-    .modal-header {
-      border-bottom-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .modal-footer {
-      border-top-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .form-control {
-      background-color: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: var(--text-color);
-    }
-
-    .form-control:disabled {
-      background-color: rgba(255, 255, 255, 0.05);
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    .form-select {
-      background-color: #2c3e50;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: var(--text-color);
-    }
-
-    .form-select:disabled {
-      background-color: #2c3e50;
-
-    }
-
-    .order-item {
-      background-color: rgba(255, 255, 255, 0.05);
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 10px;
-    }
-
-    .order-item img {
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 4px;
-    }
-
-    .btn-primary {
-      background-color: #3498db;
-      border-color: #3498db;
-    }
-
-    .btn-success {
-      background-color: #2ecc71;
-      border-color: #2ecc71;
-    }
-
-    .btn-danger {
-      background-color: #e74c3c;
-      border-color: #e74c3c;
-    }
-
-    .btn-secondary {
-      background-color: #95a5a6;
-      border-color: #95a5a6;
-    }
+  .order-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
   </style>
 </head>
 
@@ -186,7 +413,7 @@
   <main class="main-content">
     <div class="container-fluid">
 
-  <div class="main-content">
+  
     <h1 class="mb-4">Order Management</h1>
 
     <div class="table-responsive">
@@ -239,7 +466,7 @@
         </tbody>
       </table>
     </div>
-  </div>
+  
 
 
 

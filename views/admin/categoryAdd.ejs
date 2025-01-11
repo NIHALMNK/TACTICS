@@ -19,7 +19,7 @@
        
    
     
-    <div class="container-fluid">
+    
         <div class="category-container mt-5">
             <h2 class="text-center mb-4">Add New Category</h2>
             <form id="categoryForm" novalidate>
@@ -41,33 +41,49 @@
                 </div>
     
                 <!-- Image Upload -->
-                <div class="photo-upload-container mb-3 text-center">
-                    <div class="round-photo-input" id="photoUploadContainer">
-                        <input 
-                            type="file" 
-                            class="photo-input" 
-                            id="categoryImage" 
-                            accept="image/*" 
-                            required>
-                        <div id="photoPlaceholder" class="text-center">
-                            <i class="bi bi-cloud-upload fs-1 text-muted"></i>
-                            <p class="text-muted">Click to upload image</p>
-                        </div>
-                        <img 
-                            id="roundPreview" 
-                            class="photo-preview" 
-                            src="" 
-                            alt="Category Photo" 
-                            style="display: none;">
-                    </div>
-                    <button type="button" class="btn btn-link btn-remove-image" id="removeImageBtn" style="display: none;">
-                        <i class="bi bi-trash me-1"></i>Remove Image
-                    </button>
-                    <div id="imageError" class="error-message text-danger" style="display: none;">
-                        <i class="bi bi-exclamation-circle me-1"></i>
-                        Please upload a category image
-                    </div>
+<div class="photo-upload-container mb-4">
+    <div class="upload-wrapper">
+        <div class="round-photo-input" id="photoUploadContainer">
+            <input 
+                type="file" 
+                class="photo-input" 
+                id="categoryImage" 
+                accept="image/*" 
+                required>
+            <div id="photoPlaceholder" class="upload-placeholder">
+                <div class="upload-icon-container">
+                    <i class="bi bi-cloud-arrow-up-fill"></i>
                 </div>
+                <div class="upload-text">
+                    <h6 class="mb-1">Drop your image here</h6>
+                    <p class="text-secondary mb-0">or click to browse</p>
+                    <span class="file-specs">PNG, JPG or JPEG (max. 800x800px)</span>
+                </div>
+            </div>
+            <img 
+                id="roundPreview" 
+                class="photo-preview" 
+                src="" 
+                alt="Category Photo" 
+                style="display: none;">
+        </div>
+        
+        <div class="upload-actions">
+            <button 
+                type="button" 
+                class="btn btn-outline-danger btn-remove-image" 
+                id="removeImageBtn" 
+                style="display: none;">
+                <i class="bi bi-trash3-fill me-2"></i>Remove Image
+            </button>
+        </div>
+    </div>
+    
+    <div id="imageError" class="error-message" style="display: none;">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        Please upload a category image
+    </div>
+</div>
     
                 <!-- Category Description -->
                 <div class="mb-3">
@@ -88,13 +104,13 @@
     
                 <!-- Submit Button -->
                 <div class="text-center">
-                    <button type="submit" class="btn btn-submit text-white w-100">
+                    <button type="submit" id="btn-submit" class="btn btn-submit text-white w-100">
                         <i class="bi bi-plus-circle me-2"></i>Add Category
                     </button>
                 </div>
             </form>
         </div>
-    </div>
+    
     
     <!-- Crop Image Modal -->
     <div class="modal fade" id="cropModal" tabindex="-1" aria-labelledby="cropModalLabel" aria-hidden="true">
