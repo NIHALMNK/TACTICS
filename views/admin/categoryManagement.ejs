@@ -1,147 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Category Management Dashboard</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/admin/categoryManagement.css">
-</head>
-<body>
-   <!-- Include Sidebar (similar to reference code) -->
-  <%- include('./layout/asidebar.ejs') %>
-  
-    
-    <div class="main-content">
-        <div class="container-fluid">
-            <div class="card" >
-                <div class="card-header d-flex justify-content-between align-items-center" id="card-header">
-                    <h4 class="mb-0">Category Management</h4>
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" class="form-control" placeholder="Search categories...">
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table align-middle">
-                            <thead>
-                                <tr>
-                                    <th>Index</th>
-                                    <th>Name</th>
-                                    <th>Product Count</th>
-                                    <th>Created Date</th>
-                                    <th>Updated Date</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% if (categoriesWithCounts.length === 0) { %>
-                                    <tr>
-                                        <td colspan="6" class="text-center">No categories found</td>
-                                    </tr>
-                                <% } else { %>
-                                    <% categoriesWithCounts.forEach((category, index) => { %>
-                                    <tr>
-                                        <td><%= (currentPage - 1) * 5 + index + 1 %></td>
-                                        <td><%= category.name %></td>
-                                        <td>
-                                            <span class="badge bg-info rounded-pill"><%= category.productCount %></span>
-                                        </td>
-                                        <td><%= new Date(category.createdAt).toLocaleDateString() %></td>
-                                        <td><%= new Date(category.updatedAt).toLocaleDateString() %></td>
-                                        <td>
-                                            <div class="action-buttons">
-                                                <button class="btn btn-custom btn-create" id="btn-custom" onclick="location.href='/admin/category/update/<%= category._id %>'">
-                                                    <i class="fas fa-edit me-1"></i> Update
-                                                </button>
-                                                <button class="btn btn-custom btn-unlist unlist" id="btn-unlist" data-id="<%= category._id %>">
-                                                    <i class="fas fa-unlink me-1"></i> del
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <% }); %>
-                                <% } %>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Pagination -->
-            <% if (totalPages > 1) { %>
-            <div class="d-flex justify-content-center align-items-center mt-3">
-                <div class="pagination-container text-center">
-                    <span class="me-2">Page <%= currentPage %> of <%= totalPages %></span>
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination pagination-sm justify-content-center">
-                            <% if (currentPage > 1) { %>
-                            <li class="page-item">
-                                <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <% } %>
-                            
-                            <% 
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Category Management Dashboard</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin/categoryManagement.css">
+</head>
+
+<body>
+  <!-- Include Sidebar (similar to reference code) -->
+  <%- include('./layout/asidebar.ejs') %>
+
+
+  <div class="main-content">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center" id="card-header">
+          <h4 class="mb-0">Category Management</h4>
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" class="form-control" placeholder="Search categories...">
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead>
+                <tr>
+                  <th>Index</th>
+                  <th>Name</th>
+                  <th>Product Count</th>
+                  <th>Created Date</th>
+                  <th>Updated Date</th>
+                  <th>Actions</th>
+                  <th>Add Offer</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (categoriesWithCounts.length === 0) { %>
+                <tr>
+                  <td colspan="6" class="text-center">No categories found</td>
+                </tr>
+                <% } else { %>
+                <% categoriesWithCounts.forEach((category, index) => { %>
+                <tr>
+                  <td><%= (currentPage - 1) * 5 + index + 1 %></td>
+                  <td><%= category.name %></td>
+                  <td>
+                    <span class="badge bg-info rounded-pill"><%= category.productCount %></span>
+                  </td>
+                  <td><%= new Date(category.createdAt).toLocaleDateString() %></td>
+                  <td><%= new Date(category.updatedAt).toLocaleDateString() %></td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="btn btn-custom btn-create" id="btn-custom" onclick="location.href='/admin/category/update/<%= category._id %>'">
+                        <i class="fas fa-edit me-1"></i> Update
+                      </button>
+                      <button class="btn btn-custom btn-unlist unlist" id="btn-unlist" data-id="<%= category._id %>">
+                        <i class="fas fa-unlink me-1"></i> del
+                      </button>
+                    </div>
+                  </td>
+                  <td>
+                    <% if (category.offer > 0) { %>
+                    <button class="btn btn-danger btn-sm remove-offer" data-id="<%= category._id %>" data-offer="<%= category.offer %>">
+                      Remove <%= category.offer %>% Offer
+                    </button>
+                    <% } else { %>
+                    <button class="btn btn-success btn-sm add-offer" data-id="<%= category._id %>">
+                      Add Offer
+                    </button>
+                    <% } %>
+                  </td>
+                </tr>
+                <% }); %>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Offer Modal -->
+        <div class="modal fade" id="offerModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Add Category Offer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="offerForm">
+                  <div class="mb-3">
+                    <label for="offerPercentage" class="form-label">Offer Percentage</label>
+                    <input type="number" class="form-control" id="offerPercentage" min="0" max="100" required>
+                  </div>
+                  <input type="hidden" id="categoryId">
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveOffer">Save Offer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <% if (totalPages > 1) { %>
+      <div class="d-flex justify-content-center align-items-center mt-3">
+        <div class="pagination-container text-center">
+          <span class="me-2">Page <%= currentPage %> of <%= totalPages %></span>
+          <nav aria-label="Page navigation">
+            <ul class="pagination pagination-sm justify-content-center">
+              <% if (currentPage > 1) { %>
+              <li class="page-item">
+                <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <% } %>
+
+              <% 
                             // Show first page
                             if (currentPage > 3) { %>
-                                <li class="page-item">
-                                    <a class="page-link" href="?page=1">1</a>
-                                </li>
-                                <% if (currentPage > 4) { %>
-                                    <li class="page-item disabled"><span class="page-link">...</span></li>
-                                <% } %>
-                            <% } %>
+              <li class="page-item">
+                <a class="page-link" href="?page=1">1</a>
+              </li>
+              <% if (currentPage > 4) { %>
+              <li class="page-item disabled"><span class="page-link">...</span></li>
+              <% } %>
+              <% } %>
 
-                            <% 
+              <% 
                             // Show page numbers around current page
                             for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) { 
                             %>
-                                <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-                                </li>
-                            <% } %>
+              <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+              </li>
+              <% } %>
 
-                            <% 
+              <% 
                             // Show last page
                             if (currentPage < totalPages - 2) { %>
-                                <% if (currentPage < totalPages - 3) { %>
-                                    <li class="page-item disabled"><span class="page-link">...</span></li>
-                                <% } %>
-                                <li class="page-item">
-                                    <a class="page-link" href="?page=<%= totalPages %>"><%= totalPages %></a>
-                                </li>
-                            <% } %>
+              <% if (currentPage < totalPages - 3) { %>
+              <li class="page-item disabled"><span class="page-link">...</span></li>
+              <% } %>
+              <li class="page-item">
+                <a class="page-link" href="?page=<%= totalPages %>"><%= totalPages %></a>
+              </li>
+              <% } %>
 
-                            <% if (currentPage < totalPages) { %>
-                            <li class="page-item">
-                                <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                            <% } %>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-            <% } %>
-
-            <div class="action-panel mt-4">
-                <button class="btn btn-custom btn-create me-2" id="btn-add-cat">
-                    <i class="fas fa-plus me-1"></i> Create New Category
-                </button>
-                <button class="btn btn-custom btn-unlist" id="btn-del-cat">
-                    <i class="fas fa-archive me-1"></i> Unlisted Categories
-                </button>
-            </div>
+              <% if (currentPage < totalPages) { %>
+              <li class="page-item">
+                <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+              <% } %>
+            </ul>
+          </nav>
         </div>
-    </div>
+      </div>
+      <% } %>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/admin/categoryManagement.js"></script>
+      <div class="action-panel mt-4">
+        <button class="btn btn-custom btn-create me-2" id="btn-add-cat">
+          <i class="fas fa-plus me-1"></i> Create New Category
+        </button>
+        <button class="btn btn-custom btn-unlist" id="btn-del-cat">
+          <i class="fas fa-archive me-1"></i> Unlisted Categories
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/admin/categoryManagement.js"></script>
 </body>
+
 </html>

@@ -13,6 +13,6 @@ router.get('/logout', adminController.logout);
 
 
 
-router.get('/dashboard', adminController.loadDashboard);
+
 
 module.exports = router;

@@ -37,7 +37,8 @@ router.delete("/category/permanentDeleteCategory/:id", (req, res, next) => {
 }, categoryController.permanentDeleteCategory);
 
 
-
+router.put("/category/add-offer", categoryController.addCategoryOffer);
+router.put("/category/remove-offer", categoryController.removeOffer);
 
 
 

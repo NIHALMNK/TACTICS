@@ -380,6 +380,14 @@
 								<span>Discount</span>
 								<span class="text-success">- Rs. <%= offerTotal %></span>
 							</div>
+							
+							<% if (categoryOffer > 0) { %>
+								<div class="d-flex justify-content-between mb-3">
+									<span>Category Discount (<%= categoryOffer %>%)</span>
+									<span class="text-success">-₹<%= categoryDiscountAmount %></span>
+								</div>
+							<% } %>
+
 							<div class="detail-item">
 								<span>Shipping</span>
 								<% if(shipping===0) { %> <span class="free text-success">Free</span>

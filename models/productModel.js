@@ -41,6 +41,10 @@ const productSchema = new mongoose.Schema({
             message: 'Offer price must be a non-negative number.'
         }
     },
+    prevOfferPrice: {
+        type: Number,
+        default: null
+    },
     stockManagement: {
         type: [stockSchema],
         default: [],

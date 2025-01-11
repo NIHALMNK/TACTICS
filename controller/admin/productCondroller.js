@@ -32,7 +32,12 @@ module.exports = {
         }
 
         
-        return res.status(200).render('admin/productManagement', { products, currentPage: page, totalPages });
+        return res.status(200).render('admin/productManagement', 
+            { products, 
+            currentPage: page,
+            totalPages });
+
+            
     } catch (error) {
         console.log('Error loading product management ➡️' + error);
         res.status(500).json({ message: 'Error loading product management' });

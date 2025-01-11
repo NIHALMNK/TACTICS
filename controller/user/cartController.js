@@ -7,11 +7,8 @@ module.exports = {
     async LoadCart(req, res) {
         try {
             const userID = req.session.user?.id;
-
-           
     
             if (!userID) {
-                // console.log("User not logged in");
                 return res.redirect('/login');
             }
     
@@ -19,9 +16,10 @@ module.exports = {
                 .populate({
                     path: 'items.productId',
                     model: 'Product',
-                    select: 'offerPrice price name stockManagement images isDeleted' 
+                    select: 'offerPrice price name stockManagement images isDeleted category' // Added category to selection
                 });
     
+            // Handle empty cart case
             if (!cart || !Array.isArray(cart.items) || cart.items.length === 0) {
                 return res.render("user/cart", {
                     cart: { items: [] },
@@ -33,16 +31,17 @@ module.exports = {
                     totalPages: 1,
                     mrp: 0,
                     offerTotal: 0,
-                    discount: 0
+                    discount: 0,
+                    categoryOffer: 0,          // Added default value
+                    categoryDiscountAmount: 0  // Added default value
                 });
             }
-
-            const validproducts =cart.items.filter(item=>item.productId && !item.productId.isDeleted)
-
-            if (validproducts.length !== cart.items.length) {
-                cart.items = validproducts;
+    
+            const validProducts = cart.items.filter(item => item.productId && !item.productId.isDeleted);
+    
+            if (validProducts.length !== cart.items.length) {
+                cart.items = validProducts;
                 await cart.save();
-                
             }
     
             const page = parseInt(req.query.page) || 1;
@@ -54,11 +53,9 @@ module.exports = {
             const validItems = cart.items.filter(item => item.productId != null);
             const paginatedItems = validItems.slice(offset, offset + limit);
     
-           
-            
             const totals = validItems.reduce((acc, item) => {
-                acc.subtotal += item.productId.offerPrice * item.quantity; 
-                acc.mrp += item.productId.price * item.quantity;  
+                acc.subtotal += item.productId.offerPrice * item.quantity;
+                acc.mrp += item.productId.price * item.quantity;
                 return acc;
             }, { subtotal: 0, mrp: 0 });
     
@@ -72,11 +69,18 @@ module.exports = {
             }
     
             const discount = totals.mrp - totals.subtotal;
-            const total = totals.subtotal + shipping;
+            
+            // Calculate category offer - ensure it's always defined
+            const categoryOffer = validItems.length > 0 && validItems[0].productId.category 
+                ? (validItems[0].productId.category.offer || 0) 
+                : 0;
+            
+            const categoryDiscountAmount = (totals.subtotal * categoryOffer) / 100;
+            const total = totals.subtotal + shipping - categoryDiscountAmount;
     
             const itemsWithDefaultImage = paginatedItems.map(item => {
                 if (!item.productId.images || !item.productId.images.length) {
-                    item.productId.images = ['']; 
+                    item.productId.images = [''];
                 }
                 return item;
             });
@@ -92,7 +96,9 @@ module.exports = {
                 products: itemsWithDefaultImage,
                 currentPage: page,
                 totalPages,
-                discount
+                discount,
+                categoryOffer,             // Now properly defined in all cases
+                categoryDiscountAmount     // Now properly defined in all cases
             });
     
         } catch (err) {
@@ -100,7 +106,7 @@ module.exports = {
             if (process.env.NODE_ENV === 'development') {
                 console.error('Detailed error:', err);
             }
-            res.status(500).render('error', { 
+            res.status(500).render('error', {
                 message: 'Error loading cart. Please try again later.',
                 error: process.env.NODE_ENV === 'development' ? err : {}
             });
@@ -295,114 +301,115 @@ async getStock(req, res) {
     },
     
 //====================================>
-async updateQuantity(req, res) {
-    try {
-        
-        const { itemId, size, quantity } = req.body;
-        const userId = req.session.user?.id;
-
-        if (!userId) {
-            return res.status(401).json({ 
-                success: false, 
-                message: 'User not logged in' 
-            });
-        }
-
-        if (!itemId || !size || !quantity) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Missing required fields' 
-            });
-        }
-
-        const cart = await cartModel.findOne({ userId })
-            .populate({
-                path: 'items.productId',
-                model: productModel,
-                select: 'stockManagement offerPrice'
-            });
-
-        if (!cart) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'Cart not found' 
-            });
-        }
-
-        const cartItem = cart.items.find(item => 
-            item._id.toString() === itemId && item.size === size
-        );
-
-        if (!cartItem) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'Item not found in cart' 
-            });
-        }
-
-        const product = await productModel.findById(cartItem.productId._id);
-        // console.log("product of update---------> " + product);
-        
-        const sizeStock = product.stockManagement.find(stock => stock.size === size);
-
-        // console.log(`sizeStock----->${sizeStock}`);
-        // console.log("quantityStock----->"+quantity);
-        
-        if(10<quantity){
-            return res.status(400).json({ 
-                success: false, 
-                message: `Cannot exceed more than 10 stock!` 
-            });
-        }
-        
-
-        if (!sizeStock || sizeStock.quantity < quantity) {
-            return res.status(400).json({ 
-                success: false, 
-                message: `Only ${sizeStock ? sizeStock.quantity : 0} items available in stock` 
-            });
-        }
-
-        cartItem.quantity = quantity;
-
-
-        await cart.save();
-
-        const totals = cart.items.reduce((acc, item) => {
-            acc.subtotal += item.productId.offerPrice * item.quantity;
-            return acc;
-        }, { subtotal: 0 });
-
-        let shipping = 0;
-        if (totals.subtotal > 0 && totals.subtotal <= 1000) {
-            shipping = 200;
-        } else if (totals.subtotal > 1000 && totals.subtotal <= 5000) {
-            shipping = 150;
-        } else if (totals.subtotal > 5000) {
-            shipping = 100;
-        }
-
-        const total = totals.subtotal + shipping;
-
-        res.status(200).json({
-            success: true,
-            message: 'Quantity updated successfully',
-            newQuantity: quantity,
-            newSubtotal: totals.subtotal,
-            shipping,
-            total
+    async updateQuantity(req, res) {
+        try {
+            const { itemId, size, quantity } = req.body;
+            const userId = req.session.user?.id;
+    
+            if (!userId) {
+                return res.status(401).json({ 
+                    success: false, 
+                    message: 'User not logged in' 
+                });
+            }
+    
+            if (!itemId || !size || !quantity) {
+                return res.status(400).json({ 
+                    success: false, 
+                    message: 'Missing required fields' 
+                });
+            }
+    
+            const cart = await cartModel.findOne({ userId })
+                .populate({
+                    path: 'items.productId',
+                    model: productModel,
+                    select: 'stockManagement offerPrice category'
+                });
+    
+            if (!cart) {
+                return res.status(404).json({ 
+                    success: false, 
+                    message: 'Cart not found' 
+                });
+            }
+    
+            const cartItem = cart.items.find(item => 
+                item._id.toString() === itemId && item.size === size
+            );
+    
+            if (!cartItem) {
+                return res.status(404).json({ 
+                    success: false, 
+                    message: 'Item not found in cart' 
+                });
+            }
+    
+            const product = await productModel.findById(cartItem.productId._id);
             
-        });
-
-    } catch (error) {
-        console.error('Error updating quantity:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Error updating quantity', 
-            error: error.message 
-        });
-    }
-},
+            const sizeStock = product.stockManagement.find(stock => stock.size === size);
+            
+            if(quantity > 10){
+                return res.status(400).json({ 
+                    success: false, 
+                    message: `Cannot exceed more than 10 stock!` 
+                });
+            }
+    
+            if (!sizeStock || sizeStock.quantity < quantity) {
+                return res.status(400).json({ 
+                    success: false, 
+                    message: `Only ${sizeStock ? sizeStock.quantity : 0} items available in stock` 
+                });
+            }
+    
+            cartItem.quantity = quantity;
+    
+            await cart.save();
+    
+            // Filter valid items (not deleted products)
+            const validItems = cart.items.filter(item => item.productId && !item.productId.isDeleted);
+    
+            const totals = validItems.reduce((acc, item) => {
+                acc.subtotal += item.productId.offerPrice * item.quantity;
+                return acc;
+            }, { subtotal: 0 });
+    
+            let shipping = 0;
+            if (totals.subtotal > 0 && totals.subtotal <= 1000) {
+                shipping = 200;
+            } else if (totals.subtotal > 1000 && totals.subtotal <= 5000) {
+                shipping = 150;
+            } else if (totals.subtotal > 5000) {
+                shipping = 100;
+            }
+    
+            // Calculate category offer
+            const categoryOffer = validItems[0]?.productId?.category?.offer || 0;
+            const categoryDiscountAmount = (totals.subtotal * categoryOffer) / 100;
+            
+            const total = totals.subtotal + shipping - categoryDiscountAmount;
+    
+            res.status(200).json({
+                success: true,
+                message: 'Quantity updated successfully',
+                newQuantity: quantity,
+                newSubtotal: totals.subtotal,
+                shipping,
+                total,
+                categoryOffer,
+                categoryDiscountAmount
+            });
+    
+        } catch (error) {
+            console.error('Error updating quantity:', error);
+            res.status(500).json({ 
+                success: false, 
+                message: 'Error updating quantity', 
+                error: error.message 
+            });
+        }
+    },
 
 
 };
