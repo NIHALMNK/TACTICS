@@ -6,363 +6,124 @@
     <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary-bg: #1a1f26;
-            --secondary-bg: #1B232D;
-            --text-primary: #ffffff;
-            --text-secondary: #8b949e;
-            --accent-color: #22c55e;
-            --accent-hover: #2E8B57;
-            --danger-color: #ef4444;
-            --danger-hover: #dc2626;
-            --border-color: #2d3643;
-            --hover-bg: #262d36;
-            --border-radius: 8px;
-        }
+    <link rel="stylesheet" href="/css/admin/dashboard.css">
+    <!-- <style>
+        /* Enhanced Card Layouts */
+.dashboard-card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 0.5rem 0;
+}
 
-        body {
-            background-color: var(--primary-bg);
-            color: var(--text-primary);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        }
+/* Stats Card Refinements */
+.stats-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.5rem;
+}
 
-        .dashboard-card {
-            background-color: var(--secondary-bg);
-            border-radius: var(--border-radius);
-            border: 1px solid var(--border-color);
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            height: 100%;
-        }
+.stats-icon {
+    grid-row: span 2;
+    margin-bottom: 0;
+    width: 56px;
+    height: 56px;
+}
 
-        .stats-card {
-            background-color: var(--secondary-bg);
-            border-radius: var(--border-radius);
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-            border: 1px solid var(--border-color);
-            transition: transform 0.3s ease;
-        }
+.stats-value {
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
+}
 
-        .stats-card:hover {
-            transform: translateY(-5px);
-        }
+/* Filter Section Improvements */
+.data-filters {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.5rem;
+    padding: 1.25rem;
+    align-items: center;
+}
 
-        .stats-icon {
-            width: 48px;
-            height: 48px;
-            background-color: rgba(34, 197, 94, 0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1rem;
-        }
+.filter-input {
+    min-width: 150px;
+    height: 40px;
+}
 
-        .stats-icon i {
-            color: var(--accent-color);
-            font-size: 1.5rem;
-        }
-
-        .stats-value {
-            font-size: 1.75rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .stats-label {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-        }
-
-        .trend-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 1rem;
-            font-size: 0.875rem;
-        }
-
-        .trend-up {
-            background-color: rgba(34, 197, 94, 0.1);
-            color: var(--accent-color);
-        }
-
-        .trend-down {
-            background-color: rgba(239, 68, 68, 0.1);
-            color: var(--danger-color);
-        }
-
-        .chart-container {
-            position: relative;
-            margin: auto;
-            height: 300px;
-        }
-
-        .data-filters {
-            background-color: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .filter-input {
-            background-color: var(--primary-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            border-radius: var(--border-radius);
-            padding: 0.5rem;
-        }
-
-        .data-table  table thead tr th {
-            background-color: var(--secondary-bg);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            color: var(--text-primary);
-        }
-
-        .data-table table tbody tr th {
-            background-color: var(--primary-bg);
-            color: var(--text-primary);
-            border-bottom: 1px solid var(--accent-color);
-            padding: 1rem;
-        }
-
-        .data-table table tbody tr td {
-            border-bottom: 1px solid var(--accent-color);
-            padding: 1rem;
-            color: var(--text-primary);
-            background-color: var(--secondary-bg);
-        }
-
-        
-
-        .data-table tbody tr:hover {
-            background-color: var(--hover-bg);
-        }
-
-        .export-btn {
-            background-color: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 0.5rem 1rem;
-            border-radius: var(--border-radius);
-            transition: all 0.3s ease;
-        }
-
-        .export-btn:hover {
-            background-color: var(--hover-bg);
-            color: var(--accent-color);
-        }
-
-        /* Responsive Breakpoints */
-        /* S - 320px */
-        @media (max-width: 320px) {
-            .stats-card {
-                padding: 1rem;
-            }
-            .stats-value {
-                font-size: 1.25rem;
-            }
-            .dashboard-card {
-                padding: 1rem;
-            }
-            .chart-container {
-                height: 200px;
-            }
-            .data-filters {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            .export-btn {
-                width: 100%;
-                margin-bottom: 0.5rem;
-            }
-            .stats-icon {
-                width: 36px;
-                height: 36px;
-            }
-        }
-
-        /* M - 375px */
-        @media (min-width: 321px) and (max-width: 375px) {
-            .chart-container {
-                height: 250px;
-            }
-            .stats-value {
-                font-size: 1.5rem;
-            }
-            .data-filters {
-                flex-wrap: wrap;
-            }
-        }
-
-        /* L - 425px */
-        @media (min-width: 376px) and (max-width: 425px) {
-            .chart-container {
-                height: 275px;
-            }
-            .stats-card {
-                margin-bottom: 1rem;
-            }
-        }
-
-        /* Tablet - 768px */
-        @media (min-width: 426px) and (max-width: 768px) {
-            .stats-card {
-                margin-bottom: 1.5rem;
-            }
-            .chart-container {
-                height: 350px;
-            }
-        }
-
-        /* Laptop - 1024px */
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .chart-container {
-                height: 400px;
-            }
-            .dashboard-card {
-                padding: 1.75rem;
-            }
-        }
-
-        /* Laptop L - 1440px */
-        @media (min-width: 1025px) and (max-width: 1440px) {
-            .dashboard-card {
-                padding: 2rem;
-            }
-            .chart-container {
-                height: 450px;
-            }
-        }
-
-        /* 4K - 2560px */
-        @media (min-width: 1441px) {
-            .stats-value {
-                font-size: 2rem;
-            }
-            .dashboard-card {
-                padding: 2.5rem;
-            }
-            .chart-container {
-                height: 500px;
-            }
-            .stats-icon {
-                width: 64px;
-                height: 64px;
-            }
-            .stats-icon i {
-                font-size: 2rem;
-            }
-        }
-
-        /* Add these styles to your existing CSS section */
-
-/* Monthly Sales Table Specific Styles */
-.monthly-sales-table {
+/* Table Enhancements */
+.data-table {
     margin-top: 2rem;
 }
 
-.data-table {
-    overflow-x: auto;
-}
-
 .data-table table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
+    border-spacing: 0 0.5rem;
+    margin-top: -0.5rem;
 }
 
 .data-table th {
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    color: var(--text-secondary);
-    padding: 0.75rem 1rem;
-    background-color: var(--secondary-bg);
-    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 1.5rem;
+    white-space: nowrap;
 }
 
 .data-table td {
-    padding: 1rem;
-    font-size: 0.875rem;
-    color: var(--text-primary);
-    border-bottom: 1px solid var(--border-color);
-    background-color: var(--secondary-bg);
+    padding: 1.25rem 1.5rem;
+    vertical-align: middle;
 }
 
-.data-table tbody tr:hover td {
-    background-color: var(--hover-bg);
-    transition: background-color 0.2s ease;
+.data-table tbody tr:last-child td {
+    border-bottom: none;
 }
 
-/* Trend Indicators in Table */
-.data-table .trend-indicator {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 1rem;
+/* Chart Container Refinements */
+.chart-container {
+    padding: 1rem 0.5rem;
+    margin: 1.5rem 0;
+}
+
+/* Export Button Improvements */
+.export-btn {
+    height: 40px;
+    min-width: 120px;
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 500;
 }
 
-.data-table .trend-up {
-    background-color: rgba(34, 197, 94, 0.1);
-    color: var(--accent-color);
-}
-
-.data-table .trend-down {
-    background-color: rgba(239, 68, 68, 0.1);
-    color: var(--danger-color);
-}
-
-/* Responsive styles for the table */
+/* Responsive Improvements */
 @media (max-width: 768px) {
-    .data-table {
-        margin: 0 -1rem;
+    .data-filters {
+        grid-template-columns: 1fr;
     }
     
-    .data-table table {
-        min-width: 600px;
+    .stats-card {
+        padding: 1.25rem;
     }
     
-    .data-table th,
-    .data-table td {
-        padding: 0.75rem;
+    .stats-icon {
+        width: 48px;
+        height: 48px;
     }
 }
 
-/* Dark theme scrollbar for table */
-.data-table::-webkit-scrollbar {
-    height: 8px;
+@media (min-width: 1024px) {
+    .stats-card {
+        margin: 0;
+    }
+    
+    .dashboard-card {
+        margin: 0;
+    }
 }
-
-.data-table::-webkit-scrollbar-track {
-    background: var(--secondary-bg);
-    border-radius: 4px;
-}
-
-.data-table::-webkit-scrollbar-thumb {
-    background: var(--border-color);
-    border-radius: 4px;
-}
-
-.data-table::-webkit-scrollbar-thumb:hover {
-    background: var(--text-secondary);
-}
-    </style>
+    </style> -->
 </head>
 <body>
-    <!-- Include Sidebar -->
-    <%- include('./layout/asidebar.ejs') %>
+     <!-- Include Sidebar -->
+  <%- include('./layout/asidebar.ejs') %>
 
     <main class="main-content">
         <div class="container-fluid py-4">
+            
             <!-- Stats Row -->
             <div class="row g-3 mb-4">
                 <div class="col-12 col-sm-6 col-lg-3">
@@ -370,12 +131,8 @@
                         <div class="stats-icon">
                             <i class="fas fa-shopping-cart"></i>
                         </div>
-                        <div class="stats-value">24,531</div>
-                        <div class="stats-label">Total Orders
-                            <span class="trend-indicator trend-up">
-                                <i class="fas fa-arrow-up"></i> 12.5%
-                            </span>
-                        </div>
+                        <div class="stats-value"><%= stats.totalOrders %></div>
+                        <div class="stats-label">Total Orders</div>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-3">
@@ -383,12 +140,8 @@
                         <div class="stats-icon">
                             <i class="fas fa-dollar-sign"></i>
                         </div>
-                        <div class="stats-value">$65,110</div>
-                        <div class="stats-label">Total Revenue
-                            <span class="trend-indicator trend-up">
-                                <i class="fas fa-arrow-up"></i> 15.7%
-                            </span>
-                        </div>
+                        <div class="stats-value">$<%= stats.totalRevenue.toLocaleString() %></div>
+                        <div class="stats-label">Total Revenue</div>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-3">
@@ -396,49 +149,43 @@
                         <div class="stats-icon">
                             <i class="fas fa-chart-line"></i>
                         </div>
-                        <div class="stats-value">+$7,843</div>
-                        <div class="stats-label">Net Change
-                            <span class="trend-indicator trend-up">
-                                <i class="fas fa-arrow-up"></i> 8.2%
-                            </span>
-                        </div>
+                        <div class="stats-value">$<%= stats.todayRevenue.toLocaleString() %></div>
+                        <div class="stats-label">Today's Revenue</div>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-3">
                     <div class="stats-card">
                         <div class="stats-icon">
-                            <i class="fas fa-tags"></i>
+                            <i class="fas fa-shopping-bag"></i>
                         </div>
-                        <div class="stats-value">Spices</div>
-                        <div class="stats-label">Top Category
-                            <span class="trend-indicator trend-up">
-                                <i class="fas fa-arrow-up"></i> 5.3%
-                            </span>
-                        </div>
+                        <div class="stats-value"><%= stats.todayOrders %></div>
+                        <div class="stats-label">Today's Orders</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Charts Section -->
+            <!-- Sales Report Section -->
             <div class="row g-3 mb-4">
                 <div class="col-12">
                     <div class="dashboard-card">
                         <div class="data-filters d-flex flex-wrap gap-3 align-items-center justify-content-between mb-4">
                             <div class="d-flex gap-3 flex-wrap">
-                                <select class="filter-input">
-                                    <option>Daily</option>
-                                    <option>Weekly</option>
-                                    <option>Monthly</option>
-                                    <option>Yearly</option>
+                                <select class="filter-input" id="period-select">
+                                    <option value="">Custom Range</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="yearly">Yearly</option>
                                 </select>
-                                <input type="date" class="filter-input" placeholder="Start Date">
-                                <input type="date" class="filter-input" placeholder="End Date">
+                                <input type="date" class="filter-input" id="start-date">
+                                <input type="date" class="filter-input" id="end-date">
+                                <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
                             </div>
                             <div class="d-flex gap-3 flex-wrap">
-                                <button class="export-btn">
+                                <button class="export-btn" onclick="downloadReport('pdf')">
                                     <i class="fas fa-file-pdf me-2"></i>Export PDF
                                 </button>
-                                <button class="export-btn">
+                                <button class="export-btn" onclick="downloadReport('excel')">
                                     <i class="fas fa-file-excel me-2"></i>Export Excel
                                 </button>
                             </div>
@@ -446,408 +193,137 @@
                         <div class="chart-container">
                             <canvas id="salesChart"></canvas>
                         </div>
-                         <!-- New Sales Data Table -->
-                         <div class="data-table mt-4">
-                            <h5 class="mb-3">Monthly Sales Revenue Data</h5>
-                            <table class="table table-borderless mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Month</th>
-                                        <th>Revenue</th>
-                                        <th>Change</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>January</td>
-                                        <td>$65,110</td>
-                                        <td>
-                                            <span class="trend-indicator trend-up">
-                                                <i class="fas fa-arrow-up"></i> Base
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>February</td>
-                                        <td>$70,000</td>
-                                        <td>
-                                            <span class="trend-indicator trend-up">
-                                                <i class="fas fa-arrow-up"></i> +7.5%
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>March</td>
-                                        <td>$62,000</td>
-                                        <td>
-                                            <span class="trend-indicator trend-down">
-                                                <i class="fas fa-arrow-down"></i> -11.4%
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>April</td>
-                                        <td>$75,000</td>
-                                        <td>
-                                            <span class="trend-indicator trend-up">
-                                                <i class="fas fa-arrow-up"></i> +21.0%
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>May</td>
-                                        <td>$68,000</td>
-                                        <td>
-                                            <span class="trend-indicator trend-down">
-                                                <i class="fas fa-arrow-down"></i> -9.3%
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>June</td>
-                                        <td>$80,000</td>
-                                        <td>
-                                            <span class="trend-indicator trend-up">
-                                                <i class="fas fa-arrow-up"></i> +17.6%
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>July</td>
-                                        <td>$85,000</td>
-                                        <td>
-                                            <span class="trend-indicator trend-up">
-                                                <i class="fas fa-arrow-up"></i> +6.3%
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>August</td>
-                                        <td>$82,000</td>
-                                        <td>
-                                            <span class="trend-indicator trend-down">
-                                                <i class="fas fa-arrow-down"></i> -3.5%
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>September</td>
-                                        <td>$88,000</td>
-                                        <td>
-                                            <span class="trend-indicator trend-up">
-                                                <i class="fas fa-arrow-up"></i> +7.3%
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>October</td>
-                                        <td>$92,000</td>
-                                        <td>
-                                            <span class="trend-indicator trend-up">
-                                                <i class="fas fa-arrow-up"></i> +4.5%
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>November</td>
-                                        <td>$95,000</td>
-                                        <td>
-                                            <span class="trend-indicator trend-up">
-                                                <i class="fas fa-arrow-up"></i> +3.3%
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>December</td>
-                                        <td>$100,000</td>
-                                        <td>
-                                            <span class="trend-indicator trend-up">
-                                                <i class="fas fa-arrow-up"></i> +5.3%
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="data-table mt-4" id="sales-data">
+                            <!-- Sales data will be populated here -->
                         </div>
                     </div>
                 </div>
             </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Data Tables Section -->
-            <div class="row g-3">
-                <div class="col-12 col-lg-4">
-                    <div class="dashboard-card">
-                        <h5 class="mb-4">Top Selling Products</h5>
-                        <div class="data-table">
-                            <table class="table table-borderless mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Product Name</th>
-                                        <th>Quantity Sold</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>White Pepper</td>
-                                        <td>2,345</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Doritos</td>
-                                        <td>1,879</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-4">
-                    <div class="dashboard-card">
-                        <h5 class="mb-4">Top Categories</h5>
-                        <div class="data-table">
-                            <table class="table table-borderless mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Category Name</th>
-                                        <th>Quantity Sold</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Spices</td>
-                                        <td>5,678</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Snacks</td>
-                                        <td>4,567</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-4">
-                    <div class="dashboard-card">
-                        <h5 class="mb-4">Top Brands</h5>
-                        <div class="data-table">
-                            <table class="table table-borderless mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Brand Name</th>
-                                        <th>Quantity Sold</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>FoodCo</td>
-                                        <td>8,901</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Frito-Lay</td>
-                                        <td>7,890</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+           
         </div>
     </main>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    
     <script>
-        // Sales Chart
-        const createSalesChart = () => {
-            const ctx = document.getElementById('salesChart').getContext('2d');
-            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, 'rgba(34, 197, 94, 0.2)');
-            gradient.addColorStop(1, 'rgba(34, 197, 94, 0)');
+        let salesChart;
 
-            return new Chart(ctx, {
+        async function generateReport() {
+            const period = document.getElementById('period-select').value;
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
+
+            const params = new URLSearchParams();
+            if (period) {
+                params.append('period', period);
+            } else {
+                params.append('startDate', startDate);
+                params.append('endDate', endDate);
+            }
+
+            try {
+                const response = await fetch(`/admin/sales-report?${params}`);
+                const data = await response.json();
+                updateChart(data);
+                updateTable(data);
+            } catch (error) {
+                console.error('Error generating report:', error);
+            }
+        }
+
+        function updateChart(data) {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            
+            if (salesChart) {
+                salesChart.destroy();
+            }
+
+            salesChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    labels: data.salesData.map(item => item._id),
                     datasets: [{
-                        label: 'Sales Revenue',
-                        data: [65110, 70000, 62000, 75000, 68000, 80000, 85000, 82000, 88000, 92000, 95000, 100000],
-                        borderColor: 'rgb(34, 197, 94)',
-                        backgroundColor: gradient,
-                        tension: 0.4,
-                        fill: true,
-                        pointBackgroundColor: 'rgb(34, 197, 94)',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointRadius: 4,
-                        pointHoverRadius: 6
+                        label: 'Sales',
+                        data: data.salesData.map(item => item.totalSales),
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                color: '#8b949e',
-                                font: {
-                                    size: 12
-                                }
-                            }
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                            backgroundColor: '#1B232D',
-                            titleColor: '#ffffff',
-                            bodyColor: '#8b949e',
-                            borderColor: '#2d3643',
-                            borderWidth: 1,
-                            padding: 12,
-                            displayColors: false,
-                            callbacks: {
-                                label: function(context) {
-                                    return `Revenue: $${context.parsed.y.toLocaleString()}`;
-                                }
-                            }
-                        }
-                    },
                     scales: {
-                        x: {
-                            grid: {
-                                color: '#2d3643',
-                                drawBorder: false
-                            },
-                            ticks: {
-                                color: '#8b949e'
-                            }
-                        },
                         y: {
-                            grid: {
-                                color: '#2d3643',
-                                drawBorder: false
-                            },
-                            ticks: {
-                                color: '#8b949e',
-                                callback: function(value) {
-                                    return '$' + value.toLocaleString();
-                                }
-                            }
+                            beginAtZero: true
                         }
                     }
                 }
             });
-        };
+        }
 
-        // Initialize date filters
-        const initializeDateFilters = () => {
-            const today = new Date();
-            const startDate = document.querySelector('input[type="date"]:first-of-type');
-            const endDate = document.querySelector('input[type="date"]:last-of-type');
-            
-            // Set default date range (last 30 days)
-            const thirtyDaysAgo = new Date(today);
-            thirtyDaysAgo.setDate(today.getDate() - 30);
-            
-            startDate.value = thirtyDaysAgo.toISOString().split('T')[0];
-            endDate.value = today.toISOString().split('T')[0];
-            
-            // Add event listeners
-            startDate.addEventListener('change', updateChartData);
-            endDate.addEventListener('change', updateChartData);
-        };
+        function updateTable(data) {
+            const tableHtml = `
+                <h5 class="mb-3">Sales Summary</h5>
+                <table class="table table-borderless mb-0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Orders</th>
+                            <th>Sales</th>
+                            <th>Discount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.salesData.map(item => `
+                            <tr>
+                                <td>${item._id}</td>
+                                <td>${item.ordersCount}</td>
+                                <td>$${item.totalSales.toFixed(2)}</td>
+                                <td>$${item.discountTotal.toFixed(2)}</td>
+                            </tr>
+                        `).join('')}
+                        <tr class="table-info">
+                            <td><strong>Total</strong></td>
+                            <td><strong>${data.summary.totalOrders}</strong></td>
+                            <td><strong>$${data.summary.totalSales.toFixed(2)}</strong></td>
+                            <td><strong>$${data.summary.totalDiscount.toFixed(2)}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('sales-data').innerHTML = tableHtml;
+        }
 
-        // Handle time period changes
-        const handleTimePeriodChange = () => {
-            const periodSelect = document.querySelector('.filter-input');
-            periodSelect.addEventListener('change', (e) => {
-                updateChartData(e.target.value);
-            });
-        };
+        async function downloadReport(format) {
+            const period = document.getElementById('period-select').value;
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
 
-        // Update chart data based on selected period and date range
-        const updateChartData = (period = 'daily') => {
-            // Simulate API call to get data
-            // In production, this would fetch real data from your backend
-            const generateRandomData = (points) => {
-                return Array.from({ length: points }, () => 
-                    Math.floor(Math.random() * 50000) + 50000
-                );
-            };
-
-            const chart = Chart.getChart('salesChart');
-            if (chart) {
-                const data = generateRandomData(12);
-                chart.data.datasets[0].data = data;
-                chart.update();
+            const params = new URLSearchParams();
+            params.append('format', format);
+            if (period) {
+                params.append('period', period);
+            } else {
+                params.append('startDate', startDate);
+                params.append('endDate', endDate);
             }
-        };
 
-        // Export functionality
-        const initializeExportButtons = () => {
-            const pdfBtn = document.querySelector('.export-btn:first-of-type');
-            const excelBtn = document.querySelector('.export-btn:last-of-type');
+            window.location.href = `/admin/sales-report/download?${params}`;
+        }
 
-            pdfBtn.addEventListener('click', () => {
-                alert('Exporting PDF... (Implementation required)');
-                // Implement PDF export logic
-            });
-
-            excelBtn.addEventListener('click', () => {
-                alert('Exporting Excel... (Implementation required)');
-                // Implement Excel export logic
-            });
-        };
-
-        // Responsive table handling
-        const initializeResponsiveTables = () => {
-            const tables = document.querySelectorAll('.data-table');
-            tables.forEach(table => {
-                if (window.innerWidth < 768) {
-                    table.classList.add('table-responsive');
-                }
-            });
-
-            window.addEventListener('resize', () => {
-                tables.forEach(table => {
-                    if (window.innerWidth < 768) {
-                        table.classList.add('table-responsive');
-                    } else {
-                        table.classList.remove('table-responsive');
-                    }
-                });
-            });
-        };
-
-        // Initialize everything when DOM is loaded
+        // Initialize with daily report on page load
         document.addEventListener('DOMContentLoaded', () => {
-            createSalesChart();
-            initializeDateFilters();
-            handleTimePeriodChange();
-            initializeExportButtons();
-            initializeResponsiveTables();
+            document.getElementById('period-select').value = 'daily';
+            generateReport();
         });
 
-        // Handle window resize for chart responsiveness
-        window.addEventListener('resize', () => {
-            const chart = Chart.getChart('salesChart');
-            if (chart) {
-                chart.resize();
+        // Handle period select change
+        document.getElementById('period-select').addEventListener('change', (e) => {
+            const customDateInputs = document.querySelectorAll('input[type="date"]');
+            if (e.target.value === '') {
+                customDateInputs.forEach(input => input.disabled = false);
+            } else {
+                customDateInputs.forEach(input => input.disabled = true);
             }
         });
     </script>

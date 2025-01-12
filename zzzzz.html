@@ -3,426 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Admin Dashboard</title>
+    <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary-bg: #1a1f26;
-            --secondary-bg: #1B232D;
-            --text-primary: #ffffff;
-            --text-secondary: #8b949e;
-            --accent-color: #22c55e;
-            --accent-hover: #2E8B57;
-            --danger-color: #ef4444;
-            --danger-hover: #dc2626;
-            --border-color: #2d3643;
-            --hover-bg: #262d36;
-            --border-radius: 8px;
-        }
-
-        body {
-            background-color: var(--primary-bg);
-            color: var(--text-primary);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        }
-
-        .dashboard-card {
-            background-color: var(--secondary-bg);
-            border-radius: var(--border-radius);
-            border: 1px solid var(--border-color);
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            height: 100%;
-        }
-
-        .stats-card {
-            background-color: var(--secondary-bg);
-            border-radius: var(--border-radius);
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-            border: 1px solid var(--border-color);
-        }
-
-        .stats-icon {
-            width: 48px;
-            height: 48px;
-            background-color: rgba(34, 197, 94, 0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1rem;
-        }
-
-        .stats-icon i {
-            color: var(--accent-color);
-            font-size: 1.5rem;
-        }
-
-        .stats-value {
-            font-size: 1.75rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .stats-label {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-        }
-
-        .trend-up {
-            color: var(--accent-color);
-        }
-
-        .trend-down {
-            color: var(--danger-color);
-        }
-
-        .date-filter {
-            background-color: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            border-radius: var(--border-radius);
-            padding: 0.5rem 1rem;
-        }
-
-        .btn-export {
-            background-color: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 0.5rem 1rem;
-            border-radius: var(--border-radius);
-            transition: all 0.3s ease;
-        }
-
-        .btn-export:hover {
-            background-color: var(--hover-bg);
-            color: var(--text-primary);
-        }
-
-        .btn-export i {
-            margin-right: 0.5rem;
-        }
-
-        .table-responsive {
-            background-color: var(--secondary-bg);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-        }
-
-        .table {
-            color: var(--text-primary);
-            margin-bottom: 0;
-        }
-
-        .table thead th {
-            background-color: var(--hover-bg);
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            font-weight: 500;
-            white-space: nowrap;
-        }
-
-        .table td {
-            border-color: var(--border-color);
-            vertical-align: middle;
-        }
-
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 1rem;
-            font-size: 0.875rem;
-            white-space: nowrap;
-        }
-
-        .status-pending {
-            background-color: rgba(34, 197, 94, 0.1);
-            color: var(--accent-color);
-        }
-
-        .chart-container {
-            height: 300px;
-            position: relative;
-        }
-
-        .tab-controls {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .tab-btn {
-            background: none;
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            padding: 0.5rem 1rem;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-        }
-
-        .tab-btn.active {
-            background-color: var(--accent-color);
-            color: var(--text-primary);
-            border-color: var(--accent-color);
-        }
-
-        .product-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .product-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .product-item:last-child {
-            border-bottom: none;
-        }
-
-        .product-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .product-image {
-            width: 48px;
-            height: 48px;
-            border-radius: var(--border-radius);
-            background-color: var(--hover-bg);
-        }
-
-        /* Responsive Breakpoints */
-        /* S - 320px */
-        @media (max-width: 320px) {
-            .stats-card {
-                padding: 1rem;
-            }
-            .stats-value {
-                font-size: 1.25rem;
-            }
-            .dashboard-card {
-                padding: 1rem;
-            }
-            .table {
-                font-size: 0.875rem;
-            }
-            .btn-export {
-                width: 100%;
-                margin-bottom: 0.5rem;
-            }
-        }
-
-        /* M - 375px */
-        @media (min-width: 321px) and (max-width: 375px) {
-            .chart-container {
-                height: 250px;
-            }
-            .tab-controls {
-                flex-wrap: wrap;
-            }
-        }
-
-        /* L - 425px */
-        @media (min-width: 376px) and (max-width: 425px) {
-            .chart-container {
-                height: 275px;
-            }
-        }
-
-        /* Tablet - 768px */
-        @media (min-width: 426px) and (max-width: 768px) {
-            .stats-card {
-                margin-bottom: 1.5rem;
-            }
-        }
-
-        /* Laptop - 1024px */
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .chart-container {
-                height: 350px;
-            }
-        }
-
-        /* Laptop L - 1440px */
-        @media (min-width: 1025px) and (max-width: 1440px) {
-            .dashboard-card {
-                padding: 2rem;
-            }
-        }
-
-        /* 4K - 2560px */
-        @media (min-width: 1441px) {
-            .stats-value {
-                font-size: 2rem;
-            }
-            .dashboard-card {
-                padding: 2.5rem;
-            }
-            .chart-container {
-                height: 400px;
-            }
-        }
-    </style>
+   <link rel="stylesheet" href="/css/admin/dashboard.css">
 </head>
 <body>
-    <!-- Include Sidebar (similar to reference code) -->
- <%- include('./layout/asidebar.ejs') %>
+   
 
- <main class="main-content">
-    <div class="container-fluid">
-  
-
-    <div class="container-fluid py-4">
-        <!-- Stats Row -->
-        <div class="row g-3 mb-4">
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="stats-card">
-                    <div class="stats-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="stats-value">24,531</div>
-                    <div class="stats-label">Total Users <span class="trend-up">↑ 12.5%</span></div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="stats-card">
-                    <div class="stats-icon">
-                        <i class="fas fa-shopping-cart"></i>
-                    </div>
-                    <div class="stats-value">1,642</div>
-                    <div class="stats-label">Orders <span class="trend-up">↑ 8.2%</span></div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="stats-card">
-                    <div class="stats-icon">
-                        <i class="fas fa-box"></i>
-                    </div>
-                    <div class="stats-value">8,427</div>
-                    <div class="stats-label">Products <span class="trend-up">↑ 5.3%</span></div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="stats-card">
-                    <div class="stats-icon">
-                        <i class="fas fa-dollar-sign"></i>
-                    </div>
-                    <div class="stats-value">$65,110</div>
-                    <div class="stats-label">Total Sales <span class="trend-up">↑ 15.7%</span></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Charts Row -->
-        <div class="row g-3 mb-4">
-            <div class="col-12 col-lg-8">
-                <div class="dashboard-card">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h5 class="mb-0">Sales Analytics</h5>
-                        <div class="tab-controls">
-                            <button class="tab-btn active">Yearly</button>
-                            <button class="tab-btn">Monthly</button>
-                            <button class="tab-btn">Weekly</button>
+    <main class="main-content">
+        <div class="container-fluid py-4">
+            <!-- Stats Row -->
+            <div class="row g-3 mb-4">
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stats-value">24,531</div>
+                        <div class="stats-label">Total Orders
+                            <span class="trend-indicator trend-up">
+                                <i class="fas fa-arrow-up"></i> 12.5%
+                            </span>
                         </div>
                     </div>
-                    <div class="chart-container">
-                        <!-- Chart will be rendered here -->
-                    </div>
                 </div>
-            </div>
-            <div class="col-12 col-lg-4">
-                <div class="dashboard-card">
-                    <h5 class="mb-4">Top Products</h5>
-                    <ul class="product-list">
-                        <li class="product-item">
-                            <div class="product-info">
-                                <div class="product-image"></div>
-                                <div>
-                                    <h6 class="mb-1">White Pepper</h6>
-                                    <small class="text-secondary">2,345 sales</small>
-                                </div>
-                            </div>
-                            <span class="trend-up">+12.5%</span>
-                        </li>
-                        <li class="product-item">
-                            <div class="product-info">
-                                <div class="product-image"></div>
-                                <div>
-                                    <h6 class="mb-1">Doritos</h6>
-                                    <small class="text-secondary">1,879 sales</small>
-                                </div>
-                            </div>
-                            <span class="trend-up">+8.3%</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sales Report -->
-        <div class="row g-3">
-            <div class="col-12">
-                <div class="dashboard-card">
-                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-                        <h5 class="mb-0">Sales Report</h5>
-                        <div class="d-flex gap-3 flex-wrap">
-                            <input type="date" class="date-filter" placeholder="From Date">
-                            <input type="date" class="date-filter" placeholder="To Date">
-                            <button class="btn-export">
-                                <i class="fas fa-file-excel"></i>Export Excel
-                            </button>
-                            <button class="btn-export">
-                                <i class="fas fa-file-pdf"></i>Export PDF
-                            </button>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stats-value">$65,110</div>
+                        <div class="stats-label">Total Revenue
+                            <span class="trend-indicator trend-up">
+                                <i class="fas fa-arrow-up"></i> 15.7%
+                            </span>
                         </div>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Product</th>
-                                    <th>Customer</th>
-                                    <th>Date</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>#368759</td>
-                                    <td>White Pepper</td>
-                                    <td>John Doe</td>
-                                    <td>1/15/2025</td>
-                                    <td>$897.39</td>
-                                    <td><span class="status-badge status-pending">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#794296</td>
-                                    <td>Doritos</td>
-                                    <td>Jane Smith</td>
-                                    <td>1/15/2025</td>
-                                    <td>$557.90</td>
-                                    <td><span class="status-badge status-pending">Pending</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stats-value">+$7,843</div>
+                        <div class="stats-label">Net Change
+                            <span class="trend-indicator trend-up">
+                                <i class="fas fa-arrow-up"></i> 8.2%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                        <div class="stats-value">Spices</div>
+                        <div class="stats-label">Top Category
+                            <span class="trend-indicator trend-up">
+                                <i class="fas fa-arrow-up"></i> 5.3%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid py-4">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Sales Report</h3>
+                            </div>
+                            <div class="card-body">
+                                <!-- Filters -->
+                                <div class="row mb-4">
+                                    <div class="col-md-8">
+                                        <div class="d-flex gap-3">
+                                            <button class="btn btn-outline-primary" data-period="daily">Daily</button>
+                                            <button class="btn btn-outline-primary" data-period="weekly">Weekly</button>
+                                            <button class="btn btn-outline-primary" data-period="monthly">Monthly</button>
+                                            <button class="btn btn-outline-primary" data-period="yearly">Yearly</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-success" id="exportPDF">
+                                                <i class="fas fa-file-pdf me-2"></i>Export PDF
+                                            </button>
+                                            <button class="btn btn-success" id="exportExcel">
+                                                <i class="fas fa-file-excel me-2"></i>Export Excel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <!-- Custom Date Range -->
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <input type="date" class="form-control" id="startDate">
+                                            <input type="date" class="form-control" id="endDate">
+                                            <button class="btn btn-primary" id="filterDate">Apply Filter</button>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <!-- Summary Cards -->
+                                <div class="row mb-4">
+                                    <div class="col-md-3">
+                                        <div class="card bg-primary text-white">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Total Orders</h5>
+                                                <h3 class="card-text" id="totalOrders"><%- summary.totalOrders %></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card bg-success text-white">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Total Revenue</h5>
+                                                <h3 class="card-text" id="totalRevenue">₹<%- summary.totalRevenue %></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card bg-info text-white">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Total Discount</h5>
+                                                <h3 class="card-text" id="totalDiscount">₹<%- summary.totalDiscount %></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card bg-warning text-white">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Net Revenue</h5>
+                                                <h3 class="card-text" id="netRevenue">₹<%- summary.netRevenue %></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <!-- Sales Table -->
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="salesTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Order ID</th>
+                                                <th>Customer</th>
+                                                <th>Items</th>
+                                                <th>Total Amount</th>
+                                                <th>Discount</th>
+                                                <th>Net Amount</th>
+                                                <th>Payment Method</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% orders.forEach(order => { %>
+                                            <tr>
+                                                <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
+                                                <td><%= order.orderId %></td>
+                                                <td><%= order.username %></td>
+                                                <td><%= order.orderItems.length %></td>
+                                                <td>₹<%= order.totalAmount %></td>
+                                                <td>₹<%= order.discount || 0 %></td>
+                                                <td>₹<%= order.totalAmount - (order.discount || 0) %></td>
+                                                <td><%= order.paymentMethod %></td>
+                                            </tr>
+                                            <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+                <div class="col-12 col-lg-4">
+                    <div class="dashboard-card">
+                        <h5 class="mb-4">Top Brands</h5>
+                        <div class="data-table">
+                            <table class="table table-borderless mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Brand Name</th>
+                                        <th>Quantity Sold</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>FoodCo</td>
+                                        <td>8,901</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Frito-Lay</td>
+                                        <td>7,890</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
-</div>
-</main>
-
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </body>
 </html>
