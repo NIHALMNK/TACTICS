@@ -35,7 +35,7 @@ body {
     border-radius: var(--border-radius);
     padding: 1.25rem;
     margin-bottom: 1rem;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--accent-color);
     transition: transform 0.3s ease;
 }
 
@@ -105,6 +105,49 @@ body {
     padding: 1rem;
     margin-bottom: 1rem;
 }
+/*--------------------------------------------------------------*/
+.card-body, .text-muted {
+    background-color: var(--secondary-bg);
+}
+#period-select,#start-date,#end-date{
+    background: var(--background-dark);
+    color: var(--text-primary);
+    font-weight: 500;
+    border-color: #22c55e;
+}
+
+#Generate-btn{
+    background-color: var(--primary-bg);
+    border-color: var(--accent-color);
+    color: var(--accent-hover);
+    font-weight: 500;
+}
+
+#Generate-btn:hover{
+    background-color: var(--accent-hover);
+    border-color: var(--accent-color);
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+#card-head,#card-head-2,#card-head-3{
+    background-color:var(--accent-hover);
+}
+
+.table thead tr th{
+    background-color: var(--primary-bg);
+    color: var(--accent-hover);
+}
+
+.table tbody tr td:nth-child(2n-1){
+    background-color: var(--primary-bg);
+    color: var(--text-primary);
+}
+.table tbody tr td:nth-child(2n-2){
+    background-color: var(--hover-bg);
+    color: var(--text-primary);
+}
+/*---------------------------------------------------------*/
 
 .filter-input {
     background-color: var(--primary-bg);
