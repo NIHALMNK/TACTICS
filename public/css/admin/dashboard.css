@@ -12,12 +12,14 @@
     --border-radius: 8px;
 }
 
+/* Base Styles */
 body {
     background-color: var(--primary-bg);
     color: var(--text-primary);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
+/* Dashboard Card Styles */
 .dashboard-card {
     background-color: var(--secondary-bg);
     border-radius: var(--border-radius);
@@ -27,6 +29,7 @@ body {
     height: 100%;
 }
 
+/* Stats Card Styles */
 .stats-card {
     background-color: var(--secondary-bg);
     border-radius: var(--border-radius);
@@ -67,6 +70,7 @@ body {
     font-size: 0.875rem;
 }
 
+/* Trend Indicators */
 .trend-indicator {
     display: inline-flex;
     align-items: center;
@@ -86,12 +90,14 @@ body {
     color: var(--danger-color);
 }
 
+/* Chart Styles */
 .chart-container {
     position: relative;
     margin: auto;
     height: 300px;
 }
 
+/* Filter Section Styles */
 .data-filters {
     background-color: var(--secondary-bg);
     border: 1px solid var(--border-color);
@@ -108,33 +114,43 @@ body {
     padding: 0.5rem;
 }
 
-.data-table  table thead tr th {
+/* Table Styles */
+.data-table {
+    overflow-x: auto;
+}
+
+.data-table table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.data-table thead tr th {
     background-color: var(--secondary-bg);
     border-radius: var(--border-radius);
-    overflow: hidden;
     color: var(--text-primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
-.data-table table tbody tr th {
-    background-color: var(--primary-bg);
-    color: var(--text-primary);
-    border-bottom: 1px solid var(--accent-color);
+.data-table tbody tr td {
     padding: 1rem;
-}
-
-.data-table table tbody tr td {
-    border-bottom: 1px solid var(--accent-color);
-    padding: 1rem;
+    font-size: 0.875rem;
     color: var(--text-primary);
     background-color: var(--secondary-bg);
+    border-bottom: 1px solid var(--border-color);
 }
 
-
-
-.data-table tbody tr:hover {
+.data-table tbody tr:hover td {
     background-color: var(--hover-bg);
+    transition: background-color 0.2s ease;
 }
 
+/* Export Button Styles */
 .export-btn {
     background-color: var(--secondary-bg);
     border: 1px solid var(--border-color);
@@ -142,6 +158,13 @@ body {
     padding: 0.5rem 1rem;
     border-radius: var(--border-radius);
     transition: all 0.3s ease;
+    height: 40px;
+    min-width: 120px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 500;
 }
 
 .export-btn:hover {
@@ -149,55 +172,93 @@ body {
     color: var(--accent-color);
 }
 
+/* Scrollbar Styles */
+.data-table::-webkit-scrollbar {
+    height: 8px;
+}
+
+.data-table::-webkit-scrollbar-track {
+    background: var(--secondary-bg);
+    border-radius: 4px;
+}
+
+.data-table::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+.data-table::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
 /* Responsive Breakpoints */
+
 /* S - 320px */
 @media (max-width: 320px) {
+    .dashboard-card {
+        padding: 1rem;
+    }
+    .stats-card {
+        padding: 0.75rem;
+    }
+    .stats-value {
+        font-size: 1rem;
+    }
+    .stats-icon {
+        width: 32px;
+        height: 32px;
+    }
+    .stats-icon i {
+        font-size: 1rem;
+    }
+    .chart-container {
+        height: 200px;
+    }
+    .data-filters {
+        padding: 0.75rem;
+    }
+    .export-btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    .data-table th,
+    .data-table td {
+        padding: 0.5rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* M - 375px */
+@media (min-width: 321px) and (max-width: 375px) {
     .stats-card {
         padding: 1rem;
     }
     .stats-value {
         font-size: 1.25rem;
     }
-    .dashboard-card {
-        padding: 1rem;
-    }
-    .chart-container {
-        height: 200px;
-    }
-    .data-filters {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    .export-btn {
-        width: 100%;
-        margin-bottom: 0.5rem;
-    }
     .stats-icon {
         width: 36px;
         height: 36px;
     }
-}
-
-/* M - 375px */
-@media (min-width: 321px) and (max-width: 375px) {
     .chart-container {
         height: 250px;
     }
-    .stats-value {
-        font-size: 1.5rem;
-    }
     .data-filters {
-        flex-wrap: wrap;
+        padding: 0.875rem;
     }
 }
 
 /* L - 425px */
 @media (min-width: 376px) and (max-width: 425px) {
+    .stats-value {
+        font-size: 1.35rem;
+    }
+    .stats-icon {
+        width: 40px;
+        height: 40px;
+    }
     .chart-container {
         height: 275px;
-    }
-    .stats-card {
-        margin-bottom: 1rem;
     }
 }
 
@@ -206,18 +267,35 @@ body {
     .stats-card {
         margin-bottom: 1.5rem;
     }
+    .stats-value {
+        font-size: 1.5rem;
+    }
+    .stats-icon {
+        width: 44px;
+        height: 44px;
+    }
     .chart-container {
         height: 350px;
+    }
+    .data-filters {
+        flex-wrap: wrap;
     }
 }
 
 /* Laptop - 1024px */
 @media (min-width: 769px) and (max-width: 1024px) {
-    .chart-container {
-        height: 400px;
-    }
     .dashboard-card {
         padding: 1.75rem;
+    }
+    .stats-value {
+        font-size: 1.6rem;
+    }
+    .stats-icon {
+        width: 48px;
+        height: 48px;
+    }
+    .chart-container {
+        height: 400px;
     }
 }
 
@@ -226,6 +304,13 @@ body {
     .dashboard-card {
         padding: 2rem;
     }
+    .stats-value {
+        font-size: 1.75rem;
+    }
+    .stats-icon {
+        width: 52px;
+        height: 52px;
+    }
     .chart-container {
         height: 450px;
     }
@@ -233,14 +318,11 @@ body {
 
 /* 4K - 2560px */
 @media (min-width: 1441px) {
-    .stats-value {
-        font-size: 2rem;
-    }
     .dashboard-card {
         padding: 2.5rem;
     }
-    .chart-container {
-        height: 500px;
+    .stats-value {
+        font-size: 2rem;
     }
     .stats-icon {
         width: 64px;
@@ -249,100 +331,158 @@ body {
     .stats-icon i {
         font-size: 2rem;
     }
+    .chart-container {
+        height: 500px;
+    }
 }
 
-/* Add these styles to your existing CSS section */
-
-/* Monthly Sales Table Specific Styles */
-.monthly-sales-table {
-margin-top: 2rem;
+/* Bootstrap Overrides */
+.form-control {
+    background-color: var(--primary-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
 }
 
-.data-table {
-overflow-x: auto;
+.form-control:focus {
+    background-color: var(--primary-bg);
+    border-color: var(--accent-color);
+    color: var(--text-primary);
+    box-shadow: 0 0 0 0.25rem rgba(34, 197, 94, 0.25);
 }
 
-.data-table table {
-width: 100%;
-border-collapse: separate;
-border-spacing: 0;
+.form-select {
+    background-color: var(--primary-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
 }
 
-.data-table th {
-font-weight: 600;
-text-transform: uppercase;
-font-size: 0.75rem;
-letter-spacing: 0.05em;
-color: var(--text-secondary);
-padding: 0.75rem 1rem;
-background-color: var(--secondary-bg);
-border-bottom: 1px solid var(--border-color);
+.form-select:focus {
+    background-color: var(--primary-bg);
+    border-color: var(--accent-color);
+    color: var(--text-primary);
+    box-shadow: 0 0 0 0.25rem rgba(34, 197, 94, 0.25);
 }
 
-.data-table td {
-padding: 1rem;
-font-size: 0.875rem;
-color: var(--text-primary);
-border-bottom: 1px solid var(--border-color);
-background-color: var(--secondary-bg);
+.btn-primary {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
 }
 
-.data-table tbody tr:hover td {
-background-color: var(--hover-bg);
-transition: background-color 0.2s ease;
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+    border-color: var(--accent-hover);
 }
 
-/* Trend Indicators in Table */
-.data-table .trend-indicator {
-font-size: 0.75rem;
-padding: 0.25rem 0.5rem;
-border-radius: 1rem;
-display: inline-flex;
-align-items: center;
-gap: 0.25rem;
+.card {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
 }
 
-.data-table .trend-up {
-background-color: rgba(34, 197, 94, 0.1);
-color: var(--accent-color);
+.card-header {
+    background-color: rgba(45, 54, 67, 0.4);
+    border-bottom: 1px solid var(--border-color);
 }
 
-.data-table .trend-down {
-background-color: rgba(239, 68, 68, 0.1);
-color: var(--danger-color);
+/* Report Header Base Styles */
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
-/* Responsive styles for the table */
-@media (max-width: 768px) {
-.data-table {
-margin: 0 -1rem;
+.report-title {
+    margin: 0;
+    font-weight: 600;
 }
 
-.data-table table {
-min-width: 600px;
+.report-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
-.data-table th,
-.data-table td {
-padding: 0.75rem;
-}
-}
-
-/* Dark theme scrollbar for table */
-.data-table::-webkit-scrollbar {
-height: 8px;
+.report-btn {
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
 }
 
-.data-table::-webkit-scrollbar-track {
-background: var(--secondary-bg);
-border-radius: 4px;
+/* Responsive Breakpoints */
+@media (max-width: 320px) {
+    .report-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .report-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .report-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .report-title {
+        text-align: center;
+        font-size: 1.25rem;
+    }
 }
 
-.data-table::-webkit-scrollbar-thumb {
-background: var(--border-color);
-border-radius: 4px;
+@media (min-width: 321px) and (max-width: 375px) {
+    .report-header {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .report-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .report-btn {
+        width: 100%;
+    }
+    
+    .report-title {
+        text-align: center;
+        font-size: 1.35rem;
+    }
 }
 
-.data-table::-webkit-scrollbar-thumb:hover {
-background: var(--text-secondary);
+@media (min-width: 376px) and (max-width: 425px) {
+    .report-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .report-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .report-btn {
+        flex: 1;
+        min-width: 140px;
+    }
+}
+
+@media (min-width: 426px) and (max-width: 768px) {
+    .report-actions {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .report-btn {
+        min-width: auto;
+    }
 }

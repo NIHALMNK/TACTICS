@@ -37,6 +37,18 @@ const orderSchema = new mongoose.Schema({
             }
         }
     ],
+    discount: {
+        type: Number,
+        default: 0  
+    },
+    couponDiscount: {
+        type: Number,
+        default: 0 
+    },
+    totalDiscount: {
+        type: Number,
+        default: 0  
+    },
     status: {
         type: String,
         enum: ['Pending', 'Cancelled', 'Shipping', 'Completed', 'Returned', 'Requested', 'Rejected'],

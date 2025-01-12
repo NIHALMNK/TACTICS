@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/admin/dashboard.css">
-    <!-- <style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin/dashboard.css">
+  <!-- <style>
         /* Enhanced Card Layouts */
 .dashboard-card {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -117,215 +118,511 @@
 }
     </style> -->
 </head>
+
 <body>
-     <!-- Include Sidebar -->
+  <!-- Include Sidebar -->
   <%- include('./layout/asidebar.ejs') %>
 
-    <main class="main-content">
-        <div class="container-fluid py-4">
-            
-            <!-- Stats Row -->
-            <div class="row g-3 mb-4">
-                <div class="col-12 col-sm-6 col-lg-3">
-                    <div class="stats-card">
-                        <div class="stats-icon">
-                            <i class="fas fa-shopping-cart"></i>
-                        </div>
-                        <div class="stats-value"><%= stats.totalOrders %></div>
-                        <div class="stats-label">Total Orders</div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-lg-3">
-                    <div class="stats-card">
-                        <div class="stats-icon">
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
-                        <div class="stats-value">$<%= stats.totalRevenue.toLocaleString() %></div>
-                        <div class="stats-label">Total Revenue</div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-lg-3">
-                    <div class="stats-card">
-                        <div class="stats-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <div class="stats-value">$<%= stats.todayRevenue.toLocaleString() %></div>
-                        <div class="stats-label">Today's Revenue</div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-lg-3">
-                    <div class="stats-card">
-                        <div class="stats-icon">
-                            <i class="fas fa-shopping-bag"></i>
-                        </div>
-                        <div class="stats-value"><%= stats.todayOrders %></div>
-                        <div class="stats-label">Today's Orders</div>
-                    </div>
-                </div>
-            </div>
+  <main class="main-content">
+    <div class="container-fluid py-4">
 
-            <!-- Sales Report Section -->
-            <div class="row g-3 mb-4">
-                <div class="col-12">
-                    <div class="dashboard-card">
-                        <div class="data-filters d-flex flex-wrap gap-3 align-items-center justify-content-between mb-4">
-                            <div class="d-flex gap-3 flex-wrap">
-                                <select class="filter-input" id="period-select">
-                                    <option value="">Custom Range</option>
-                                    <option value="daily">Daily</option>
-                                    <option value="weekly">Weekly</option>
-                                    <option value="monthly">Monthly</option>
-                                    <option value="yearly">Yearly</option>
-                                </select>
-                                <input type="date" class="filter-input" id="start-date">
-                                <input type="date" class="filter-input" id="end-date">
-                                <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
-                            </div>
-                            <div class="d-flex gap-3 flex-wrap">
-                                <button class="export-btn" onclick="downloadReport('pdf')">
-                                    <i class="fas fa-file-pdf me-2"></i>Export PDF
-                                </button>
-                                <button class="export-btn" onclick="downloadReport('excel')">
-                                    <i class="fas fa-file-excel me-2"></i>Export Excel
-                                </button>
-                            </div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="salesChart"></canvas>
-                        </div>
-                        <div class="data-table mt-4" id="sales-data">
-                            <!-- Sales data will be populated here -->
-                        </div>
-                    </div>
-                </div>
+      <!-- Stats Row -->
+      <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="stats-card">
+            <div class="stats-icon">
+              <i class="fas fa-shopping-cart"></i>
             </div>
-           
+            <div class="stats-value"><%= stats.totalOrders %></div>
+            <div class="stats-label">Total Orders</div>
+          </div>
         </div>
-    </main>
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="stats-card">
+            <div class="stats-icon">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="stats-value">$<%= stats.totalRevenue.toLocaleString() %></div>
+            <div class="stats-label">Total Revenue</div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="stats-card">
+            <div class="stats-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stats-value">$<%= stats.todayRevenue.toLocaleString() %></div>
+            <div class="stats-label">Today's Revenue</div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="stats-card">
+            <div class="stats-icon">
+              <i class="fas fa-shopping-bag"></i>
+            </div>
+            <div class="stats-value"><%= stats.todayOrders %></div>
+            <div class="stats-label">Today's Orders</div>
+          </div>
+        </div>
+      </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <script>
-        let salesChart;
+      <!-- Sales Report Section -->
+<div class="row g-3 mb-4">
+    <div class="col-12">
+        <div class="dashboard-card p-4">
+            <!-- Report Header -->
+            <div class="report-header">
+                <h4 class="report-title">Sales Analytics</h4>
+                <div class="report-actions">
+                    <button class="btn btn-outline-secondary btn-sm report-btn" onclick="refreshReport()">
+                        <i class="fas fa-sync-alt me-2"></i>Refresh
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm report-btn" onclick="downloadReport('pdf')">
+                        <i class="fas fa-file-pdf me-2"></i>PDF Report
+                    </button>
+                    <button class="btn btn-outline-success btn-sm report-btn" onclick="downloadReport('excel')">
+                        <i class="fas fa-file-excel me-2"></i>Excel Report
+                    </button>
+                </div>
+            </div>
 
-        async function generateReport() {
-            const period = document.getElementById('period-select').value;
-            const startDate = document.getElementById('start-date').value;
-            const endDate = document.getElementById('end-date').value;
+            <!-- Filters Section -->
+            <div class="card mb-4">
+              <div class="card-body">
+                <div class="row g-3">
+                  <div class="col-12 col-md-3">
+                    <label class="form-label">Date Range</label>
+                    <select class="form-select" id="period-select" onchange="handlePeriodChange()">
+                      <option value="">Custom Range</option>
+                      <option value="daily">Today</option>
+                      <option value="weekly">This Week</option>
+                      <option value="monthly">This Month</option>
+                      <option value="yearly">This Year</option>
+                    </select>
+                  </div>
+                  <div class="col-12 col-md-3">
+                    <label class="form-label">Start Date</label>
+                    <input type="date" class="form-control" id="start-date">
+                  </div>
+                  <div class="col-12 col-md-3">
+                    <label class="form-label">End Date</label>
+                    <input type="date" class="form-control" id="end-date">
+                  </div>
+                  <div class="col-12 col-md-3 d-flex align-items-end">
+                    <button class="btn btn-primary w-100" onclick="generateReport()">
+                      Generate Report
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-            const params = new URLSearchParams();
-            if (period) {
-                params.append('period', period);
-            } else {
-                params.append('startDate', startDate);
-                params.append('endDate', endDate);
+            <!-- Summary Cards -->
+            <div class="row g-3 mb-4" id="summary-cards">
+              <!-- Will be populated by JavaScript -->
+            </div>
+
+            <!-- Charts Section -->
+            <div class="row g-3 mb-4">
+              <div class="col-12 col-lg-8">
+                <div class="card h-100">
+                  <div class="card-header">
+                    <h5 class="card-title mb-0">Sales Trend</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container" style="height: 300px;">
+                      <canvas id="salesChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-4">
+                <div class="card h-100">
+                  <div class="card-header">
+                    <h5 class="card-title mb-0">Discount Analysis</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container" style="height: 300px;">
+                      <canvas id="discountChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title mb-0">Detailed Report</h5>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive" id="sales-data">
+                  <!-- Sales data table will be populated here -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://kit.fontawesome.com/your-kit-code.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let salesChart;
+    let discountChart;
+
+    // Date Range Handling
+    function handlePeriodChange() {
+      const periodSelect = document.getElementById('period-select');
+      const startDate = document.getElementById('start-date');
+      const endDate = document.getElementById('end-date');
+
+      const isCustom = periodSelect.value === '';
+      startDate.disabled = !isCustom;
+      endDate.disabled = !isCustom;
+
+      if (!isCustom) {
+        generateReport();
+      }
+    }
+
+    // Summary Cards Update
+    function updateSummaryCards(summary) {
+      const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      });
+
+      const cards = [{
+          title: 'Gross Sales',
+          value: formatter.format(summary.grossSales),
+          icon: 'fa-dollar-sign',
+          color: 'primary'
+        },
+        {
+          title: 'Net Sales',
+          value: formatter.format(summary.totalSales),
+          icon: 'fa-chart-line',
+          color: 'success'
+        },
+        {
+          title: 'Total Discount',
+          value: formatter.format(summary.totalDiscount),
+          icon: 'fa-tags',
+          color: 'warning'
+        },
+        {
+          title: 'Orders',
+          value: summary.totalOrders,
+          icon: 'fa-shopping-cart',
+          color: 'info'
+        }
+      ];
+
+      const html = cards.map(card => `
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-${card.color}-subtle p-3 rounded">
+                                <i class="fas ${card.icon} fa-fw text-${card.color}"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="text-muted mb-1">${card.title}</h6>
+                            <h4 class="mb-0">${card.value}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+      document.getElementById('summary-cards').innerHTML = html;
+    }
+
+    // Chart Updates
+    function updateCharts(data) {
+      // Update Sales Chart
+      const ctx = document.getElementById('salesChart').getContext('2d');
+      if (salesChart) {
+        salesChart.destroy();
+      }
+
+      salesChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: data.salesData.map(item => item._id),
+          datasets: [{
+            label: 'Gross Sales',
+            data: data.salesData.map(item => item.grossSales),
+            borderColor: 'rgb(59, 125, 221)',
+            backgroundColor: 'rgba(59, 125, 221, 0.1)',
+            fill: true
+          }, {
+            label: 'Net Sales',
+            data: data.salesData.map(item => item.totalSales),
+            borderColor: 'rgb(28, 187, 140)',
+            backgroundColor: 'rgba(28, 187, 140, 0.1)',
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top'
             }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: value => '$' + value.toLocaleString()
+              }
+            }
+          }
+        }
+      });
 
-            try {
-                const response = await fetch(`/admin/sales-report?${params}`);
-                const data = await response.json();
-                updateChart(data);
-                updateTable(data);
-            } catch (error) {
-                console.error('Error generating report:', error);
+      // Update Discount Chart
+      const ctxDiscount = document.getElementById('discountChart').getContext('2d');
+      if (discountChart) {
+        discountChart.destroy();
+      }
+
+      discountChart = new Chart(ctxDiscount, {
+        type: 'doughnut',
+        data: {
+          labels: ['Regular Discount', 'Coupon Discount'],
+          datasets: [{
+            data: [data.summary.regularDiscount, data.summary.couponDiscount],
+            backgroundColor: ['#ffc107', '#fd7e14']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+    }
+
+    // Table Update
+    function updateTable(data) {
+      const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2
+      });
+
+      const tableHtml = `
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th class="text-end">Orders</th>
+                    <th class="text-end">Gross Sales</th>
+                    <th class="text-end">Discounts</th>
+                    <th class="text-end">Net Sales</th>
+                    <th class="text-end">Discount %</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${data.salesData.map(item => `
+                    <tr>
+                        <td>${item._id}</td>
+                        <td class="text-end">${item.ordersCount}</td>
+                        <td class="text-end">${formatter.format(item.grossSales)}</td>
+                        <td class="text-end">${formatter.format(item.totalDiscount)}</td>
+                        <td class="text-end">${formatter.format(item.totalSales)}</td>
+                        <td class="text-end">${item.discountPercentage.toFixed(1)}%</td>
+                    </tr>
+                `).join('')}
+                <tr class="table-info fw-bold">
+                    <td>Total</td>
+                    <td class="text-end">${data.summary.totalOrders}</td>
+                    <td class="text-end">${formatter.format(data.summary.grossSales)}</td>
+                    <td class="text-end">${formatter.format(data.summary.totalDiscount)}</td>
+                    <td class="text-end">${formatter.format(data.summary.totalSales)}</td>
+                    <td class="text-end">${((data.summary.totalDiscount / data.summary.grossSales) * 100).toFixed(1)}%</td>
+                </tr>
+            </tbody>
+        </table>
+    `;
+      document.getElementById('sales-data').innerHTML = tableHtml;
+    }
+
+    // Report Generation
+    async function generateReport() {
+      try {
+        const period = document.getElementById('period-select').value;
+        const startDate = document.getElementById('start-date').value;
+        const endDate = document.getElementById('end-date').value;
+
+        const params = new URLSearchParams();
+        if (period) {
+          params.append('period', period);
+        } else if (startDate && endDate) {
+          params.append('startDate', startDate);
+          params.append('endDate', endDate);
+        } else {
+          alert('Please select a date range');
+          return;
+        }
+
+        const response = await fetch(`/admin/sales-report?${params}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch report data');
+        }
+
+        const data = await response.json();
+        updateSummaryCards(data.summary);
+        updateCharts(data);
+        updateTable(data);
+      } catch (error) {
+        console.error('Error generating report:', error);
+        alert('Error generating report. Please try again.');
+      }
+    }
+
+    // Report Download
+// Report Download
+async function downloadReport(format) {
+    try {
+        const period = document.getElementById('period-select').value;
+        const startDate = document.getElementById('start-date').value;
+        const endDate = document.getElementById('end-date').value;
+
+        // Validate date selection
+        if (!period && (!startDate || !endDate)) {
+            alert('Please select a date range or period');
+            return;
+        }
+
+        // Show loading state
+        const button = document.querySelector(`button[onclick="downloadReport('${format}')"]`);
+        const originalContent = button.innerHTML;
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Downloading...';
+
+        // Build query parameters
+        const params = new URLSearchParams();
+        params.append('format', format);
+        if (period) {
+            params.append('period', period);
+        } else {
+            params.append('startDate', startDate);
+            params.append('endDate', endDate);
+        }
+
+        // Make request to the correct endpoint
+        const response = await fetch(`/admin/sales-report/download?${params.toString()}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Get the filename from the Content-Disposition header if available
+        const contentDisposition = response.headers.get('Content-Disposition');
+        let filename = `sales-report.${format}`;
+        if (contentDisposition) {
+            const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+            if (filenameMatch && filenameMatch[1]) {
+                filename = filenameMatch[1].replace(/['"]/g, '');
             }
         }
 
-        function updateChart(data) {
-            const ctx = document.getElementById('salesChart').getContext('2d');
-            
-            if (salesChart) {
-                salesChart.destroy();
-            }
+        // Convert the response to blob
+        const blob = await response.blob();
+        
+        // Create a link to download the file
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = filename;
+        
+        // Add to document, click and cleanup
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
 
-            salesChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: data.salesData.map(item => item._id),
-                    datasets: [{
-                        label: 'Sales',
-                        data: data.salesData.map(item => item.totalSales),
-                        borderColor: 'rgb(75, 192, 192)',
-                        tension: 0.1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
+    } catch (error) {
+        console.error('Error downloading report:', error);
+        alert('Error downloading report. Please try again.');
+    } finally {
+        // Restore button state
+        const button = document.querySelector(`button[onclick="downloadReport('${format}')"]`);
+        button.disabled = false;
+        button.innerHTML = format === 'pdf' ? 
+            '<i class="fas fa-file-pdf me-2"></i>PDF Report' : 
+            '<i class="fas fa-file-excel me-2"></i>Excel Report';
+    }
+}
 
-        function updateTable(data) {
-            const tableHtml = `
-                <h5 class="mb-3">Sales Summary</h5>
-                <table class="table table-borderless mb-0">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Orders</th>
-                            <th>Sales</th>
-                            <th>Discount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${data.salesData.map(item => `
-                            <tr>
-                                <td>${item._id}</td>
-                                <td>${item.ordersCount}</td>
-                                <td>$${item.totalSales.toFixed(2)}</td>
-                                <td>$${item.discountTotal.toFixed(2)}</td>
-                            </tr>
-                        `).join('')}
-                        <tr class="table-info">
-                            <td><strong>Total</strong></td>
-                            <td><strong>${data.summary.totalOrders}</strong></td>
-                            <td><strong>$${data.summary.totalSales.toFixed(2)}</strong></td>
-                            <td><strong>$${data.summary.totalDiscount.toFixed(2)}</strong></td>
-                        </tr>
-                    </tbody>
-                </table>
-            `;
-            document.getElementById('sales-data').innerHTML = tableHtml;
-        }
+// When the document loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Set default period to daily
+    document.getElementById('period-select').value = 'daily';
+    handlePeriodChange();
 
-        async function downloadReport(format) {
-            const period = document.getElementById('period-select').value;
-            const startDate = document.getElementById('start-date').value;
-            const endDate = document.getElementById('end-date').value;
+    // Initialize date inputs with current date range
+    const today = new Date();
+    const dateInputs = document.querySelectorAll('input[type="date"]');
+    dateInputs.forEach(input => {
+        input.value = today.toISOString().split('T')[0];
+    });
 
-            const params = new URLSearchParams();
-            params.append('format', format);
-            if (period) {
-                params.append('period', period);
-            } else {
-                params.append('startDate', startDate);
-                params.append('endDate', endDate);
-            }
+    // Generate initial report
+    generateReport();
+});
+    // Initialize Dashboard
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set default period to daily
+      document.getElementById('period-select').value = 'daily';
+      handlePeriodChange();
 
-            window.location.href = `/admin/sales-report/download?${params}`;
-        }
+      // Add event listeners for download buttons
+      const pdfDownloadBtn = document.querySelector('[onclick="downloadReport(\'pdf\')"]');
+      const excelDownloadBtn = document.querySelector('[onclick="downloadReport(\'excel\')"]');
 
-        // Initialize with daily report on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('period-select').value = 'daily';
-            generateReport();
-        });
+      if (pdfDownloadBtn) {
+        pdfDownloadBtn.onclick = (e) => {
+          e.preventDefault();
+          downloadReport('pdf');
+        };
+      }
 
-        // Handle period select change
-        document.getElementById('period-select').addEventListener('change', (e) => {
-            const customDateInputs = document.querySelectorAll('input[type="date"]');
-            if (e.target.value === '') {
-                customDateInputs.forEach(input => input.disabled = false);
-            } else {
-                customDateInputs.forEach(input => input.disabled = true);
-            }
-        });
-    </script>
+      if (excelDownloadBtn) {
+        excelDownloadBtn.onclick = (e) => {
+          e.preventDefault();
+          downloadReport('excel');
+        };
+      }
+
+      // Initialize date inputs with current date range
+      const today = new Date();
+      const dateInputs = document.querySelectorAll('input[type="date"]');
+      dateInputs.forEach(input => {
+        input.value = today.toISOString().split('T')[0];
+      });
+    });
+  </script>
 </body>
+
 </html>
