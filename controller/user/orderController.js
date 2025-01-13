@@ -156,66 +156,57 @@ const orderController = {
     },
   
 
-  requestReturn: async (req, res) => {
-    try {
-      
-
-      // const { orderId } = req.params;
-      const { reason, orderId} = req.body;
-
-      
-      
-      const order = await Order.findById(orderId);
-
-      if (!order) {
-        // console.log("Order not found");
-        
-        return res.status(404).json({ message: 'Order not found' });
-      }
-
-
-      if (order.status !== 'Completed') {
-        // console.log("-=-=-DONE-=-=-");
-        
-        return res.status(400).json({ message: 'Order cannot be returned' });
-      }
-      
-      order.status = 'Requested';
-      order.refundReason = reason;
-      // console.log("------->order");
-      await order.save();
-
-     return res.json({ message: 'Return requested successfully' });
-
-    } catch (error) {
-      console.error('Error requesting return:', error);
-      res.status(500).json({ message: 'Failed to request return' });
-    }
-  },
-
-  async cancelOrder(req,res){
-    try {
-      // console.log(req.session);
-      
-        const userId=req.session.user.id;
-
-        const orderId = req.params.orderId;
+    requestReturn: async (req, res) => {
+      try {
+        const { reason, orderId } = req.body;
+        const userId = req.session.user.id;
+  
         const order = await Order.findById(orderId);
-    
+  
         if (!order) {
-          return res.status(404).json({ 
-            success: false, 
-            message: 'Order not found' 
-          });
+          return res.status(404).json({ message: 'Order not found' });
         }
-    
-        if (order.status !== 'Pending') {
-          return res.status(400).json({ 
-            success: false, 
-            message: 'Only pending orders can be cancelled' 
-          });
+  
+        if (order.status !== 'Completed') {
+          return res.status(400).json({ message: 'Order cannot be returned' });
         }
-    
+  
+        // Calculate refund amount (total order amount)
+        const refundAmount = order.totalAmount;
+  
+        // Update wallet balance
+        let walletData = await wallet.findOne({ userId });
+        
+        if (!walletData) {
+          // Create new wallet if it doesn't exist
+          walletData = await wallet.create({
+            userId: userId,
+            balance: refundAmount,
+            transactionHistory: [{
+              transactionType: "CREDIT",
+              transactionAmount: refundAmount,
+              transactionDate: new Date(),
+              description: `Refund for returned order #${orderId}`
+            }]
+          });
+        } else {
+          // Update existing wallet
+          walletData.balance += refundAmount;
+          walletData.transactionHistory.push({
+            transactionType: "CREDIT",
+            transactionAmount: refundAmount,
+            transactionDate: new Date(),
+            description: `Refund for returned order #${orderId}`
+          });
+          await walletData.save();
+        }
+  
+        // Update order status and save return reason
+        order.status = 'Requested';
+        order.refundReason = reason;
+        await order.save();
+  
+        // Update product quantities back to inventory
         for (const item of order.orderItems) {
           const product = await Product.findById(item.productId);
           if (product) {
@@ -223,48 +214,92 @@ const orderController = {
             await product.save();
           }
         }
-    
-        order.status = 'Cancelled';
-        const method=order.paymentMethod;
-        if (method==='razorpay'&&order.status === 'Cancelled'){
-          let walletdata=await wallet.findOne({userId})
-          if(!walletdata){
-            walletdata=await wallet.create({
-              userId:req.session.user.id,
-              balance:order.totalAmount,
-              transactionHistory:[{
-                transactionType:"refund",
-                transactionAmount:order.totalAmount,
-                transactionDate:new Date(),
-                description:order.refundReason
-              }],
-            });
-          }else{
-            walletdata.balance+=order.totalAmount,
-            walletdata.transactionHistory.push({
-              transactionType:"refund",
-                transactionAmount:order.totalAmount,
-                transactionDate:new Date(),
-                description:order.refundReason,
-            });
-            await walletdata.save()
-          }
-
-        }
-        await order.save();
-    
-        res.json({ 
-          success: true, 
-          message: 'Order cancelled successfully' 
+  
+        return res.json({ 
+          success: true,
+          message: 'Return requested successfully and refund initiated' 
         });
-    
+  
       } catch (error) {
-        console.error('Error cancelling order:', error);
+        console.error('Error requesting return:', error);
         res.status(500).json({ 
-          success: false, 
-          message: 'Failed to cancel order' 
+          success: false,
+          message: 'Failed to request return' 
         });
       }
+    },
+
+  async cancelOrder(req, res) {
+    try {
+      const userId = req.session.user.id;
+      const orderId = req.params.orderId;
+      const order = await Order.findById(orderId);
+
+      if (!order) {
+        return res.status(404).json({ 
+          success: false, 
+          message: 'Order not found' 
+        });
+      }
+
+      if (order.status !== 'Pending') {
+        return res.status(400).json({ 
+          success: false, 
+          message: 'Only pending orders can be cancelled' 
+        });
+      }
+
+      // Update product quantities
+      for (const item of order.orderItems) {
+        const product = await Product.findById(item.productId);
+        if (product) {
+          product.quantity += item.quantity;
+          await product.save();
+        }
+      }
+
+      order.status = 'Cancelled';
+      
+      // Handle refund for all online payment methods
+      if (order.paymentMethod !== 'COD') {
+        let walletData = await wallet.findOne({ userId });
+        if (!walletData) {
+          walletData = await wallet.create({
+            userId: userId,
+            balance: order.totalAmount,
+            transactionHistory: [{
+              transactionType: "CREDIT", // Changed from "credit" to "CREDIT"
+              transactionAmount: order.totalAmount,
+              transactionDate: new Date(),
+              description: `Refund for order #${order._id}`
+            }],
+          });
+        } else {
+          walletData.balance += order.totalAmount;
+          walletData.transactionHistory.push({
+            transactionType: "CREDIT", // Changed from "credit" to "CREDIT"
+            transactionAmount: order.totalAmount,
+            transactionDate: new Date(),
+            description: `Refund for order #${order._id}`
+          });
+          await walletData.save();
+        }
+      }
+
+      await order.save();
+
+      res.json({ 
+        success: true, 
+        message: 'Order cancelled successfully' 
+      });
+
+    } catch (error) {
+      console.error('Error cancelling order:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: 'Failed to cancel order' 
+      });
+    }
   },
 
 

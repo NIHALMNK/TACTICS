@@ -16,7 +16,8 @@ const walletSchema = new mongoose.Schema({
       {
         transactionType: {
           type: String,
-          enum: ['deposit', 'refund', 'purchase', 'wallet-to-wallet', 'manual'],
+          enum: ['CREDIT', 'DEBIT'],
+
           required: true
         },
         transactionAmount: {

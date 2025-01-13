@@ -188,29 +188,32 @@
                                   </tr>
                               </thead>
                               <tbody id="transaction-history">
-                                  <% if (transactionHistory===null) { %>
-                                    <tr>
-                                      <th><p>there is no transaction-history</p></th> 
-                                  </tr>
-                                   
-                                   <% } else { %>
-                                    <% transactionHistory.forEach((items,index) => { %>
-                                     <p>there is no transaction-history</p><tr>
-                                      <th><p><b><%= index+1 %></b></p></th>
-                                      <th><p><%= new Date(items.transactionDate).toLocaleDateString('en-IN', { 
-                                        day: '2-digit', 
-                                        month: '2-digit', 
-                                        year: 'numeric' 
-                                    }) %></p></th>
-                                    
-                                      <th><%= items.description %></th>
-                                      <th><%= items.transactionType %></th>
-                                      <th><%= items.transactionAmount%></th>
-                                  </tr>
-                                     
-                                    <% }) %>
-                                  <% } %>
-                              </tbody>
+  <% if (!transactionHistory || transactionHistory.length === 0) { %>
+    <tr>
+      <td colspan="5" class="text-center">No transaction history available</td>
+    </tr>
+  <% } else { %>
+    <% transactionHistory.forEach((items, index) => { %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= new Date(items.transactionDate).toLocaleDateString('en-IN', { 
+          day: '2-digit', 
+          month: '2-digit', 
+          year: 'numeric' 
+        }) %></td>
+        <td><%= items.description %></td>
+        <td>
+          <span class="badge <%= items.transactionType === 'credit' ? 'badge-credit' : 'badge-debit' %>">
+            <%= items.transactionType %>
+          </span>
+        </td>
+        <td class="<%= items.transactionType === 'credit' ? 'text-success' : 'text-danger' %>">
+          ₹<%= items.transactionAmount %>
+        </td>
+      </tr>
+    <% }) %>
+  <% } %>
+</tbody>
                           </table>
                       </div>
                       <nav aria-label="Transaction pagination" class="mt-4">

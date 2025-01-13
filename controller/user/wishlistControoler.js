@@ -58,43 +58,41 @@ module.exports={
   
 
     async LoadWishlist(req,res){
-        try{
-            const userId=req.session.user.id;
+        try {
+            const userId = req.session.user.id;
             if(!userId){
                 return res.redirect('/login');
             }
-
-            const wishlist=await wishlistModel.findOne({userId})
-            .populate({
-                path: 'products.productId',
-                model: 'Product',
-                select: 'offerPrice price name  images isDeleted' 
-            });
-
-        if(!wishlist){
-            return res.render("user/wishlist",{
-                status:false,
-                wishlist:null,
-
-            })
-        }else{
+    
+            const wishlist = await wishlistModel.findOne({userId})
+                .populate({
+                    path: 'products.productId',
+                    model: 'Product',
+                    select: 'offerPrice price name images isDeleted' 
+                });
+    
+            if(!wishlist){
+                return res.render("user/wishlist", {
+                    status: false,
+                    wishlist: null,
+                });
+            }
+    
+            wishlist.products = wishlist.products.filter(product => product.productId !== null);
+            await wishlist.save();
             
+            const isWishlistEmpty = wishlist.products.length === 0;
             
-            
-            return res.render("user/wishlist",{
-                status:true,
+            return res.render("user/wishlist", {
+                status: !isWishlistEmpty,
                 wishlist
-            })
-        }
-
-
-
-        }catch(error){
+            });
+    
+        } catch(error) {
             console.error("Error wishlist:", error);
             res.status(500).json({ message: "Server error" });
         }
     },
-   
 
 
 

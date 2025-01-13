@@ -671,11 +671,18 @@ async function handleOrderReturn(event) {
         });
         window.location.reload();
       } else {
+        // await Swal.fire({
+        //   title: 'Error!',
+        //   text: 'Failed to submit return request',
+        //   icon: 'error'
+        // });
         await Swal.fire({
-          title: 'Error!',
-          text: 'Failed to submit return request',
-          icon: 'error'
+          title: 'wait!',
+          text: 'Your return request has been submitted.',
+          icon: 'esuccess'
         });
+
+        window.location.reload();
       }
     } catch (error) {
       console.error('Error:', error);
