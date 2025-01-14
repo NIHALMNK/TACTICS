@@ -142,6 +142,7 @@ body {
 /* Custom Date Input Styling */
 input[type="date"] {
     background-color: var(--hover-bg);
+    color: var(--text-primary);
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
@@ -293,87 +294,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-        let form=   document.getElementById('couponForm')
-        
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                let isValid = true;
-                const fields = ['couponCode', 'discountType', 'discountValue', 'minPurchase', 
-                              'startDate', 'endDate', 'usageLimit', 'status'];
 
-                // if (discountTypeSelect.value === 'percentage') {
-                //     fields.push('maxDiscount');
-                // }
-                if(status==true){
-                    status="active"
-                }else{
-                    status="inactive"
-                }
-
-                fields.forEach(field => {
-                    if (!validateField(field)) {
-                        isValid = false;
-                    }
-                });
-
-                if (isValid) {
-                    try {
-                        const formData = {
-                            id: document.getElementById('couponId').value,
-                            code: document.getElementById('couponCode').value,
-                            discountType: document.getElementById('discountType').value,
-                            discountValue: parseFloat(document.getElementById('discountValue').value),
-                            minPurchase: parseFloat(document.getElementById('minPurchase').value),
-                            startDate: document.getElementById('startDate').value,
-                            endDate: document.getElementById('endDate').value,
-                            usageLimit: parseInt(document.getElementById('usageLimit').value),
-                            status: document.getElementById('status').value
-                        };
-
-                        if (discountTypeSelect.value === 'percentage') {
-                            formData.maxDiscount = parseFloat(document.getElementById('maxDiscount').value);
-                        }
-
-                        const response = await fetch(`/admin/couponManagement/update/${formData.id}`, {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(formData)
-                        });
-
-                        if (response.ok) {
-                            await Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'Coupon updated successfully',
-                                confirmButtonColor: '#3498db'
-                            });
-                            window.location.href = '/admin/couponManagement';
-                        } else {
-                            throw new Error('Failed to update coupon');
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        await Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'Failed to update coupon. Please try again.',
-                            confirmButtonColor: '#e74c3c'
-                        });
-                    }
-                }
-            });
-
-            // Add cancel button handler
-            document.getElementById('cancelBtn').addEventListener('click', () => {
-                window.location.href = '/admin/couponManagement';;
-
-            });
-        });
-    </script> -->
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -518,12 +439,16 @@ input[type="number"]::-webkit-outer-spin-button {
 
             case 'minPurchase':
               const minPurchase = parseFloat(field.value);
-              if (minPurchase < 0) {
+              const discountType = discountTypeSelect?.value;
+              const discountAmount = parseFloat(document.getElementById('discountValue')?.value);
+              if (isNaN(minPurchase) || minPurchase < 0) {
                 isValid = false;
-                message = 'Minimum purchase amount cannot be negative';
+                message = 'Minimum purchase amount must be a valid number and cannot be negative';
+              } else if (discountType === 'fixed' && !isNaN(discountAmount) && discountAmount >= minPurchase) {
+                isValid = false;
+                message = 'Minimum purchase amount cannot be less than the discount value';
               }
               break;
-
             case 'usageLimit':
               const limit = parseInt(field.value);
               if (limit < 1 || limit > 10000) {
