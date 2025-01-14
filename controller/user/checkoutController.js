@@ -80,7 +80,7 @@ module.exports = {
             });
 
             const coupens = await couponModel.find()
-            // console.log(coupens);
+            
 
             res.render('user/checkout', {
                 addresses,
@@ -273,14 +273,13 @@ module.exports = {
                     quantity: item.quantity,
                     price: item.productId.offerPrice,
                 })),
-                discount: discount, // Product discount (MRP - Offer Price)
-                couponDiscount: appliedCoupon?.discount || 0, // Coupon discount if applied
-                totalDiscount: discount + (appliedCoupon?.discount || 0), // Total of both discounts
+                discount: discount, 
+                couponDiscount: appliedCoupon?.discount || 0, 
+                totalDiscount: discount + (appliedCoupon?.discount || 0), 
                 paymentMethod: selectedPayment,
                 paymentStatus: selectedPayment === 'cod' ? 'Pending' : 'Completed',
             };
 
-            // Add coupon information if applied
             if (appliedCoupon && appliedCoupon.couponId) {
                 orderData.coupon = appliedCoupon.couponId;
                 orderData.discountAmount = appliedCoupon.discount;
@@ -288,14 +287,11 @@ module.exports = {
 
             const newOrder = await orderModel.create(orderData);
 
-            // Clear the cart and update stock
             cart.items = [];
             await cart.save();
 
-            // Clear the applied coupon from session
             delete req.session.appliedCoupon;
 
-            // Update product stock
             for (let item of validItems) {
                 const product = await productModel.findById(item.productId._id);
                 const sizeStock = product.stockManagement.find(stock => stock.size === item.size);
@@ -325,7 +321,6 @@ module.exports = {
             const { addressid } = req.body;
             const userId = req.session.user.id;
 
-            // Get cart and calculate total amount
             const cart = await cartModel.findOne({ userId })
                 .populate({
                     path: 'items.productId',
@@ -404,7 +399,6 @@ module.exports = {
                 addressid
             } = req.body;
 
-            // Verify signature
             const sign = razorpay_order_id + "|" + razorpay_payment_id;
             const expectedSign = crypto
                 .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)

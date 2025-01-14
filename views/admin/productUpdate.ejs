@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -18,190 +19,187 @@
   <main class="main-content">
     <div class="container-fluid">
 
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-8 col-md-10">
-        <div class="product-form-container">
-          <h2 class="text-center mb-4">Update Product</h2>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8 col-md-10">
+            <div class="product-form-container">
+              <h2 class="text-center mb-4">Update Product</h2>
 
-          <form id="productForm" enctype="multipart/form-data">
-            <!-- Hidden Fields -->
-            <input type="hidden" id="productId" name="productId" value="<%= product.id %>">
+              <form id="productForm" enctype="multipart/form-data">
+                <!-- Hidden Fields -->
+                <input type="hidden" id="productId" name="productId" value="<%= product.id %>">
 
-            <!-- Basic Product Information -->
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group">
-                  <label for="productName" class="form-label">Product Name</label>
-                  <input type="text" class="form-control" id="productName" name="productName" value="<%= product.name %>">
-                  <p id="productNameError" class="text-danger" style="display:none;">Please enter a valid product name.</p>
+                <!-- Basic Product Information -->
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="productName" class="form-label">Product Name</label>
+                      <input type="text" class="form-control" id="productName" name="productName" value="<%= product.name %>">
+                      <p id="productNameError" class="text-danger" style="display:none;">Please enter a valid product name.</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            <!-- Price Information -->
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="productPrice" class="form-label">Price</label>
-                  <input type="number" class="form-control" id="productPrice" name="productPrice" value="<%= product.price %>">
-                  <p id="productPriceError" class="text-danger" style="display:none;">Please enter a valid price.</p>
+                <!-- Price Information -->
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="productPrice" class="form-label">Price</label>
+                      <input type="number" class="form-control" id="productPrice" name="productPrice" value="<%= product.price %>">
+                      <p id="productPriceError" class="text-danger" style="display:none;">Please enter a valid price.</p>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="offerPrice" class="form-label">Offer Price</label>
+                      <input type="number" class="form-control" id="offerPrice" name="productOfferPrice" value="<%= product.offerPrice %>">
+                      <p id="offerPriceError" class="text-danger" style="display:none;">Please enter a valid offer price.</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="offerPrice" class="form-label">Offer Price</label>
-                  <input type="number" class="form-control" id="offerPrice" name="productOfferPrice" value="<%= product.offerPrice %>">
-                  <p id="offerPriceError" class="text-danger" style="display:none;">Please enter a valid offer price.</p>
-                </div>
-              </div>
-            </div>
 
-            <div class="form-group mb-4">
-              <label class="form-label fw-bold mb-3">Product Images</label>
-              <div class="image-update-grid">
-                  <% for (let i = 0; i < 4; i++) { %>
-                  <div class="image-update-card">
+                <div class="form-group mb-4">
+                  <label class="form-label fw-bold mb-3">Product Images</label>
+                  <div class="image-update-grid">
+                    <% for (let i = 0; i < 4; i++) { %>
+                    <div class="image-update-card">
                       <div class="image-preview-wrapper">
-                          <label for="productImages<%= i %>" class="image-label">
-                              <img id="roundPreview<%= i %>" 
-                                   class="preview-image" 
-                                   src="<%= product.images[i] || '/default-image.png' %>" 
-                                   alt="Preview <%= i + 1 %>" />
-                              <div class="upload-overlay">
-                                  <i class="fas fa-camera camera-icon"></i>
-                                  <span class="upload-text">Change Image</span>
-                                  <% if (product.images[i]) { %>
-                                      <button type="button" class="remove-image-btn" data-image-index="<%= i %>">
-                                          <!-- <i class="fas fa-trash-alt"></i> -->
-                                      </button>
-                                  <% } %>
-                              </div>
-                          </label>
-                          <div class="file-input-container" style="display: none;">
-                              <input type="file" 
-                                     class="form-control" 
-                                     id="productImages<%= i %>" 
-                                     name="productImages[]" 
-                                     accept="image/*"/>
+                        <label for="productImages<%= i %>" class="image-label">
+                          <img id="roundPreview<%= i %>" class="preview-image" src="<%= product.images[i] || '/default-image.png' %>" alt="Preview <%= i + 1 %>" />
+                          <div class="upload-overlay">
+                            <i class="fas fa-camera camera-icon"></i>
+                            <span class="upload-text">Change Image</span>
+                            <% if (product.images[i]) { %>
+                            <button type="button" class="remove-image-btn" data-image-index="<%= i %>">
+                              <!-- <i class="fas fa-trash-alt"></i> -->
+                            </button>
+                            <% } %>
                           </div>
-                          <input type="hidden" name="existingImages[]" value="<%= product.images[i] %>" />
+                        </label>
+                        <div class="file-input-container" style="display: none;">
+                          <input type="file" class="form-control" id="productImages<%= i %>" name="productImages[]" accept="image/*" />
+                        </div>
+                        <input type="hidden" name="existingImages[]" value="<%= product.images[i] %>" />
                       </div>
                       <div class="image-number">Image <%= i + 1 %></div>
+                    </div>
+                    <% } %>
                   </div>
-                  <% } %>
-              </div>
-              <small class="text-muted mt-2">Click on an image to update it. Recommended size: 800x800px</small>
+                  <small class="text-muted mt-2">Click on an image to update it. Recommended size: 800x800px</small>
+                </div>
+
+
+                <!-- Product Details -->
+                <div class="form-group">
+                  <label for="productDescription" class="form-label">Description</label>
+                  <textarea class="form-control" id="productDescription" name="productDescription" rows="3"><%= product.description %></textarea>
+                  <p id="productDescriptionError" class="text-danger" style="display:none;">Please enter a product description.</p>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="productTags" class="form-label">Tags</label>
+                      <input type="text" class="form-control" id="productTags" name="productTags" placeholder="Comma separated" value="<%= product.tags %>">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="productBrand" class="form-label">Brand</label>
+                      <input type="text" class="form-control" id="productBrand" name="productBrand" value="<%= product.brand %>">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Warranty and Return Policy -->
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="productWarranty" class="form-label">Warranty</label>
+                      <input type="text" class="form-control" id="productWarranty" name="productWarranty" placeholder="e.g., 1 year" value="<%= product.warranty %>">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="productReturnPolicy" class="form-label">Return Policy</label>
+                      <input type="text" class="form-control" id="productReturnPolicy" name="productReturnPolicy" placeholder="e.g., 30 days" value="<%= product.returnPolicy %>">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Category Selection -->
+                <div class="form-group">
+                  <label for="productCategory" class="form-label">Category</label>
+                  <select class="form-control" id="productCategory" name="productCategory">
+                    <% categories.forEach(category => { %>
+                      <% if(String(category._id) === String(product.category)){ %>
+                        <option selected value="<%= category._id %>"><%= category.name %></option>
+                        <% } else { %>
+                          <option value="<%= category._id %>">
+                            <%= category.name %>
+                          </option>
+                        <% } %>
+                    <% }) %>
+                  </select>
+                  <p id="productCategoryError" class="text-danger" style="display:none;">Please select a product category.</p>
+                </div>
+
+                <!-- TYPE -->
+                <div class="form-group">
+                  <label for="productType" class="form-label">Select Type</label>
+                  <select class="form-control" id="productType" name="productType">
+                    <option value="">Select type</option>
+                    <option value="TopWare" <%= product.type === 'TopWare' ? 'selected' : '' %>>TopWare</option>
+                    <option value="BottomWare" <%= product.type === 'BottomWare' ? 'selected' : '' %>>BottomWare</option>
+                  </select>
+                </div>
+
+                <!-- Stock Management -->
+                <div class="row mt-3">
+                  <div class="col-12">
+                    <div class="form-group">
+                      <label class="form-label">Stock Management</label>
+                      <div id="stockManagementContainer" class="row g-3">
+
+                      </div>
+                      <input type="hidden" name="productStockManagement" id="productStockManagement" value="<%= JSON.stringify(product.stockManagement || []) %>">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                  <button type="submit" id="Updatesubmit" class="btn btn-primary btn-submit mt-3 w-50">
+                    Update Product
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-          
-
-            <!-- Product Details -->
-            <div class="form-group">
-              <label for="productDescription" class="form-label">Description</label>
-              <textarea class="form-control" id="productDescription" name="productDescription" rows="3"><%= product.description %></textarea>
-              <p id="productDescriptionError" class="text-danger" style="display:none;">Please enter a product description.</p>
-            </div>
-
-            <!-- Additional Information -->
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="productTags" class="form-label">Tags</label>
-                  <input type="text" class="form-control" id="productTags" name="productTags" placeholder="Comma separated" value="<%= product.tags %>">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="productBrand" class="form-label">Brand</label>
-                  <input type="text" class="form-control" id="productBrand" name="productBrand" value="<%= product.brand %>">
-                </div>
-              </div>
-            </div>
-
-            <!-- Warranty and Return Policy -->
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="productWarranty" class="form-label">Warranty</label>
-                  <input type="text" class="form-control" id="productWarranty" name="productWarranty" placeholder="e.g., 1 year" value="<%= product.warranty %>">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="productReturnPolicy" class="form-label">Return Policy</label>
-                  <input type="text" class="form-control" id="productReturnPolicy" name="productReturnPolicy" placeholder="e.g., 30 days" value="<%= product.returnPolicy %>">
-                </div>
-              </div>
-            </div>
-
-            <!-- Category Selection -->
-            <div class="form-group">
-              <label for="productCategory" class="form-label">Category</label>
-              <select class="form-control" id="productCategory" name="productCategory">
-                <% categories.forEach(category => { %>
-                <option value="<%= category._id %>" <%= category._id.equals(product.category) ? 'selected' : '' %>>
-                  <%= category.name %>
-                </option>
-                <% }) %>
-              </select>
-              <p id="productCategoryError" class="text-danger" style="display:none;">Please select a product category.</p>
-            </div>
-
-             <!-- TYPE -->
-             <div class="form-group">
-              <label for="productType" class="form-label">Select Type</label>
-              <select class="form-control" id="productType" name="productType">
-                <option value="TopWare" <%= product.type === 'TopWare' ? 'selected' : '' %>>TopWare</option>
-                <option value="BottomWare" <%= product.type === 'BottomWare' ? 'selected' : '' %>>BottomWare</option>
-              </select>
-            </div>
-
-            <!-- Stock Management -->
-            <div class="row mt-3">
-              <div class="col-12">
-                <div class="form-group">
-                  <label class="form-label">Stock Management</label>
-                  <div id="stockManagementContainer" class="row g-3">
-                    
-                  </div>
-                  <input type="hidden" name="productStockManagement" id="productStockManagement" 
-                         value="<%= JSON.stringify(product.stockManagement || []) %>">
-                </div>
-              </div>
-            </div>
-
-            <!-- Submit Button -->
-            <div class="text-center">
-              <button type="submit" id="Updatesubmit" class="btn btn-primary btn-submit mt-3 w-50">
-                Update Product
-              </button>
-            </div>
-          </form>
         </div>
-      </div>
-    </div>
 
-    <!-- Image Cropping Modal -->
-<div class="modal fade" id="cropImageModal" tabindex="-1" aria-labelledby="cropImageModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="cropImageModalLabel">Crop Image</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <img id="imageToCrop" src="" alt="Image to crop" style="max-width: 100%;" />
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" id="cropButton" class="btn btn-primary">Crop Image</button>
-      </div>
-    </div>
-  </div>
-</div>
+        <!-- Image Cropping Modal -->
+        <div class="modal fade" id="cropImageModal" tabindex="-1" aria-labelledby="cropImageModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="cropImageModalLabel">Crop Image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <img id="imageToCrop" src="" alt="Image to crop" style="max-width: 100%;" />
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="cropButton" class="btn btn-primary">Crop Image</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-</div>
-</main>
+      </div>
+  </main>
 
 
   <!-- External Scripts -->
@@ -212,4 +210,5 @@
   <!-- Your existing scripts remain unchanged -->
   <script src="/js/admin/productUpdate.js"></script>
 </body>
+
 </html>

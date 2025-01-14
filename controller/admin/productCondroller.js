@@ -186,12 +186,9 @@ async loadUpdateProduct(req, res) {
                 message: 'Product ID is required' 
             });
         }
-
-        const [product, categories] = await Promise.all([
-            Products.findById(productId).populate('category'),
-            Category.find({ isDeleted: false })
-        ]);
-
+        const product = await Products.findOne({_id:productId, isDeleted:false})
+        const categories = await Category.find({isDeleted:false})
+        
         if (!product) {
             return res.status(404).render('error/erroralert', { 
                 message: 'Product not found' 

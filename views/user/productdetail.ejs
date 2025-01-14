@@ -112,7 +112,17 @@
 
             <!-- Product Details -->
 <div class="col-md-6">
-    <h2 class="product-title mb-3"><b><%= product.name %></b></h2>
+   
+    <% if (product.stockManagement.reduce((total, item) => total + item.quantity, 0) >100) { %>
+        
+        <h2 class="product-title mb-3"><b><%= product.name %></b></h2>
+       
+
+        <% } else { %>
+            <p><b><%= product.name %></b></p>
+            <h2 class="product-title mb-3"><b>limited stock</b></h2>
+
+ <% } %>
     <div class="d-flex align-items-center mb-3">
         <div class="rating me-2">
             <% for (let i = 0; i < product.rating; i++) { %>

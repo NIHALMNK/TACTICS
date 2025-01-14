@@ -124,6 +124,7 @@
             <div class="form-group">
               <label for="productCategory" class="form-label">Category</label>
               <select class="form-control" id="productCategory" name="productCategory">
+                <option value="" >select one</option>
                 <% categories.forEach(category => { %>
                 <option value="<%= category._id %>"><%= category.name %></option>
                 <% }) %>
@@ -135,6 +136,7 @@
             <div class="form-group">
               <label for="productType" class="form-label">Select Type</label>
               <select class="form-control" id="productType" name="productType">
+                <option value="">Select type</option>
                 <option value="TopWare">TopWare</option>
                 <option value="BottomWare">BottomWare</option>
               </select>

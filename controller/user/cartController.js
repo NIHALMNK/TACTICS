@@ -19,7 +19,6 @@ module.exports = {
                     select: 'offerPrice price name stockManagement images isDeleted category' // Added category to selection
                 });
     
-            // Handle empty cart case
             if (!cart || !Array.isArray(cart.items) || cart.items.length === 0) {
                 return res.render("user/cart", {
                     cart: { items: [] },
@@ -32,8 +31,8 @@ module.exports = {
                     mrp: 0,
                     offerTotal: 0,
                     discount: 0,
-                    categoryOffer: 0,          // Added default value
-                    categoryDiscountAmount: 0  // Added default value
+                    categoryOffer: 0,          
+                    categoryDiscountAmount: 0  
                 });
             }
     
@@ -70,7 +69,6 @@ module.exports = {
     
             const discount = totals.mrp - totals.subtotal;
             
-            // Calculate category offer - ensure it's always defined
             const categoryOffer = validItems.length > 0 && validItems[0].productId.category 
                 ? (validItems[0].productId.category.offer || 0) 
                 : 0;
@@ -97,8 +95,8 @@ module.exports = {
                 currentPage: page,
                 totalPages,
                 discount,
-                categoryOffer,             // Now properly defined in all cases
-                categoryDiscountAmount     // Now properly defined in all cases
+                categoryOffer,
+                categoryDiscountAmount    
             });
     
         } catch (err) {
@@ -367,7 +365,6 @@ async getStock(req, res) {
     
             await cart.save();
     
-            // Filter valid items (not deleted products)
             const validItems = cart.items.filter(item => item.productId && !item.productId.isDeleted);
     
             const totals = validItems.reduce((acc, item) => {
@@ -384,7 +381,6 @@ async getStock(req, res) {
                 shipping = 100;
             }
     
-            // Calculate category offer
             const categoryOffer = validItems[0]?.productId?.category?.offer || 0;
             const categoryDiscountAmount = (totals.subtotal * categoryOffer) / 100;
             

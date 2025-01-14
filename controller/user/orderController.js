@@ -10,7 +10,6 @@ const orderController = {
       try {
         const userId = req.session.user.id;
         
-        // First get the user to access their addresses
         const user = await User.findById(userId);
         
         const orders = await Order.find({ userId })
@@ -18,7 +17,6 @@ const orderController = {
           .sort({ createdAt: -1 });
   
         const formattedOrders = orders.map(order => {
-          // Find the matching address from user's address array
           const shippingAddress = user.address.find(addr => 
             addr._id.toString() === order.addressId.toString()
           );
@@ -171,14 +169,11 @@ const orderController = {
           return res.status(400).json({ message: 'Order cannot be returned' });
         }
   
-        // Calculate refund amount (total order amount)
         const refundAmount = order.totalAmount;
   
-        // Update wallet balance
         let walletData = await wallet.findOne({ userId });
         
         if (!walletData) {
-          // Create new wallet if it doesn't exist
           walletData = await wallet.create({
             userId: userId,
             balance: refundAmount,
@@ -190,7 +185,7 @@ const orderController = {
             }]
           });
         } else {
-          // Update existing wallet
+         
           walletData.balance += refundAmount;
           walletData.transactionHistory.push({
             transactionType: "CREDIT",
@@ -201,12 +196,12 @@ const orderController = {
           await walletData.save();
         }
   
-        // Update order status and save return reason
+       
         order.status = 'Requested';
         order.refundReason = reason;
         await order.save();
   
-        // Update product quantities back to inventory
+        
         for (const item of order.orderItems) {
           const product = await Product.findById(item.productId);
           if (product) {
@@ -249,7 +244,6 @@ const orderController = {
         });
       }
 
-      // Update product quantities
       for (const item of order.orderItems) {
         const product = await Product.findById(item.productId);
         if (product) {
@@ -260,7 +254,6 @@ const orderController = {
 
       order.status = 'Cancelled';
       
-      // Handle refund for all online payment methods
       if (order.paymentMethod !== 'COD') {
         let walletData = await wallet.findOne({ userId });
         if (!walletData) {
@@ -268,7 +261,7 @@ const orderController = {
             userId: userId,
             balance: order.totalAmount,
             transactionHistory: [{
-              transactionType: "CREDIT", // Changed from "credit" to "CREDIT"
+              transactionType: "CREDIT", 
               transactionAmount: order.totalAmount,
               transactionDate: new Date(),
               description: `Refund for order #${order._id}`
@@ -277,7 +270,7 @@ const orderController = {
         } else {
           walletData.balance += order.totalAmount;
           walletData.transactionHistory.push({
-            transactionType: "CREDIT", // Changed from "credit" to "CREDIT"
+            transactionType: "CREDIT",
             transactionAmount: order.totalAmount,
             transactionDate: new Date(),
             description: `Refund for order #${order._id}`

@@ -124,7 +124,6 @@ module.exports={
                 });
             }
     
-            // Check if the product exists in the wishlist
             const productExists = wishlist.products.some(product => 
                 product._id.toString() === id
             );
@@ -136,7 +135,6 @@ module.exports={
                 });
             }
     
-            // Remove the product
             wishlist.products = wishlist.products.filter(product => 
                 product._id.toString() !== id
             );

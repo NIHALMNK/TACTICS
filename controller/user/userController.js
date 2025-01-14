@@ -32,7 +32,6 @@ module.exports = {
 
       let query = { isDeleted: false };
 
-      // Fetch all categories
       const categories = await categoryModel.find({ isDeleted: false });
 
       if (categoryName) {
@@ -48,30 +47,26 @@ module.exports = {
         query.category = category._id;
       }
 
-      // Find total number of products
       const totalProducts = await productModel.countDocuments(query);
       const totalPages = Math.ceil(totalProducts / limit);
 
-      // Fetch paginated products
       const products = await productModel
         .find(query)
         .populate("category")
         .skip(skip)
         .limit(limit);
 
-      // Render the shop page
       if (page === 1) {
         return res.render("user/shop", {
           user: req.session.user,
           products,
           currentPage: page,
           totalPages,
-          categories, // Pass categories array here
-          selectedCategory: categoryName || 'All Products', // Pass selected category name
+          categories, 
+          selectedCategory: categoryName || 'All Products', 
         });
       }
 
-      // For subsequent pages, return JSON
       res.json({
         products,
         currentPage: page,

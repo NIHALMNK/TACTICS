@@ -38,6 +38,10 @@ document.getElementById("productForm").addEventListener("submit", async function
       console.error("Missing product ID. This field is required for updates.");
       hasError = true;
   }
+console.log("-------------------------------------------->");
+
+  console.log(document.getElementById("productCategory").value);
+  
 
   if (!document.getElementById("productName").value) {
       showError("productName", "Product name is required.");
@@ -56,6 +60,8 @@ document.getElementById("productForm").addEventListener("submit", async function
   if (!document.getElementById("productDescription").value) {
       showError("productDescription", "Product description is required.");
   }
+
+
 
   if (hasError) {
       Swal.fire("Error", "Please fix the highlighted errors.", "error");
