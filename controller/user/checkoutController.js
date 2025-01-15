@@ -185,7 +185,6 @@ module.exports = {
                 discount = coupon.maxDiscount;
             }
 
-            // Store coupon data in session for use during order placement
             req.session.appliedCoupon = {
                 couponId: coupon._id,
                 discount: discount
@@ -214,6 +213,7 @@ module.exports = {
 
             const userId = req.session.user.id;
             const appliedCoupon = req.session.appliedCoupon;
+            const COD_LIMIT = 20000; 
 
             const user = await User.findById(userId);
 
@@ -262,16 +262,23 @@ module.exports = {
             const discount = totals.mrp - totals.subtotal;
             let total = totals.subtotal + shipping;
 
-            // Apply coupon discount if available
             if (appliedCoupon && appliedCoupon.couponId) {
                 total -= appliedCoupon.discount;
 
-                // Update coupon usage count
                 await couponModel.findByIdAndUpdate(
                     appliedCoupon.couponId,
                     { $inc: { usedCount: 1 } }
                 );
             }
+            if (selectedPayment === 'cod' && total > COD_LIMIT) {
+                return res.status(400).json({
+                    success: false,
+                    message: `Cash on Delivery is not available for orders above ₹${COD_LIMIT.toLocaleString()}. Please choose online payment.`
+                });
+            }
+            
+
+            
 
             const orderData = {
                 userId,
@@ -294,10 +301,6 @@ module.exports = {
                     size:item.size,
                     quantity: item.quantity,
                     price: item.productId.offerPrice,
-                    //-->
-                    // productName: item.productId.name,
-                    // originalPrice: item.productId.price,
-                    // productImages: item.productId.images
                 })),
                 discount: discount, 
                 couponDiscount: appliedCoupon?.discount || 0, 

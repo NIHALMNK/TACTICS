@@ -693,12 +693,20 @@ document.querySelectorAll('.payment-button').forEach(button => {
 document.querySelector(".btn-placeorder").addEventListener('click', async () => {
     try {
         if (!selectedAddress || !selectedPayment) {
-            alert('Please select an address and payment method before placing the order.');
+            Swal.fire({
+                toast: true,
+                icon: 'warning',
+                text: 'Please select an address and payment method before placing the order.',
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
             return;
         }
 
         if (selectedPayment === 'cod') {
-            // Your existing COD logic
+            
             const response = await fetch("/checkout/placeorder", {
                 method: 'POST',
                 headers: {
@@ -714,7 +722,34 @@ document.querySelector(".btn-placeorder").addEventListener('click', async () => 
             
             if (data.success && data.orderId) {          
                 window.location.href = `/order/success/${data.orderId}`;
+            }else{
+                if(data.message && data.message.includes('Cash on Delivery is not available')){
+                    const result = await Swal.fire({
+                        title: 'COD Limit Exceeded',
+                        text: data.message + '\n\nWould you like to switch to online payment?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, switch to online payment',
+                        cancelButtonText: 'No, I\'ll modify my order',
+                        confirmButtonColor: '#3AA39F',
+                        cancelButtonColor: '#d33'
+                    });
+
+                } else {
+                    
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        text: data.message || 'An error occurred while placing your order.',
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
+                }
             }
+                
+            
         } else if (selectedPayment === 'razorpay') {
             // Create Razorpay order
             const orderResponse = await fetch("/checkout/create-razorpay-order", {
