@@ -403,6 +403,46 @@
     object-fit: cover;
     border-radius: 4px;
   }
+
+   /* Pagination Styles */
+   .pagination {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 0.25rem;
+    }
+    
+    .pagination .page-item .page-link {
+      background: var(--bg-darker);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+    
+    .pagination .page-item.active .page-link {
+      background: var(--status-green);
+      border-color: var(--status-green);
+      color: white;
+    }
+    
+    .pagination .page-item .page-link:hover {
+      background: var(--hover-bg);
+    }
+    
+    .pagination .page-item.disabled .page-link {
+      background: var(--bg-darker);
+      color: var(--text-muted);
+      cursor: not-allowed;
+    }
+    
+    .order-info {
+      text-align: center;
+      margin-top: 1rem;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
   </style>
 </head>
 
@@ -465,6 +505,56 @@
           <% }); %>
         </tbody>
       </table>
+      <nav aria-label="Order navigation">
+        <ul class="pagination justify-content-center">
+          <% if (currentPage > 1) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+          <% } %>
+    
+          <% for(let i = 1; i <= totalPages; i++) { %>
+            <% if (i === currentPage) { %>
+              <li class="page-item active">
+                <span class="page-link"><%= i %></span>
+              </li>
+            <% } else if (
+              i === 1 || 
+              i === totalPages || 
+              (i >= currentPage - 2 && i <= currentPage + 2)
+            ) { %>
+              <li class="page-item">
+                <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+              </li>
+            <% } else if (
+              i === currentPage - 3 || 
+              i === currentPage + 3
+            ) { %>
+              <li class="page-item disabled">
+                <span class="page-link">...</span>
+              </li>
+            <% } %>
+          <% } %>
+    
+          <% if (currentPage < totalPages) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          <% } %>
+        </ul>
+      </nav>
+    
+      <div class="order-info">
+        Showing <%= (currentPage - 1) * 5 + 1 %> to 
+        <%= Math.min(currentPage * 5, totalOrders) %> 
+        of <%= totalOrders %> orders
+      </div>
+    
+    
     </div>
   
 
@@ -558,8 +648,7 @@
       </div>
     </div>
   </div>
-
-
+  
 </div>
 </main>
 
@@ -590,6 +679,7 @@
             document.getElementById('addressState').textContent = address.state || 'N/A';
             document.getElementById('addressLandmark').textContent = address.landmark || 'N/A';
             document.getElementById('addressPinCode').textContent = address.pinCode || 'N/A';
+
         } else {
             // If no address is found, display "No address found" instead of "Address not available"
             const addressFields = ['House', 'Street', 'City', 'District', 'State', 'Landmark', 'PinCode'];
@@ -625,6 +715,7 @@
                             <div>
                                 <h6 class="mb-1">${item.productId.name}</h6>
                                 <div>Quantity: ${item.quantity}</div>
+                                <div>size: ${item.size}</div>
                                 <div>Price: ₹${item.price.toFixed(2)}</div>
                             </div>
                         </div>

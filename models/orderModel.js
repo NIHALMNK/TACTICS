@@ -15,8 +15,17 @@ const orderSchema = new mongoose.Schema({
         type:String,
         required: true
     },
-    addressId: {
-        type: mongoose.Schema.Types.ObjectId,
+    shippingAddress: {
+        name: { type: String, required: true },
+        phone: { type: String, required: true },
+        house: { type: String, required: true },
+        street: { type: String, required: true },
+        landmark: { type: String },
+        city: { type: String, required: true },
+        district: { type: String, required: true },
+        state: { type: String, required: true },
+        country: { type: String, required: true },
+        pinCode: { type: Number, required: true }
     },
     totalAmount: {
         type: Number,
@@ -30,6 +39,10 @@ const orderSchema = new mongoose.Schema({
             },
             quantity: {
                 type: Number,
+                required: true
+            },
+            size:{
+                type: String,
                 required: true
             },
             price: {

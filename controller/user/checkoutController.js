@@ -48,7 +48,7 @@ module.exports = {
 
             const total = totals.subtotal + shipping;
 
-            // console.log("address id -----------> "+userData.address[0].id);
+            
 
 
 
@@ -211,10 +211,20 @@ module.exports = {
     async placeOrder(req, res) {
         try {
             const { addressid, selectedPayment } = req.body;
+
             const userId = req.session.user.id;
             const appliedCoupon = req.session.appliedCoupon;
 
             const user = await User.findById(userId);
+
+            const selectedAddress = user.address.find(addr => 
+                addr._id.toString() === addressid
+            );
+
+            if (!selectedAddress) {
+                throw new Error('Selected address not found');
+            }
+    
 
             const cart = await cartModel.findOne({ userId })
                 .populate({
@@ -266,12 +276,28 @@ module.exports = {
             const orderData = {
                 userId,
                 username: user.name,
-                addressId: addressid,
+                shippingAddress: {
+                    name: user.name,
+                    phone: user.phone,
+                    house: selectedAddress.house,
+                    street: selectedAddress.street,
+                    landmark: selectedAddress.landmark,
+                    city: selectedAddress.city,
+                    district: selectedAddress.district,
+                    state: selectedAddress.state,
+                    country: selectedAddress.country,
+                    pinCode: selectedAddress.pinCode
+                },
                 totalAmount: total,
                 orderItems: validItems.map(item => ({
                     productId: item.productId._id,
+                    size:item.size,
                     quantity: item.quantity,
                     price: item.productId.offerPrice,
+                    //-->
+                    // productName: item.productId.name,
+                    // originalPrice: item.productId.price,
+                    // productImages: item.productId.images
                 })),
                 discount: discount, 
                 couponDiscount: appliedCoupon?.discount || 0, 
@@ -279,6 +305,9 @@ module.exports = {
                 paymentMethod: selectedPayment,
                 paymentStatus: selectedPayment === 'cod' ? 'Pending' : 'Completed',
             };
+
+            console.log(orderData);
+            
 
             if (appliedCoupon && appliedCoupon.couponId) {
                 orderData.coupon = appliedCoupon.couponId;
@@ -398,22 +427,24 @@ module.exports = {
                 razorpay_signature,
                 addressid
             } = req.body;
-
+    
+            // Verify Razorpay signature
             const sign = razorpay_order_id + "|" + razorpay_payment_id;
             const expectedSign = crypto
                 .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
                 .update(sign)
                 .digest("hex");
-
+    
             if (razorpay_signature !== expectedSign) {
                 return res.status(400).json({
                     success: false,
                     message: "Invalid payment signature"
                 });
             }
-
+    
             const userId = req.session.user.id;
-
+    
+            // Fetch user and cart data in parallel
             const [user, cart] = await Promise.all([
                 User.findById(userId),
                 cartModel.findOne({ userId }).populate({
@@ -422,21 +453,27 @@ module.exports = {
                     select: 'name price offerPrice stockManagement'
                 })
             ]);
-
+    
+            // Get selected address
+            const selectedAddress = user.address.find(addr => addr._id.toString() === addressid);
+            if (!selectedAddress) {
+                throw new Error('Selected address not found');
+            }
+    
             if (!cart || !cart.items.length) {
                 throw new Error('Cart is empty');
             }
-
+    
             const validItems = cart.items.filter(item =>
                 item.productId && item.productId.stockManagement.length > 0
             );
-
+    
             const totals = validItems.reduce((acc, item) => {
                 acc.subtotal += item.productId.offerPrice * item.quantity;
                 acc.mrp += item.productId.price * item.quantity;
                 return acc;
             }, { subtotal: 0, mrp: 0 });
-
+    
             let shipping = 0;
             if (totals.subtotal > 0 && totals.subtotal <= 1000) {
                 shipping = 200;
@@ -445,23 +482,35 @@ module.exports = {
             } else if (totals.subtotal > 5000) {
                 shipping = 100;
             }
-
+    
             const discount = totals.mrp - totals.subtotal;
             let total = totals.subtotal + shipping;
-
+    
             const appliedCoupon = req.session.appliedCoupon;
             if (appliedCoupon && appliedCoupon.couponId) {
                 total -= appliedCoupon.discount;
             }
-
+    
             const orderData = {
                 userId,
                 username: user.name,
-                addressId: addressid,
+                shippingAddress: {
+                    name: user.name,
+                    phone: user.phone,
+                    house: selectedAddress.house,
+                    street: selectedAddress.street,
+                    landmark: selectedAddress.landmark || '',
+                    city: selectedAddress.city,
+                    district: selectedAddress.district,
+                    state: selectedAddress.state,
+                    country: selectedAddress.country,
+                    pinCode: selectedAddress.pinCode
+                },
                 totalAmount: total,
                 orderItems: validItems.map(item => ({
                     productId: item.productId._id,
                     quantity: item.quantity,
+                    size: item.size,
                     price: item.productId.offerPrice,
                 })),
                 discount: discount,
@@ -472,42 +521,42 @@ module.exports = {
                 razorpayOrderId: razorpay_order_id,
                 razorpayPaymentId: razorpay_payment_id
             };
-
+    
             if (appliedCoupon && appliedCoupon.couponId) {
                 orderData.coupon = appliedCoupon.couponId;
                 orderData.discountAmount = appliedCoupon.discount;
-
+    
                 await couponModel.findByIdAndUpdate(
                     appliedCoupon.couponId,
                     { $inc: { usedCount: 1 } }
                 );
             }
-
+    
             const newOrder = await orderModel.create(orderData);
-
-
+    
+            // Update product stock
             for (let item of validItems) {
                 const product = await productModel.findById(item.productId._id);
                 const sizeStock = product.stockManagement.find(stock => stock.size === item.size);
-
+    
                 if (!sizeStock || sizeStock.quantity < item.quantity) {
                     throw new Error(`Insufficient stock for ${product.name} (Size: ${item.size})`);
                 }
-
+    
                 sizeStock.quantity -= item.quantity;
                 await product.save();
             }
-
-
+    
+            // Clear cart and coupon
             cart.items = [];
             await cart.save();
             delete req.session.appliedCoupon;
-
+    
             res.json({
                 success: true,
                 orderId: newOrder._id
             });
-
+    
         } catch (error) {
             console.error('Error verifying payment:', error);
             res.status(500).json({
@@ -515,7 +564,7 @@ module.exports = {
                 message: error.message || 'Error verifying payment'
             });
         }
-    }
+    },
 
 
 
