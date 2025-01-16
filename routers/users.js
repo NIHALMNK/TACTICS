@@ -81,6 +81,7 @@ router.get('/order/:orderId', orderController.getOrderDetails);
 router.post('/order/return/:orderId', orderController.requestReturn);
 
 router.post('/order/cancel/:orderId', orderController.cancelOrder);
+router.get('/order/pdf/:orderId', orderController.generatePDF);
 
 
 

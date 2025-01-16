@@ -2,6 +2,8 @@ const Order = require('../../models/orderModel');
 const User = require('../../models/userRegister');
 const Product = require('../../models/productModel');
 const wallet=require('../../models/walletModel');
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
 const mongoose = require('mongoose');
 
 const orderController = {
@@ -321,8 +323,170 @@ const orderController = {
       }
     
     },
-  
 
+    async generatePDF(req, res) {
+      try {
+            const orderId = req.params.orderId;
+            const userId = req.session.user.id;
+        
+            // Fetch order with populated data
+            const order = await Order.findOne({ _id: orderId, userId })
+              .populate('orderItems.productId');
+        
+            if (!order) {
+              return res.status(404).json({ success: false, message: 'Order not found' });
+            }
+        
+            // Create PDF document
+            const doc = new PDFDocument({ margin: 50 });
+        
+            // Set response headers
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `attachment; filename=order-${orderId}-receipt.pdf`);
+            doc.pipe(res);
+        
+            // Helper function to draw table lines
+            const drawTableLine = (y) => {
+              doc.moveTo(50, y).lineTo(550, y).stroke();
+            };
+        
+            // Helper function to create table row
+            const createTableRow = (items, y, isHeader = false) => {
+              const columns = {
+                item: { x: 50, width: 180 },
+                size: { x: 230, width: 60 },
+                qty: { x: 290, width: 60 },
+                price: { x: 350, width: 100 },
+                total: { x: 450, width: 100 }
+              };
+        
+              if (isHeader) {
+                doc.font('Helvetica-Bold');
+              } else {
+                doc.font('Helvetica');
+              }
+        
+              Object.keys(columns).forEach((col, index) => {
+                const text = items[index] || '';
+                doc.text(text, columns[col].x, y, {
+                  width: columns[col].width,
+                  align: ['item'].includes(col) ? 'left' : 'center'
+                });
+              });
+        
+              return y + 25;
+            };
+        
+            // Company Header
+            doc.fontSize(24).font('Helvetica-Bold').text('TACTICS', { align: 'center' });
+            doc.fontSize(16).text('Order Receipt', { align: 'center' });
+            doc.moveDown();
+        
+            // Order Information
+            doc.fontSize(12).font('Helvetica');
+            const orderInfoY = doc.y;
+            
+            // Left column
+            doc.text('Order Information:', 50, orderInfoY);
+            doc.font('Helvetica');
+            doc.text(`Order ID: #${orderId}`, 50, orderInfoY + 20);
+            doc.text(`Date: ${new Date(order.createdAt).toLocaleDateString()}`, 50, orderInfoY + 40);
+            doc.text(`Status: ${order.status}`, 50, orderInfoY + 60);
+        
+            // Right column - Shipping Address
+            doc.font('Helvetica-Bold');
+            doc.text('Shipping Address:', 300, orderInfoY);
+            doc.font('Helvetica');
+            doc.text(`${order.shippingAddress.house}`, 300, orderInfoY + 20);
+            doc.text(`${order.shippingAddress.street}`, 300, orderInfoY + 40);
+            doc.text(`${order.shippingAddress.city}, ${order.shippingAddress.state}`, 300, orderInfoY + 60);
+            doc.text(`PIN: ${order.shippingAddress.pinCode}`, 300, orderInfoY + 80);
+        
+            // Move to items table
+            doc.moveDown(5);
+        
+            // Draw table header
+            const tableTop = doc.y;
+            drawTableLine(tableTop);
+            let currentY = createTableRow(
+              ['Item', 'Size', 'Qty', 'Price', 'Total'],
+              tableTop + 5,
+              true
+            );
+            drawTableLine(currentY - 5);
+        
+            // Draw table rows
+            order.orderItems.forEach((item, index) => {
+              currentY = createTableRow([
+                item.productId.name,
+                item.size,
+                item.quantity.toString(),
+                `₹${item.productId.offerPrice}`,
+                `₹${item.productId.offerPrice * item.quantity}`
+              ], currentY);
+              drawTableLine(currentY - 5);
+            });
+        
+            // Calculate totals
+            const subtotal = order.orderItems.reduce((sum, item) => 
+              sum + (item.productId.offerPrice * item.quantity), 0);
+            
+            let shipping = 0;
+            if (subtotal <= 1000) shipping = 200;
+            else if (subtotal <= 5000) shipping = 150;
+            else shipping = 100;
+        
+            // Summary section
+            doc.moveDown();
+            const summaryX = 350;
+            const summaryStartY = doc.y;
+            
+            // Draw summary box
+            doc.rect(summaryX - 10, summaryStartY - 10, 220, 120).stroke();
+            
+            // Summary content
+            doc.font('Helvetica');
+            doc.text('Subtotal:', summaryX, summaryStartY);
+            doc.text(`₹${subtotal}`, 450, summaryStartY, { align: 'right' });
+            
+            doc.text('Shipping:', summaryX, summaryStartY + 25);
+            doc.text(`₹${shipping}`, 450, summaryStartY + 25, { align: 'right' });
+            
+            if (order.discount) {
+              doc.text('Discount:', summaryX, summaryStartY + 50);
+              doc.text(`-₹${order.discount}`, 450, summaryStartY + 50, { align: 'right' });
+            }
+        
+            // Total
+            doc.font('Helvetica-Bold');
+            doc.text('Total:', summaryX, summaryStartY + 75);
+            doc.text(
+              `₹${subtotal + shipping - (order.discount || 0)}`,
+              450,
+              summaryStartY + 75,
+              { align: 'right' }
+            );
+        
+            // Footer
+            doc.font('Helvetica')
+              .fontSize(10)
+              .text('Thank you for shopping with Tactics!', {
+                align: 'center',
+                y: doc.page.height - 100
+              });
+        
+            // Finalize PDF
+            doc.end();
+        
+          } catch (error) {
+            console.error('Error generating PDF:', error);
+            res.status(500).json({ 
+              success: false, 
+              message: 'Failed to generate PDF receipt' 
+            });
+          }
+        },
+                
  
   
 };
