@@ -2,6 +2,7 @@ const Orders = require('../../models/orderModel');
 const PDFDocument = require('pdfkit');
 const ExcelJS = require('exceljs');
 const moment = require('moment');
+const users=require('../../models/userRegister')
 
 async function generateSalesData(query) {
     const salesData = await Orders.aggregate([
@@ -62,6 +63,116 @@ async function generateSalesData(query) {
     return { salesData, summary };
 }
 
+
+
+async function getTopSellingProducts(limit = 10) {
+    return await Orders.aggregate([
+        { $match: { status: { $ne: 'Cancelled' } } },
+        { $unwind: '$orderItems' },
+        {
+            $group: {
+                _id: '$orderItems.productId',
+                totalSales: { $sum: { $multiply: ['$orderItems.price', '$orderItems.quantity'] } },
+                totalUnits: { $sum: '$orderItems.quantity' }
+            }
+        },
+        { $sort: { totalSales: -1 } },
+        { $limit: limit },
+        {
+            $lookup: {
+                from: 'products',
+                localField: '_id',
+                foreignField: '_id',
+                as: 'productDetails'
+            }
+        },
+        { $unwind: '$productDetails' },
+        {
+            $project: {
+                name: '$productDetails.name',
+                sku: '$productDetails.sku',
+                sales: '$totalSales',
+                units: '$totalUnits',
+                category: '$productDetails.category',
+                brand: '$productDetails.brand'
+            }
+        }
+    ]);
+}
+
+
+async function getTopSellingCategories(limit = 10) {
+    return await Orders.aggregate([
+        { $match: { status: { $ne: 'Cancelled' } } },
+        { $unwind: '$orderItems' },
+        {
+            $lookup: {
+                from: 'products',
+                localField: 'orderItems.productId',
+                foreignField: '_id',
+                as: 'product'
+            }
+        },
+        { $unwind: '$product' },
+        {
+            $group: {
+                _id: '$product.category',  
+                sales: { $sum: { $multiply: ['$orderItems.price', '$orderItems.quantity'] } },
+                items: { $sum: '$orderItems.quantity' }
+            }
+        },
+        {
+            $lookup: {  
+                from: 'categories',
+                localField: '_id',
+                foreignField: '_id',
+                as: 'categoryDetails'
+            }
+        },
+        { $unwind: '$categoryDetails' },
+        {
+            $project: {  
+                name: '$categoryDetails.name',
+                sales: 1,
+                items: 1
+            }
+        },
+        { $sort: { sales: -1 } },
+        { $limit: limit }
+    ]);
+}
+
+async function getTopSellingBrands(limit = 10) {
+    return await Orders.aggregate([
+        { $match: { status: { $ne: 'Cancelled' } } },
+        { $unwind: '$orderItems' },
+        {
+            $lookup: {
+                from: 'products',
+                localField: 'orderItems.productId',
+                foreignField: '_id',
+                as: 'product'
+            }
+        },
+        { $unwind: '$product' },
+        {
+            $group: {
+                _id: '$product.brand',
+                sales: { $sum: { $multiply: ['$orderItems.price', '$orderItems.quantity'] } },
+                products: { $addToSet: '$product._id' }
+            }
+        },
+        {
+            $project: {
+                name: '$_id',
+                sales: 1,
+                products: { $size: '$products' }
+            }
+        },
+        { $sort: { sales: -1 } },
+        { $limit: limit }
+    ]);
+}
 module.exports = {
     async loadDashboard(req, res) {
         try {
@@ -70,43 +181,44 @@ module.exports = {
             }
 
             // Get overall stats
-            const totalOrders = await Orders.countDocuments();
-            
-            // Get revenue excluding cancelled orders
-            const revenueStats = await Orders.aggregate([
-                { 
-                    $match: { 
-                        status: { $ne: 'Cancelled' } 
-                    } 
-                },
-                {
-                    $group: {
-                        _id: null,
-                        totalRevenue: { $sum: '$totalAmount' },
-                        grossRevenue: { $sum: { $add: ['$totalAmount', '$totalDiscount'] } },
-                        totalDiscount: { $sum: '$totalDiscount' }
+            const [
+                topProducts,
+                topCategories,
+                topBrands,
+                totalOrders,
+                revenueStats,
+                todayStats
+            ] = await Promise.all([
+                getTopSellingProducts(),
+                getTopSellingCategories(),
+                getTopSellingBrands(),
+                Orders.countDocuments(),
+                Orders.aggregate([
+                    { $match: { status: { $ne: 'Cancelled' } } },
+                    {
+                        $group: {
+                            _id: null,
+                            totalRevenue: { $sum: '$totalAmount' },
+                            grossRevenue: { $sum: { $add: ['$totalAmount', '$totalDiscount'] } },
+                            totalDiscount: { $sum: '$totalDiscount' }
+                        }
                     }
-                }
-            ]);
-
-            // Get today's stats
-            const today = moment().startOf('day');
-            const todayStats = await Orders.aggregate([
-                {
-                    $match: {
-                        createdAt: { $gte: today.toDate() },
-                        status: { $ne: 'Cancelled' }
+                ]),
+                Orders.aggregate([
+                    {
+                        $match: {
+                            createdAt: { $gte: moment().startOf('day').toDate() },
+                            status: { $ne: 'Cancelled' }
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: null,
+                            revenue: { $sum: '$totalAmount' },
+                            orders: { $sum: 1 }
+                        }
                     }
-                },
-                {
-                    $group: {
-                        _id: null,
-                        revenue: { $sum: '$totalAmount' },
-                        grossRevenue: { $sum: { $add: ['$totalAmount', '$totalDiscount'] } },
-                        orders: { $sum: 1 },
-                        totalDiscount: { $sum: '$totalDiscount' }
-                    }
-                }
+                ])
             ]);
 
             const revenue = revenueStats[0]?.totalRevenue || 0;
@@ -116,6 +228,11 @@ module.exports = {
             const todayGrossRevenue = todayStats[0]?.grossRevenue || 0;
             const todayDiscount = todayStats[0]?.totalDiscount || 0;
             const todayOrders = todayStats[0]?.orders || 0;
+
+
+            const usercount=await users.countDocuments({})
+            
+            
 
             return res.status(200).render('admin/dashboard', {
                 admin: req.session.admin,
@@ -129,8 +246,12 @@ module.exports = {
                     todayDiscount,
                     todayOrders,
                     discountPercentage: grossRevenue ? ((totalDiscount / grossRevenue) * 100).toFixed(1) : 0,
-                    todayDiscountPercentage: todayGrossRevenue ? ((todayDiscount / todayGrossRevenue) * 100).toFixed(1) : 0
-                }
+                    todayDiscountPercentage: todayGrossRevenue ? ((todayDiscount / todayGrossRevenue) * 100).toFixed(1) : 0,
+                },
+                usercount,
+                topProducts,
+                topCategories,
+                topBrands
             });
         } catch (error) {
             console.error('Dashboard load error:', error);
@@ -225,20 +346,17 @@ module.exports = {
             const { salesData, summary } = await generateSalesData(query);
 
             if (format === 'pdf') {
-                // Set correct headers for PDF
                 res.setHeader('Content-Type', 'application/pdf');
                 res.setHeader('Content-Disposition', `attachment; filename=sales-report-${moment().format('YYYY-MM-DD')}.pdf`);
 
                 const doc = new PDFDocument();
                 doc.pipe(res);
 
-                // Add title and header
                 doc.fontSize(20).text('Sales Report', { align: 'center' });
                 doc.moveDown();
                 doc.fontSize(12).text(`Period: ${dateRange.start.format('YYYY-MM-DD')} to ${dateRange.end.format('YYYY-MM-DD')}`, { align: 'center' });
                 doc.moveDown();
 
-                // Add summary section
                 doc.fontSize(14).text('Summary', { underline: true });
                 doc.fontSize(10);
                 doc.text(`Total Orders: ${summary.totalOrders}`);

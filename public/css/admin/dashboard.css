@@ -529,3 +529,122 @@ body {
         min-width: auto;
     }
 }
+
+
+
+
+.top-lists-container {
+    background-color: var(--secondary-bg);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+}
+
+.nav-tabs {
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 1.5rem;
+}
+
+.nav-tabs .nav-link {
+    color: var(--text-secondary);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    margin-right: 0.5rem;
+    border-radius: 8px 8px 0 0;
+    position: relative;
+}
+
+.nav-tabs .nav-link:hover {
+    color: var(--accent-color);
+    border: none;
+    background: transparent;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--accent-color);
+    background-color: transparent;
+    border: none;
+}
+
+.nav-tabs .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--accent-color);
+}
+
+.top-list-item {
+    background-color: var(--primary-bg);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    transition: transform 0.2s;
+}
+
+.top-list-item:hover {
+    transform: translateX(5px);
+    background-color: var(--hover-bg);
+}
+
+.rank-badge {
+    background-color: var(--accent-color);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.875rem;
+}
+
+.item-details h6 {
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.item-details p {
+    color: var(--text-secondary);
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.sales-value {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+@media (max-width: 576px) {
+    .top-lists-container {
+        padding: 1rem;
+    }
+
+    .nav-tabs .nav-link {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .top-list-item {
+        padding: 0.75rem;
+    }
+
+    .item-details h6 {
+        font-size: 0.875rem;
+    }
+
+    .item-details p {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}

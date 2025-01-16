@@ -52,10 +52,10 @@
         <div class="col-12 col-sm-6 col-lg-3">
           <div class="stats-card">
             <div class="stats-icon">
-              <i class="fas fa-shopping-bag"></i>
+              <i class="fas fa-user"></i>
             </div>
-            <div class="stats-value"><%= stats.todayOrders %></div>
-            <div class="stats-label">Today's Orders</div>
+            <div class="stats-value"><%= usercount %></div>
+            <div class="stats-label"> Total User </div>
           </div>
         </div>
       </div>
@@ -155,6 +155,84 @@
                 </div>
               </div>
             </div>
+
+<div class="container py-4">
+    <div class="top-lists-container">
+        <ul class="nav nav-tabs" id="topListsTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="products-tab" data-bs-toggle="tab" href="#products">Top Products</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="categories-tab" data-bs-toggle="tab" href="#categories">Top Categories</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="brands-tab" data-bs-toggle="tab" href="#brands">Top Brands</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="products">
+                <% if (topProducts && topProducts.length > 0) { %>
+                    <% topProducts.forEach((product, index) => { %>
+                        <div class="top-list-item">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rank-badge"><%= index + 1 %></div>
+                                <div class="item-details flex-grow-1">
+                                    <h6><%= product.name %></h6>
+                                    <p>SKU: <%= product.sku %> | Units Sold: <%= product.units.toLocaleString() %></p>
+                                </div>
+                                <div class="sales-value">$<%= product.sales.toLocaleString() %></div>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="p-3 text-center">No product data available</div>
+                <% } %>
+            </div>
+
+            <div class="tab-pane fade" id="categories">
+              <% if (topCategories && topCategories.length > 0) { %>
+                  <% topCategories.forEach((category, index) => { %>
+                      <div class="top-list-item">
+                          <div class="d-flex align-items-center gap-3">
+                              <div class="rank-badge"><%= index + 1 %></div>
+                              <div class="item-details flex-grow-1">
+                                  <h6><%= category.name %></h6>
+                                  <p>Total Items: <%= category.items.toLocaleString() %></p>
+                              </div>
+                              <div class="sales-value">$<%= category.sales.toLocaleString() %></div>
+                          </div>
+                      </div>
+                  <% }); %>
+              <% } else { %>
+                  <div class="p-3 text-center">No category data available</div>
+              <% } %>
+          </div>
+
+            <div class="tab-pane fade" id="brands">
+                <% if (topBrands && topBrands.length > 0) { %>
+                    <% topBrands.forEach((brand, index) => { %>
+                        <div class="top-list-item">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rank-badge"><%= index + 1 %></div>
+                                <div class="item-details flex-grow-1">
+                                    <h6><%= brand.name %></h6>
+                                    <p>Total Products: <%= brand.products.toLocaleString() %></p>
+                                </div>
+                                <div class="sales-value">$<%= brand.sales.toLocaleString() %></div>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="p-3 text-center">No brand data available</div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
           </div>
         </div>
       </div>
