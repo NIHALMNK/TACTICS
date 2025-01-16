@@ -4,7 +4,8 @@ const cartModel = require("../../models/CartModel");
 const orderModel = require("../../models/orderModel")
 const couponModel = require('../../models/couponModel')
 const razorpay = require('../../utils/razorpay')
-const crypto = require('crypto')
+const crypto = require('crypto');
+const { table } = require("console");
 
 module.exports = {
     loadCheckout: async (req, res) => {
@@ -210,46 +211,51 @@ module.exports = {
     async placeOrder(req, res) {
         try {
             const { addressid, selectedPayment } = req.body;
-
             const userId = req.session.user.id;
             const appliedCoupon = req.session.appliedCoupon;
-            const COD_LIMIT = 20000; 
-
+            const COD_LIMIT = 20000;
+     
             const user = await User.findById(userId);
-
+            if (!user) {
+                return res.status(404).redirect('/login');
+            }
+     
             const selectedAddress = user.address.find(addr => 
                 addr._id.toString() === addressid
             );
-
+            
             if (!selectedAddress) {
                 throw new Error('Selected address not found');
             }
-    
-
+     
             const cart = await cartModel.findOne({ userId })
                 .populate({
                     path: 'items.productId',
                     model: 'Product',
-                    select: 'name price offerPrice stockManagement'
+                    select: 'name price offerPrice images stockManagement'
                 });
-
+     
             if (!cart || !cart.items.length) {
                 return res.redirect('/cart');
             }
-
-            const validItems = cart.items.filter(item => item.productId && item.productId.stockManagement.length > 0);
-
+     
+            const validItems = cart.items.filter(item => item.productId != null);
+            const { stockErrors, stockUpdates } = await checkStockAvailability(validItems);
+     
+            if (stockErrors.length > 0) {
+                return res.status(400).json({
+                    success: false, 
+                    message: 'Stock availability issues',
+                    errors: stockErrors
+                });
+            }
+     
             const totals = validItems.reduce((acc, item) => {
-                const productStock = item.productId.stockManagement.find(stock => stock.size === item.size);
-                if (!productStock || productStock.quantity < item.quantity) {
-                    throw new Error(`Insufficient stock for ${item.productId.name} (Size: ${item.size})`);
-                }
-
                 acc.subtotal += item.productId.offerPrice * item.quantity;
                 acc.mrp += item.productId.price * item.quantity;
                 return acc;
             }, { subtotal: 0, mrp: 0 });
-
+     
             let shipping = 0;
             if (totals.subtotal > 0 && totals.subtotal <= 1000) {
                 shipping = 200;
@@ -258,28 +264,25 @@ module.exports = {
             } else if (totals.subtotal > 5000) {
                 shipping = 100;
             }
-
+     
             const discount = totals.mrp - totals.subtotal;
             let total = totals.subtotal + shipping;
-
-            if (appliedCoupon && appliedCoupon.couponId) {
+     
+            if (appliedCoupon?.couponId) {
                 total -= appliedCoupon.discount;
-
                 await couponModel.findByIdAndUpdate(
                     appliedCoupon.couponId,
                     { $inc: { usedCount: 1 } }
                 );
             }
+     
             if (selectedPayment === 'cod' && total > COD_LIMIT) {
                 return res.status(400).json({
                     success: false,
                     message: `Cash on Delivery is not available for orders above ₹${COD_LIMIT.toLocaleString()}. Please choose online payment.`
                 });
             }
-            
-
-            
-
+     
             const orderData = {
                 userId,
                 username: user.name,
@@ -298,49 +301,32 @@ module.exports = {
                 totalAmount: total,
                 orderItems: validItems.map(item => ({
                     productId: item.productId._id,
-                    size:item.size,
+                    size: item.size,
                     quantity: item.quantity,
                     price: item.productId.offerPrice,
                 })),
-                discount: discount, 
-                couponDiscount: appliedCoupon?.discount || 0, 
-                totalDiscount: discount + (appliedCoupon?.discount || 0), 
+                discount,
+                couponDiscount: appliedCoupon?.discount || 0,
+                totalDiscount: discount + (appliedCoupon?.discount || 0),
                 paymentMethod: selectedPayment,
                 paymentStatus: selectedPayment === 'cod' ? 'Pending' : 'Completed',
             };
-
-            console.log(orderData);
-            
-
-            if (appliedCoupon && appliedCoupon.couponId) {
+     
+            if (appliedCoupon?.couponId) {
                 orderData.coupon = appliedCoupon.couponId;
                 orderData.discountAmount = appliedCoupon.discount;
             }
-
+     
             const newOrder = await orderModel.create(orderData);
-
+            await updateStockLevels(stockUpdates);
+     
             cart.items = [];
             await cart.save();
-
             delete req.session.appliedCoupon;
-
-            for (let item of validItems) {
-                const product = await productModel.findById(item.productId._id);
-                const sizeStock = product.stockManagement.find(stock => stock.size === item.size);
-
-                if (!sizeStock || sizeStock.quantity < item.quantity) {
-                    throw new Error(`Insufficient stock for ${product.name} (Size: ${item.size})`);
-                }
-
-                sizeStock.quantity -= item.quantity;
-                await product.save();
-            }
-
-            console.log('Order placed successfully:', newOrder);
-
-            res.json({ success: true, orderId: newOrder._id });
+     
+            return res.json({ success: true, orderId: newOrder._id });
         } catch (error) {
-            console.error('Error in placeOrder:', error.message);
+            console.error('Error in placeOrder:', error);
             res.status(500).json({ success: false, message: error.message });
         }
     },
@@ -573,4 +559,58 @@ module.exports = {
 
 
 
+};
+
+const checkStockAvailability = async (items) => {
+    const stockErrors = [];
+    const stockUpdates = [];
+
+    for (const item of items) {
+        const product = await productModel.findById(item.productId._id);
+        
+        if (!product) {
+            stockErrors.push(`Product not found: ${item.productId._id}`);
+            continue;
+        }
+
+        const sizeStock = product.stockManagement.find(stock => stock.size === item.size);
+        
+        if (!sizeStock) {
+            stockErrors.push(`Size ${item.size} not found for product ${product.name}`);
+            continue;
+        }
+
+        if (sizeStock.quantity < item.quantity) {
+            stockErrors.push(
+                `Insufficient stock for ${product.name} (Size: ${item.size}). ` +
+                `Requested: ${item.quantity}, Available: ${sizeStock.quantity}`
+            );
+            continue;
+        }
+
+        stockUpdates.push({
+            productId: product._id,
+            size: item.size,
+            quantity: item.quantity,
+            currentStock: sizeStock.quantity
+        });
+    }
+
+    return { stockErrors, stockUpdates };
+};
+
+const updateStockLevels = async (stockUpdates) => {
+    for (const update of stockUpdates) {
+        await productModel.updateOne(
+            { 
+                _id: update.productId,
+                'stockManagement.size': update.size
+            },
+            {
+                $inc: {
+                    'stockManagement.$.quantity': -update.quantity
+                }
+            }
+        );
+    }
 };
