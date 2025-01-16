@@ -9,16 +9,15 @@ module.exports={
             console.log("working...............");
 
             const userID = req.session.user?.id;
-           console.log(userID);
-           
-            
-            console.log(req.body);
-            
             const {selectedSize,productId}=req.body;
+
+
 
             if(!selectedSize||!productId){
                 return res.status(400).json({ success: false, message: 'Missing required fields' });
             }
+
+            
 
             const product = await productModel.findById(productId);
             if(!product){
@@ -26,13 +25,27 @@ module.exports={
             }
 ;
             let wishlist=await wishlistModel.findOne({userId : userID})
+            
+            if (!wishlist) {
+                wishlist = new wishlistModel({ 
+                    userId: userID, 
+                    products: [] 
+                });
+            }
+            
+            const isDuplicate = wishlist.products.some(item => 
+                item.productId.toString() === productId && 
+                item.size === selectedSize
+            );
 
-            if(!wishlist){
-                wishlist=new wishlistModel({userId:userID,products:[]})
+            if (isDuplicate) {
+                return res.status(409).json({
+                    success: false,
+                    message: 'Item already exists in wishlist'
+                });
             }
 
-          
-            
+         
 
             if(wishlist){
                 wishlist.products.push({
@@ -42,7 +55,10 @@ module.exports={
             }
 
            await wishlist.save()
-
+           return res.status(200).json({
+            success: true,
+            message: 'item successfull added to wishlist'
+        });
 
             
 

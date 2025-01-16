@@ -116,11 +116,11 @@ module.exports = {
         .exec();
 
       if (!product || product.isDeleted) {
-        // console.log("Product not found, deleted, or has no category");
+      
         return res.redirect('/home');
       }
 
-      // console.log("HEI"+product)
+    
 
 
       const productAll = await productModel.find({ isDeleted: false });
