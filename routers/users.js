@@ -79,13 +79,10 @@ router.get('/order/:orderId', orderController.getOrderDetails);
 
 // Request return
 router.post('/order/return/:orderId', orderController.requestReturn);
-
 router.post('/order/cancel/:orderId', orderController.cancelOrder);
 router.get('/order/pdf/:orderId', orderController.generatePDF);
-
-
-
-
+router.post('/order/retry-payment/:orderId', orderController.retryPayment);
+router.post('/order/verify-payment',orderController.verifyPayment);
 
 
 

@@ -392,6 +392,44 @@ module.exports = {
 
             const order = await razorpay.orders.create(options);
 
+            const user= await User.findById(userId)
+            const selectedAddress=user.address.find(addr=> addr._id.toString() === addressid);
+            if(!selectedAddress){
+                throw new Error('Selected address not found')
+            }
+
+            const orderData = {
+                userId,
+                username: user.name,
+                shippingAddress: {
+                    name: user.name,
+                    phone: user.phone,
+                    house: selectedAddress.house,
+                    street: selectedAddress.street,
+                    landmark: selectedAddress.landmark || '',
+                    city: selectedAddress.city,
+                    district: selectedAddress.district,
+                    state: selectedAddress.state,
+                    country: selectedAddress.country,
+                    pinCode: selectedAddress.pinCode
+                },
+                totalAmount: total,
+                orderItems: validItems.map(item => ({
+                    productId: item.productId._id,
+                    quantity: item.quantity,
+                    size: item.size,
+                    price: item.productId.offerPrice,
+                })),
+                discount: discount,
+                couponDiscount: req.session.appliedCoupon?.discount || 0,
+                totalDiscount: discount + (req.session.appliedCoupon?.discount || 0),
+                paymentMethod: 'razorpay',
+                paymentStatus: 'Failed',
+                razorpayOrderId: order.id,
+            };
+
+            await orderModel.create(orderData);
+
             res.json({
                 success: true,
                 order_id: order.id,
@@ -417,7 +455,7 @@ module.exports = {
                 addressid
             } = req.body;
     
-            // Verify Razorpay signature
+           
             const sign = razorpay_order_id + "|" + razorpay_payment_id;
             const expectedSign = crypto
                 .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
@@ -433,7 +471,7 @@ module.exports = {
     
             const userId = req.session.user.id;
     
-            // Fetch user and cart data in parallel
+            
             const [user, cart] = await Promise.all([
                 User.findById(userId),
                 cartModel.findOne({ userId }).populate({
@@ -443,7 +481,7 @@ module.exports = {
                 })
             ]);
     
-            // Get selected address
+            
             const selectedAddress = user.address.find(addr => addr._id.toString() === addressid);
             if (!selectedAddress) {
                 throw new Error('Selected address not found');
@@ -521,7 +559,11 @@ module.exports = {
                 );
             }
     
-            const newOrder = await orderModel.create(orderData);
+            const newOrder = await orderModel.findOneAndUpdate(
+                { razorpayOrderId: razorpay_order_id },
+                orderData,
+                { new: true }
+            );
     
             // Update product stock
             for (let item of validItems) {

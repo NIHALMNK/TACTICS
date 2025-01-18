@@ -5,6 +5,14 @@ const wallet=require('../../models/walletModel');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const mongoose = require('mongoose');
+const Razorpay = require('razorpay'); 
+const crypto = require('crypto');
+
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET
+});
 
 const orderController = {
   
@@ -85,24 +93,41 @@ const orderController = {
     getOrderDetails: async (req, res) => {
       try {
         const orderId = req.params.orderId;
-        
-        const order = await Order.findById(orderId)
-          .populate('orderItems.productId')
-          .populate('addressId');
-  
+        const userId = req.session.user.id;
+        const addressId = req.params.addressId || req.body.addressId; // Ensure addressId is retrieved
+    
+        // Find the order by orderId and userId
+        const order = await Order.findOne(orderId)
+          .populate('orderItems.productId');
+    
         if (!order) {
+          
+          
           return res.status(404).json({ message: 'Order not found' });
         }
-  
+    
+        const user = await User.findById(userId);
+    
+        if (!user || !user.address) {
+          return res.status(404).json({ success: false, message: 'User or address not found' });
+        }
+    
+        // Ensure addressId is defined and valid
+        const selectedAddress = user.address.find(addr => addr._id && addr._id.toString() === addressId);
+    
+        if (!selectedAddress) {
+          return res.status(404).json({ success: false, message: 'Selected address not found' });
+        }
+    
         const totals = order.orderItems.reduce((acc, item) => {
           const mrpTotal = item.productId.price * item.quantity;
           const offerTotal = item.productId.offerPrice * item.quantity;
-          
+    
           acc.mrp += mrpTotal;
           acc.subtotal += offerTotal;
           return acc;
         }, { mrp: 0, subtotal: 0 });
-  
+    
         let shipping = 0;
         if (totals.subtotal > 0 && totals.subtotal <= 1000) {
           shipping = 200;
@@ -111,11 +136,10 @@ const orderController = {
         } else if (totals.subtotal > 5000) {
           shipping = 100;
         }
-  
+    
         const discount = totals.mrp - totals.subtotal;
-
         const total = totals.subtotal + shipping;
-  
+    
         res.json({
           order: {
             id: order._id,
@@ -124,7 +148,7 @@ const orderController = {
             items: order.orderItems.map(item => ({
               name: item.productId.name,
               quantity: item.quantity,
-              size:item.size,
+              size: item.size,
               price: item.productId.offerPrice,
               mrp: item.productId.price,
               total: item.productId.offerPrice * item.quantity,
@@ -136,9 +160,9 @@ const orderController = {
             shipping: shipping,
             discount: discount,
             total: total,
-            address: order.addressId,
-            paymentMethod: order.paymentMethod,
-            paymentStatus: order.paymentStatus
+            address: selectedAddress,
+            paymentStatus: order.paymentStatus,
+            paymentMethod: order.paymentMethod
           }
         });
       } catch (error) {
@@ -148,14 +172,16 @@ const orderController = {
     },
   
 
-    requestReturn: async (req, res) => {
+    async  requestReturn (req, res) {
       try {
         const { reason, orderId } = req.body;
+        
         const userId = req.session.user.id;
   
         const order = await Order.findById(orderId);
   
         if (!order) {
+          
           return res.status(404).json({ message: 'Order not found' });
         }
   
@@ -486,7 +512,153 @@ const orderController = {
             });
           }
         },
-                
+
+        async retryPayment(req, res) {
+          try {
+            const { orderId } = req.params;
+            
+            const order = await Order.findOne({ _id: orderId })
+              .populate('orderItems.productId');
+            
+            if (!order) {
+              return res.status(404).json({
+                success: false,
+                message: 'Order not found'
+              });
+            }
+        
+            // Use the real amount from the order
+            const amountInPaise = Math.round(12098 * 100); // Convert to paise
+        
+            console.log('Amount details:', {
+              originalAmount: 12098,
+              amountInPaise: amountInPaise
+            });
+        
+            // Create Razorpay order
+            const razorpayOrder = await razorpay.orders.create({
+              amount: amountInPaise,
+              currency: 'INR',
+              receipt: orderId.toString(),
+              payment_capture: 1
+            });
+        
+            // IMPORTANT: Save the amount BEFORE creating payment
+            await Order.findByIdAndUpdate(
+              orderId,
+              {
+                $set: {
+                  razorpayOrderAmount: amountInPaise,
+                  razorpayOrderId: razorpayOrder.id,
+                  originalAmount: 12098 // Save original amount for reference
+                }
+              },
+              { new: true } // Get updated document
+            );
+        
+            // Get user details
+            const user = await User.findById(order.userId);
+        
+            res.json({
+              success: true,
+              razorpayKeyId: process.env.RAZORPAY_KEY_ID,
+              razorpayOrderId: razorpayOrder.id,
+              amount: amountInPaise,
+              originalAmount: 12098,
+              currency: 'INR',
+              customerName: user.name,
+              customerEmail: user.email,
+              customerPhone: user.phone
+            });
+        
+          } catch (error) {
+            console.error('Retry payment error:', error);
+            res.status(500).json({
+              success: false,
+              message: 'Failed to initialize payment',
+              error: error.message
+            });
+          }
+        },
+
+    async verifyPayment (req,res){
+
+      try {
+        const {
+          orderId,
+          razorpay_payment_id,
+          razorpay_order_id,
+          razorpay_signature
+        } = req.body;
+    
+        // Fetch the order
+        const order = await Order.findById(orderId);
+        if (!order) {
+          throw new Error('Order not found');
+        }
+    
+        console.log('Verification amounts:', {
+          savedAmount: order.razorpayOrderAmount,
+          originalAmount: order.originalAmount
+        });
+    
+        // Verify signature
+        const body = razorpay_order_id + '|' + razorpay_payment_id;
+        const expectedSignature = crypto
+          .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+          .update(body.toString())
+          .digest('hex');
+    
+        if (expectedSignature !== razorpay_signature) {
+          throw new Error('Invalid signature');
+        }
+    
+        // Fetch payment details from Razorpay
+        const payment = await razorpay.payments.fetch(razorpay_payment_id);
+        
+        console.log('Payment verification:', {
+          razorpayAmount: payment.amount,
+          orderAmount: order.razorpayOrderAmount,
+          paymentStatus: payment.status
+        });
+    
+        // Verify the amount (expecting 1209800 paise = ₹12098)
+        const expectedAmount = 1209800;
+        if (payment.amount !== expectedAmount) {
+          throw new Error(`Payment amount mismatch. Expected: ${expectedAmount}, Got: ${payment.amount}`);
+        }
+    
+        // Update order status
+        await Order.findByIdAndUpdate(
+          orderId,
+          {
+            $set: {
+              paymentStatus: 'completed',
+              razorpayPaymentId: razorpay_payment_id,
+              razorpayOrderId: razorpay_order_id,
+              razorpaySignature: razorpay_signature,
+              paidAmount: payment.amount,  // in paise
+              paidAmountINR: payment.amount / 100  // in rupees
+            }
+          }
+        );
+    
+        res.json({
+          success: true,
+          message: 'Payment verified successfully'
+        });
+    
+      } catch (error) {
+        console.error('Payment verification error:', error);
+        res.status(400).json({
+          success: false,
+          message: error.message || 'Payment verification failed'
+        });
+      }
+
+
+    },
+      
  
   
 };

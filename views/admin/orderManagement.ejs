@@ -8,410 +8,417 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-   :root {
-    --bg-dark: #1a1f26;
-    --bg-darker: #151a21;
-    --card-bg: #1B232D;
-    --border-color: #2d3643;
-    --text-color: #ffffff;
-    --text-muted: #8b949e;
-    --status-green: #22c55e;
-    --status-darkgreen: #2E8B57;
-    --status-red: #ef4444;
-    --hover-bg: #262d36;
-  }
-  
-  /* Global Reset and Base Styles */
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    background: var(--bg-dark);
-    color: var(--text-color);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    line-height: 1.5;
-    min-height: 100vh;
-  }
-  
-  .main-content {
-    padding: 2rem;
-    max-width: 1440px;
-    margin: 0 auto;
-  }
-  
-  /* Table Styles */
-  .table-responsive {
-    overflow-x: auto;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-  }
-  
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    background: transparent;
-    min-width: 800px;
-  }
-  
-  .table th {
-    background: var(--bg-darker);
-    text-align: left;
-    padding: 1rem;
-    font-weight: 500;
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    border-bottom: 1px solid var(--border-color);
-  }
-  
-  .table td {
-    padding: 1rem;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 0.875rem;
-  }
-  
-  .table thead th {
-    background-color: var(--border-color);
-    color: var(--text-color);
-  }
-  
-  .table tbody tr td:nth-child(2n-1) {
-    background-color: var(--card-bg);
-    color: var(--text-color);
-  }
-  
-  .table tbody tr td:nth-child(2n-2) {
-    background-color: var(--bg-dark);
-    color: var(--text-color);
-  }
-  
-  .table tbody tr:hover td {
-    background: var(--hover-bg);
-  }
-  
-  /* Status Badge Styles */
-  .status-badge {
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    display: inline-block;
-  }
-  
-  .status-pending {
-    background: rgba(241, 196, 15, 0.1);
-    color: #f1c40f;
-  }
-  
-  .status-completed {
-    background: rgba(34, 197, 94, 0.1);
-    color: var(--status-green);
-  }
-  
-  .status-cancelled {
-    background: rgba(239, 68, 68, 0.1);
-    color: var(--status-red);
-  }
-  
-  .status-returned {
-    background: rgba(139, 148, 158, 0.1);
-    color: var(--text-muted);
-  }
-  
-  .status-shipping {
-    background: rgba(34, 197, 94, 0.1);
-    color: var(--status-darkgreen);
-  }
-  
-  /* Button Styles */
-  .btn-view {
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    background: rgba(34, 197, 94, 0.1);
-    color: var(--status-green);
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .btn-view:hover {
-    background: rgba(34, 197, 94, 0.2);
-  }
-  
-  /* Modal Styles */
-  .modal-content {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    color: var(--text-color);
-  }
-  
-  .modal-header {
-    border-bottom: 1px solid var(--border-color);
-    padding: 1.5rem;
-  }
-  
-  .modal-footer {
-    border-top: 1px solid var(--border-color);
-    padding: 1.5rem;
-  }
-  
-  .form-control, .form-select {
-    background: var(--bg-darker);
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-    border-radius: 6px;
-    padding: 0.75rem 1rem;
-  }
-  
-  .form-control:disabled {
-    background: var(--bg-darker);
-    opacity: 0.7;
-  }
-  
-  .address-details {
-    background: var(--bg-darker);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 1024px) {
+    :root {
+      --bg-dark: #1a1f26;
+      --bg-darker: #151a21;
+      --card-bg: #1B232D;
+      --border-color: #2d3643;
+      --text-color: #ffffff;
+      --text-muted: #8b949e;
+      --status-green: #22c55e;
+      --status-darkgreen: #2E8B57;
+      --status-red: #ef4444;
+      --hover-bg: #262d36;
+    }
+
+    /* Global Reset and Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-color);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
     .main-content {
+      padding: 2rem;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    /* Table Styles */
+    .table-responsive {
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+      min-width: 800px;
+    }
+
+    .table th {
+      background: var(--bg-darker);
+      text-align: left;
       padding: 1rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
     }
-  }
-  
-  @media (max-width: 768px) {
-    .table td, .table th {
-      padding: 0.75rem;
+
+    .table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.875rem;
     }
-    
+
+    .table thead th {
+      background-color: var(--border-color);
+      color: var(--text-color);
+    }
+
+    .table tbody tr td:nth-child(2n-1) {
+      background-color: var(--card-bg);
+      color: var(--text-color);
+    }
+
+    .table tbody tr td:nth-child(2n-2) {
+      background-color: var(--bg-dark);
+      color: var(--text-color);
+    }
+
+    .table tbody tr:hover td {
+      background: var(--hover-bg);
+    }
+
+    /* Status Badge Styles */
+    .status-badge {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      display: inline-block;
+    }
+
+    .status-pending {
+      background: rgba(241, 196, 15, 0.1);
+      color: #f1c40f;
+    }
+
+    .status-completed {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--status-green);
+    }
+
+    .status-cancelled {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--status-red);
+    }
+
+    .status-returned {
+      background: rgba(139, 148, 158, 0.1);
+      color: var(--text-muted);
+    }
+
+    .status-shipping {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--status-darkgreen);
+    }
+
+    /* Button Styles */
     .btn-view {
-      padding: 0.375rem 0.75rem;
-      font-size: 0.75rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--status-green);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
-  }
-  
-  @media (max-width: 425px) {
-    .main-content {
-      padding: 0.5rem;
+
+    .btn-view:hover {
+      background: rgba(34, 197, 94, 0.2);
     }
-  }
-  
-  
-  /* Modal Base Styles */
-  .modal-dialog {
-    max-width: 800px;
-  }
-  
-  .modal-content {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-  }
-  
-  .modal-header {
-    background: var(--bg-darker);
-    border-bottom: 1px solid var(--border-color);
-    border-radius: 12px 12px 0 0;
-    padding: 1.25rem 1.5rem;
-  }
-  
-  .modal-title {
-    color: var(--text-color);
-    font-weight: 600;
-    font-size: 1.25rem;
-  }
-  
-  .modal-body {
-    padding: 1.5rem;
-    background: var(--card-bg);
-  }
-  
-  .modal-footer {
-    background: var(--bg-darker);
-    border-top: 1px solid var(--border-color);
-    border-radius: 0 0 12px 12px;
-    padding: 1.25rem 1.5rem;
-  }
-  
-  /* Form Controls */
-  .form-label {
-    color: var(--text-muted);
-    font-size: 0.875rem;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-  }
-  
-  .form-control, .form-select {
-    background: var(--bg-darker);
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    font-size: 0.875rem;
-    transition: all 0.2s ease;
-  }
-  
-  .form-control:disabled, .form-control[readonly],
-  .form-select:disabled {
-    background: var(--bg-darker);
-    opacity: 0.7;
-    color: var(--text-muted);
-  }
-  
-  .form-control:focus, .form-select:focus {
-    border-color: var(--status-green);
-    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
-    outline: none;
-  }
-  
-  /* Address Details Section */
-  .address-details {
-    background: var(--bg-darker);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    margin-top: 0.5rem;
-  }
-  
-  .address-details p {
-    margin-bottom: 0.75rem;
-    font-size: 0.875rem;
-    color: var(--text-color);
-  }
-  
-  .address-details strong {
-    color: var(--text-muted);
-    font-weight: 500;
-    min-width: 120px;
-    display: inline-block;
-  }
-  
-  /* Button Styles */
-  .modal .btn {
-    padding: 0.625rem 1.25rem;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    border: none;
-  }
-  
-  .modal .btn-primary {
-    background: var(--status-darkgreen);
-    color: white;
-  }
-  
-  .modal .btn-primary:hover {
-    background: var(--status-green);
-  }
-  
-  .modal .btn-secondary {
-    background: var(--border-color);
-    color: var(--text-color);
-  }
-  
-  .modal .btn-secondary:hover {
-    background: var(--hover-bg);
-  }
-  
-  .modal .btn-danger {
-    background: rgba(239, 68, 68, 0.1);
-    color: var(--status-red);
-  }
-  
-  .modal .btn-danger:hover {
-    background: rgba(239, 68, 68, 0.2);
-  }
-  
-  .modal .btn-success {
-    background: rgba(34, 197, 94, 0.1);
-    color: var(--status-green);
-  }
-  
-  .modal .btn-success:hover {
-    background: rgba(34, 197, 94, 0.2);
-  }
-  
-  /* Return Request Section */
-  .return-request-section {
-    background: var(--bg-darker);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 1rem;
-    margin-top: 1.5rem;
-  }
-  
-  .return-request-section textarea {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-    resize: none;
-  }
-  
-  /* Close Button */
-  .btn-close {
-    background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'%3E%3Cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3E%3C/svg%3E") center/1em auto no-repeat;
-    opacity: 0.5;
-    transition: opacity 0.2s ease;
-  }
-  
-  .btn-close:hover {
-    opacity: 1;
-  }
-  
-  /* Order Items Container */
-  #orderItemsContainer {
-    background: var(--bg-darker);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 1rem;
-    margin-top: 0.5rem;
-  }
-  
-  /* Responsive Adjustments */
-  @media (max-width: 768px) {
+
+    /* Modal Styles */
+    .modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      color: var(--text-color);
+    }
+
+    .modal-header {
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.5rem;
+    }
+
+    .modal-footer {
+      border-top: 1px solid var(--border-color);
+      padding: 1.5rem;
+    }
+
+    .form-control,
+    .form-select {
+      background: var(--bg-darker);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+    }
+
+    .form-control:disabled {
+      background: var(--bg-darker);
+      opacity: 0.7;
+      color: var(--card-bg);
+    }
+
+    .address-details {
+      background: var(--bg-darker);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .main-content {
+        padding: 1rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+
+      .table td,
+      .table th {
+        padding: 0.75rem;
+      }
+
+      .btn-view {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.75rem;
+      }
+    }
+
+    @media (max-width: 425px) {
+      .main-content {
+        padding: 0.5rem;
+      }
+    }
+
+
+    /* Modal Base Styles */
     .modal-dialog {
-      margin: 0.5rem;
+      max-width: 800px;
     }
-    
-    .address-details .row {
-      flex-direction: column;
+
+    .modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
     }
-    
-    .address-details .col-md-6:first-child {
-      margin-bottom: 1rem;
+
+    .modal-header {
+      background: var(--bg-darker);
+      border-bottom: 1px solid var(--border-color);
+      border-radius: 12px 12px 0 0;
+      padding: 1.25rem 1.5rem;
     }
-  }
 
-  .order-item {
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 10px;
-  }
+    .modal-title {
+      color: var(--text-color);
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
 
-  .order-item img {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 4px;
-  }
+    .modal-body {
+      padding: 1.5rem;
+      background: var(--card-bg);
+    }
 
-   /* Pagination Styles */
-   .pagination {
+    .modal-footer {
+      background: var(--bg-darker);
+      border-top: 1px solid var(--border-color);
+      border-radius: 0 0 12px 12px;
+      padding: 1.25rem 1.5rem;
+    }
+
+    /* Form Controls */
+    .form-label {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .form-control,
+    .form-select {
+      background: var(--bg-darker);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+
+    .form-control:disabled,
+    .form-control[readonly],
+    .form-select:disabled {
+      background: var(--bg-darker);
+      opacity: 0.7;
+      color: var(--bg-dark);
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: var(--status-green);
+      box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+      outline: none;
+    }
+
+    /* Address Details Section */
+    .address-details {
+      background: var(--bg-darker);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+
+    .address-details p {
+      margin-bottom: 0.75rem;
+      font-size: 0.875rem;
+      color: var(--text-color);
+    }
+
+    .address-details strong {
+      color: var(--text-muted);
+      font-weight: 500;
+      min-width: 120px;
+      display: inline-block;
+    }
+
+    /* Button Styles */
+    .modal .btn {
+      padding: 0.625rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      border: none;
+    }
+
+    .modal .btn-primary {
+      background: var(--status-darkgreen);
+      color: white;
+    }
+
+    .modal .btn-primary:hover {
+      background: var(--status-green);
+    }
+
+    .modal .btn-secondary {
+      background: var(--border-color);
+      color: var(--text-color);
+    }
+
+    .modal .btn-secondary:hover {
+      background: var(--hover-bg);
+    }
+
+    .modal .btn-danger {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--status-red);
+    }
+
+    .modal .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    .modal .btn-success {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--status-green);
+    }
+
+    .modal .btn-success:hover {
+      background: rgba(34, 197, 94, 0.2);
+    }
+
+    /* Return Request Section */
+    .return-request-section {
+      background: var(--bg-darker);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .return-request-section textarea {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      resize: none;
+    }
+
+    /* Close Button */
+    .btn-close {
+      background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'%3E%3Cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3E%3C/svg%3E") center/1em auto no-repeat;
+      opacity: 0.5;
+      transition: opacity 0.2s ease;
+    }
+
+    .btn-close:hover {
+      opacity: 1;
+    }
+
+    /* Order Items Container */
+    #orderItemsContainer {
+      background: var(--bg-darker);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .modal-dialog {
+        margin: 0.5rem;
+      }
+
+      .address-details .row {
+        flex-direction: column;
+      }
+
+      .address-details .col-md-6:first-child {
+        margin-bottom: 1rem;
+      }
+    }
+
+    .order-item {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 10px;
+    }
+
+    .order-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    /* Pagination Styles */
+    .pagination {
       margin-top: 2rem;
       display: flex;
       justify-content: center;
       gap: 0.25rem;
     }
-    
+
     .pagination .page-item .page-link {
       background: var(--bg-darker);
       border: 1px solid var(--border-color);
@@ -420,23 +427,23 @@
       border-radius: 6px;
       transition: all 0.2s ease;
     }
-    
+
     .pagination .page-item.active .page-link {
       background: var(--status-green);
       border-color: var(--status-green);
       color: white;
     }
-    
+
     .pagination .page-item .page-link:hover {
       background: var(--hover-bg);
     }
-    
+
     .pagination .page-item.disabled .page-link {
       background: var(--bg-darker);
       color: var(--text-muted);
       cursor: not-allowed;
     }
-    
+
     .order-info {
       text-align: center;
       margin-top: 1rem;
@@ -453,204 +460,205 @@
   <main class="main-content">
     <div class="container-fluid">
 
-  
-    <h1 class="mb-4">Order Management</h1>
 
-    <div class="table-responsive">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>INDEX</th>
-            <th>ORDER NO</th>
-            <th>USER NAME</th>
-            <th>DATE</th>
-            <th>PRICE</th>
-            <th>PAYMENT STATUS</th>
-            <th>STATUS</th>
-            <th>PAYMENT MODE</th>
-            <th>ACTION</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% orders.forEach((order, index) => { %>
-          <tr>
-            <td><%= index + 1 %></td>
-            <td><%= order._id %></td>
-            <% if (order.userId.name) { %>
-            <td><%= order.userId.name %></td>
+      <h1 class="mb-4">Order Management</h1>
 
-            <% }else{ %>
-            <td>NO user</td>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>INDEX</th>
+              <th>ORDER NO</th>
+              <th>USER NAME</th>
+              <th>DATE</th>
+              <th>PRICE</th>
+              <th>PAYMENT STATUS</th>
+              <th>STATUS</th>
+              <th>PAYMENT MODE</th>
+              <th>ACTION</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% orders.forEach((order, index) => { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= order._id %></td>
+              <% if (order.userId.name) { %>
+              <td><%= order.userId.name %></td>
 
-            <% } %>
+              <% }else{ %>
+              <td>NO user</td>
+
+              <% } %>
 
 
-            <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
-            <td>₹ <%= order.totalAmount.toFixed(2) %></td>
-            <td>
-              <span class="status-badge status-<%= order.paymentStatus.toLowerCase() %>">
-                <%= order.paymentStatus %>
-              </span>
-            </td>
-            <td>
-              <span class="status-badge status-<%= order.status.toLowerCase() %>">
-                <%= order.status %>
-              </span>
-            </td>
-            <td><%= order.paymentMethod %></td>
-            <td>
-              <button class="btn-view" onclick="viewOrderDetails('<%= order._id %>')">View</button>
-            </td>
-          </tr>
-          <% }); %>
-        </tbody>
-      </table>
-      <nav aria-label="Order navigation">
-        <ul class="pagination justify-content-center">
-          <% if (currentPage > 1) { %>
+              <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
+              <td>₹ <%= order.totalAmount.toFixed(2) %></td>
+              <td>
+                <span class="status-badge status-<%= order.paymentStatus.toLowerCase() %>">
+                  <%= order.paymentStatus %>
+                </span>
+              </td>
+              <td>
+                <span class="status-badge status-<%= order.status.toLowerCase() %>">
+                  <%= order.status %>
+                </span>
+              </td>
+              <td><%= order.paymentMethod %></td>
+              <td>
+                <button class="btn-view" onclick="viewOrderDetails('<%= order._id %>')">View</button>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+        <nav aria-label="Order navigation">
+          <ul class="pagination justify-content-center">
+            <% if (currentPage > 1) { %>
             <li class="page-item">
               <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
               </a>
             </li>
-          <% } %>
-    
-          <% for(let i = 1; i <= totalPages; i++) { %>
+            <% } %>
+
+            <% for(let i = 1; i <= totalPages; i++) { %>
             <% if (i === currentPage) { %>
-              <li class="page-item active">
-                <span class="page-link"><%= i %></span>
-              </li>
+            <li class="page-item active">
+              <span class="page-link"><%= i %></span>
+            </li>
             <% } else if (
               i === 1 || 
               i === totalPages || 
               (i >= currentPage - 2 && i <= currentPage + 2)
             ) { %>
-              <li class="page-item">
-                <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-              </li>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+            </li>
             <% } else if (
               i === currentPage - 3 || 
               i === currentPage + 3
             ) { %>
-              <li class="page-item disabled">
-                <span class="page-link">...</span>
-              </li>
+            <li class="page-item disabled">
+              <span class="page-link">...</span>
+            </li>
             <% } %>
-          <% } %>
-    
-          <% if (currentPage < totalPages) { %>
+            <% } %>
+
+            <% if (currentPage < totalPages) { %>
             <li class="page-item">
               <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
               </a>
             </li>
-          <% } %>
-        </ul>
-      </nav>
-    
-      <div class="order-info">
-        Showing <%= (currentPage - 1) * 5 + 1 %> to 
-        <%= Math.min(currentPage * 5, totalOrders) %> 
-        of <%= totalOrders %> orders
-      </div>
-    
-    
-    </div>
-  
+            <% } %>
+          </ul>
+        </nav>
 
-
-
-  <!-- Modal for Viewing Order Details -->
-  <div class="modal fade" id="orderDetailsModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Order Details</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="order-info">
+          Showing <%= (currentPage - 1) * 5 + 1 %> to
+          <%= Math.min(currentPage * 5, totalOrders) %>
+          of <%= totalOrders %> orders
         </div>
-        <div class="modal-body">
-          <form id="orderForm">
-            <div class="mb-3">
-              <label for="orderNo" class="form-label">Order No</label>
-              <input type="text" class="form-control" id="orderNo" disabled>
-            </div>
-            <div class="mb-3">
-              <label for="userName" class="form-label">User Name</label>
-              <input type="text" class="form-control" id="userName" disabled>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Order Items</label>
-              <div id="orderItemsContainer"></div>
-            </div>
 
 
-            
-            <div class="mb-3">
-              <label class="form-label">Shipping Address</label>
-              <div class="address-details p-3 rounded" style="background-color: rgba(255, 255, 255, 0.05);">
-                <div class="row">
-                  <div class="col-md-6">
-                    <p><strong>House/Building:</strong> <span id="addressHouse"></span></p>
-                    <p><strong>Street:</strong> <span id="addressStreet"></span></p>
-                    <p><strong>City:</strong> <span id="addressCity"></span></p>
-                  </div>
-                  <div class="col-md-6">
-                    <p><strong>District:</strong> <span id="addressDistrict"></span></p>
-                    <p><strong>State:</strong> <span id="addressState"></span></p>
-                    <p><strong>Landmark:</strong> <span id="addressLandmark"></span></p>
-                    <p><strong>PIN Code:</strong> <span id="addressPinCode"></span></p>
+      </div>
+
+
+
+
+      <!-- Modal for Viewing Order Details -->
+
+      <div class="modal fade" id="orderDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Order Details</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="orderForm">
+                <div class="mb-3">
+                  <label for="orderNo" class="form-label">Order No</label>
+                  <input type="text" class="form-control" id="orderNo" disabled>
+                </div>
+                <div class="mb-3">
+                  <label for="userName" class="form-label">User Name</label>
+                  <input type="text" class="form-control" id="userName" disabled>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Order Items</label>
+                  <div id="orderItemsContainer"></div>
+                </div>
+
+
+
+                <div class="mb-3">
+                  <label class="form-label">Shipping Address</label>
+                  <div class="address-details p-3 rounded" style="background-color: rgba(255, 255, 255, 0.05);">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <p><strong>House/Building:</strong> <span id="addressHouse"></span></p>
+                        <p><strong>Street:</strong> <span id="addressStreet"></span></p>
+                        <p><strong>City:</strong> <span id="addressCity"></span></p>
+                      </div>
+                      <div class="col-md-6">
+                        <p><strong>District:</strong> <span id="addressDistrict"></span></p>
+                        <p><strong>State:</strong> <span id="addressState"></span></p>
+                        <p><strong>Landmark:</strong> <span id="addressLandmark"></span></p>
+                        <p><strong>PIN Code:</strong> <span id="addressPinCode"></span></p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            
-            <div class="mb-3">
-              <label for="shippingStatus" class="form-label">Shipping Status</label>
-              <select class="form-select" id="shippingStatus">
-                <option value="Pending">Pending</option>
-                <option value="Shipping">Shipping</option>
-                <option value="Completed">Completed</option>
-                <option value="Returned">Returned</option>
-                <option value="Requested">Requested</option>
-                <option value="Rejected">Rejected</option>
-                <option value="Cancelled">Cancelled</option>
-              </select>
+
+                <div class="mb-3">
+                  <label for="shippingStatus" class="form-label">Shipping Status</label>
+                  <select class="form-select" id="shippingStatus">
+                    <option value="Pending">Pending</option>
+                    <option value="Shipping">Shipping</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Returned">Returned</option>
+                    <option value="Requested">Requested</option>
+                    <option value="Rejected">Rejected</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="paymentStatus" class="form-label">Payment Status</label>
+                  <select class="form-select" id="paymentStatus">
+                    <option value="pending">Pending</option>
+                    <option value="completed">Completed</option>
+                    <option value="failed">Failed</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="totalAmount" class="form-label">Total Amount</label>
+                  <input type="text" class="form-control" id="totalAmount" disabled>
+                </div>
+                <div class="return-request-section d-none" id="returnRequestSection">
+                  <div class="mb-3">
+                    <label for="reason" class="form-label">Return Reason</label>
+                    <textarea class="form-control" id="reason" rows="3" readonly></textarea>
+                  </div>
+                  <div class="d-flex justify-content-between mb-3">
+                    <button type="button" class="btn btn-danger" id="rejectReturnBtn">Reject Return</button>
+                    <button type="button" class="btn btn-success" id="acceptReturnBtn">Accept Return</button>
+                  </div>
+                </div>
+              </form>
             </div>
-            <div class="mb-3">
-              <label for="paymentStatus" class="form-label">Payment Status</label>
-              <select class="form-select" id="paymentStatus">
-                <option value="Pending">Pending</option>
-                <option value="Completed">Completed</option>
-                <option value="Failed">Failed</option>
-              </select>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="updateStatusBtn">Update Status</button>
             </div>
-            <div class="mb-3">
-              <label for="totalAmount" class="form-label">Total Amount</label>
-              <input type="text" class="form-control" id="totalAmount" disabled>
-            </div>
-            <div class="return-request-section d-none" id="returnRequestSection">
-              <div class="mb-3">
-                <label for="reason" class="form-label">Return Reason</label>
-                <textarea class="form-control" id="reason" rows="3" readonly></textarea>
-              </div>
-              <div class="d-flex justify-content-between mb-3">
-                <button type="button" class="btn btn-danger" id="rejectReturnBtn">Reject Return</button>
-                <button type="button" class="btn btn-success" id="acceptReturnBtn">Accept Return</button>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="updateStatusBtn">Update Status</button>
+          </div>
         </div>
       </div>
+
     </div>
-  </div>
-  
-</div>
-</main>
+  </main>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
   <script>
@@ -671,24 +679,24 @@
         document.getElementById('userName').value = order.userId.name;
 
         if (order.shippingAddress) {
-            const address = order.shippingAddress;
-            document.getElementById('addressHouse').textContent = address.house || 'N/A';
-            document.getElementById('addressStreet').textContent = address.street || 'N/A';
-            document.getElementById('addressCity').textContent = address.city || 'N/A';
-            document.getElementById('addressDistrict').textContent = address.district || 'N/A';
-            document.getElementById('addressState').textContent = address.state || 'N/A';
-            document.getElementById('addressLandmark').textContent = address.landmark || 'N/A';
-            document.getElementById('addressPinCode').textContent = address.pinCode || 'N/A';
+          const address = order.shippingAddress;
+          document.getElementById('addressHouse').textContent = address.house || 'N/A';
+          document.getElementById('addressStreet').textContent = address.street || 'N/A';
+          document.getElementById('addressCity').textContent = address.city || 'N/A';
+          document.getElementById('addressDistrict').textContent = address.district || 'N/A';
+          document.getElementById('addressState').textContent = address.state || 'N/A';
+          document.getElementById('addressLandmark').textContent = address.landmark || 'N/A';
+          document.getElementById('addressPinCode').textContent = address.pinCode || 'N/A';
 
         } else {
-            // If no address is found, display "No address found" instead of "Address not available"
-            const addressFields = ['House', 'Street', 'City', 'District', 'State', 'Landmark', 'PinCode'];
-            addressFields.forEach(field => {
-                document.getElementById(`address${field}`).textContent = 'No address found';
-            });
+          // If no address is found, display "No address found" instead of "Address not available"
+          const addressFields = ['House', 'Street', 'City', 'District', 'State', 'Landmark', 'PinCode'];
+          addressFields.forEach(field => {
+            document.getElementById(`address${field}`).textContent = 'No address found';
+          });
         }
 
-        
+
         const shippingStatusSelect = document.getElementById('shippingStatus');
         shippingStatusSelect.value = order.status;
 
@@ -703,7 +711,19 @@
           document.getElementById('updateStatusBtn').disabled = false;
         }
 
-        document.getElementById('paymentStatus').value = order.paymentStatus;
+        const paymentStatusSelect = document.getElementById('paymentStatus');
+        if (paymentStatusSelect && order.paymentStatus) {
+          const serverStatus = order.paymentStatus.toLowerCase();
+          const matchingOption = Array.from(paymentStatusSelect.options).find(option =>
+            option.value.toLowerCase() === serverStatus
+          );
+
+          if (matchingOption) {
+            paymentStatusSelect.value = matchingOption.value;
+          } else {
+            console.warn('Payment status from server does not match any available options:', order.paymentStatus);
+          }
+        }
         document.getElementById('totalAmount').value = `₹${order.totalAmount.toFixed(2)}`;
 
         // Generate order items HTML

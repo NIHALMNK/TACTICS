@@ -11,8 +11,8 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "users"
     },
-    username:{
-        type:String,
+    username: {
+        type: String,
         required: true
     },
     shippingAddress: {
@@ -41,7 +41,7 @@ const orderSchema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
-            size:{
+            size: {
                 type: String,
                 required: true
             },
@@ -52,15 +52,15 @@ const orderSchema = new mongoose.Schema({
     ],
     discount: {
         type: Number,
-        default: 0  
+        default: 0
     },
     couponDiscount: {
         type: Number,
-        default: 0 
+        default: 0
     },
     totalDiscount: {
         type: Number,
-        default: 0  
+        default: 0
     },
     status: {
         type: String,
@@ -78,10 +78,10 @@ const orderSchema = new mongoose.Schema({
     },
     paymentStatus: {
         type: String,
-        enum: ['Pending', 'Completed', 'Failed'],
+        enum: ['Pending', 'Completed', 'Failed','Refunded'],
         default: 'Pending'
     },
-    razorpayOrderId: {  
+    razorpayOrderId: {
         type: String,
         default: null
     },
@@ -93,7 +93,7 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Coupon',
         default: null
-    }, 
+    },
 
     createdAt: {
         type: Date,
@@ -101,7 +101,7 @@ const orderSchema = new mongoose.Schema({
     },
     expiresAt: {
         type: Date,
-        index: { expireAfterSeconds: 0 } 
+        index: { expireAfterSeconds: 0 }
     }
 })
 
@@ -110,22 +110,22 @@ function generateOrderId() {
     return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-// Pre-validate middleware to set orderId
-orderSchema.pre('validate', async function(next) {
+
+orderSchema.pre('validate', async function (next) {
     if (!this.orderId) {
         let isUnique = false;
         let newOrderId;
-        
-        // Keep trying until we get a unique orderId
+
+
         while (!isUnique) {
             newOrderId = generateOrderId();
-            // Check if this orderId already exists
+
             const existingOrder = await this.constructor.findOne({ orderId: newOrderId });
             if (!existingOrder) {
                 isUnique = true;
             }
         }
-        
+
         this.orderId = newOrderId;
     }
     next();
