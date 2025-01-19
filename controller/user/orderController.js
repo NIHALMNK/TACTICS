@@ -1,7 +1,7 @@
 const Order = require('../../models/orderModel');
 const User = require('../../models/userRegister');
 const Product = require('../../models/productModel');
-const wallet=require('../../models/walletModel');
+const  wallet=require('../../models/walletModel');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const mongoose = require('mongoose');
@@ -96,7 +96,6 @@ const orderController = {
         const userId = req.session.user.id;
         const addressId = req.params.addressId || req.body.addressId; // Ensure addressId is retrieved
     
-        // Find the order by orderId and userId
         const order = await Order.findOne(orderId)
           .populate('orderItems.productId');
     
@@ -112,7 +111,6 @@ const orderController = {
           return res.status(404).json({ success: false, message: 'User or address not found' });
         }
     
-        // Ensure addressId is defined and valid
         const selectedAddress = user.address.find(addr => addr._id && addr._id.toString() === addressId);
     
         if (!selectedAddress) {
@@ -248,106 +246,115 @@ const orderController = {
       try {
         const userId = req.session.user.id;
         const orderId = req.params.orderId;
+        const { reason } = req.body;
         
-        const order = await Order.findById(orderId)
-          .populate('orderItems.productId');
-  
+        console.log(reason);
+        
+        const order = await Order.findById(orderId).populate('orderItems.productId');
+    
         if (!order) {
-          return res.status(404).json({ 
-            success: false, 
-            message: 'Order not found' 
-          });
-        }
-  
-        // Validate order ownership and status
-        if (order.userId.toString() !== userId) {
-          return res.status(403).json({
+          return res.status(404).json({
             success: false,
-            message: 'Unauthorized to cancel this order'
+            message: 'Order not found',
           });
         }
-  
-        if (order.status !== 'Pending') {
-          return res.status(400).json({
-            success: false,
-            message: 'Only pending orders can be cancelled'
-          });
-        }
-  
-        // Restock inventory
-        for (const orderItem of order.orderItems) {
-          const product = await Product.findById(orderItem.productId);
+    
+        
+                if (order.userId.toString() !== userId) {
+                  return res.status(403).json({
+                    success: false,
+                    message: 'Unauthorized to cancel this order'
+                  });
+                }
           
-          if (!product) {
-            console.error(`Product not found for ID: ${orderItem.productId}`);
-            continue;
-          }
-  
-          // Find the stock entry for the specific size
-          const stockEntry = product.stockManagement.find(
-            stock => stock.size === orderItem.size
-          );
-  
-          if (!stockEntry) {
-            console.error(`Size ${orderItem.size} not found in stock management for product ${product._id}`);
-            continue;
-          }
-  
-          // Update the quantity
-          stockEntry.quantity += orderItem.quantity;
-          await product.save();
-  
-          console.log(`Restocked ${orderItem.quantity} units of size ${orderItem.size} for product ${product._id}`);
-        }
-  
-        // Process refund if payment was made
+                if (order.status !== 'Pending') {
+                  return res.status(400).json({
+                    success: false,
+                    message: 'Only pending orders can be cancelled'
+                  });
+                }
+          
+                for (const orderItem of order.orderItems) {
+                  const product = await Product.findById(orderItem.productId);
+                  
+                  if (!product) {
+                    console.error(`Product not found for ID: ${orderItem.productId}`);
+                    continue;
+                  }
+          
+                  const stockEntry = product.stockManagement.find(
+                    stock => stock.size === orderItem.size
+                  );
+          
+                  if (!stockEntry) {
+                    console.error(`Size ${orderItem.size} not found in stock management for product ${product._id}`);
+                    continue;
+                  }
+          
+                  stockEntry.quantity += orderItem.quantity;
+                  await product.save();
+          
+                  console.log(`Restocked ${orderItem.quantity} units of size ${orderItem.size} for product ${product._id}`);
+                }
+    
         if (order.paymentMethod !== 'cod' && order.paymentStatus === 'Completed') {
-          let walletData = await wallet.findOne({ userId });
-          
-          if (!walletData) {
-            walletData = new wallet({
-              userId: userId,
-              balance: order.totalAmount,
-              transactionHistory: [{
+          try {
+            let walletData = await wallet.findOne({ userId });
+            const transactionRef = `REFUND-${orderId}-${Date.now()}`;
+    
+            if (!walletData) {
+              walletData = new wallet({
+                userId: userId,
+                balance: order.totalAmount,
+                transactionHistory: [{
+                  transactionType: "CREDIT",
+                  transactionAmount: order.totalAmount,
+                  transactionDate: new Date(),
+                  reference: transactionRef,
+                  description: `Refund for cancelled order #${orderId}`
+                }]
+              });
+            } else {
+              walletData.balance += order.totalAmount;
+              walletData.transactionHistory.push({
                 transactionType: "CREDIT",
                 transactionAmount: order.totalAmount,
                 transactionDate: new Date(),
-                description: `Refund for cancelled order #${order.orderId}`
-              }]
-            });
-          } else {
-            walletData.balance += order.totalAmount;
-            walletData.transactionHistory.push({
-              transactionType: "CREDIT",
-              transactionAmount: order.totalAmount,
-              transactionDate: new Date(),
-              description: `Refund for cancelled order #${order.orderId}`
+                reference: transactionRef,
+                description: `Refund for cancelled order #${orderId}`
+              });
+            }
+    
+            await walletData.save();
+          } catch (walletError) {
+            console.error('Wallet update error:', walletError);
+            return res.status(500).json({
+              success: false,
+              message: 'Failed to process refund'
             });
           }
-          await walletData.save();
         }
-  
-        // Update order status
+    
         order.status = 'Cancelled';
+        order.cancelReason=reason;
         if (order.paymentStatus === 'Pending') {
           order.paymentStatus = 'Failed';
         }
-        
+    
         await order.save();
-  
-        res.json({ 
-          success: true, 
-          message: 'Order cancelled successfully and inventory updated' 
+    
+        res.json({
+          success: true,
+          message: 'Order cancelled successfully and inventory updated',
         });
-  
+    
       } catch (error) {
         console.error('Error cancelling order:', error);
-        res.status(500).json({ 
-          success: false, 
-          message: 'Failed to cancel order' 
+        res.status(500).json({
+          success: false,
+          message: 'Failed to cancel order',
         });
       }
-    
     },
 
     async generatePDF(req, res) {
@@ -355,7 +362,6 @@ const orderController = {
             const orderId = req.params.orderId;
             const userId = req.session.user.id;
         
-            // Fetch order with populated data
             const order = await Order.findOne({ _id: orderId, userId })
               .populate('orderItems.productId');
         
@@ -363,20 +369,16 @@ const orderController = {
               return res.status(404).json({ success: false, message: 'Order not found' });
             }
         
-            // Create PDF document
             const doc = new PDFDocument({ margin: 50 });
         
-            // Set response headers
             res.setHeader('Content-Type', 'application/pdf');
             res.setHeader('Content-Disposition', `attachment; filename=order-${orderId}-receipt.pdf`);
             doc.pipe(res);
         
-            // Helper function to draw table lines
             const drawTableLine = (y) => {
               doc.moveTo(50, y).lineTo(550, y).stroke();
             };
         
-            // Helper function to create table row
             const createTableRow = (items, y, isHeader = false) => {
               const columns = {
                 item: { x: 50, width: 180 },
@@ -403,23 +405,19 @@ const orderController = {
               return y + 25;
             };
         
-            // Company Header
             doc.fontSize(24).font('Helvetica-Bold').text('TACTICS', { align: 'center' });
             doc.fontSize(16).text('Order Receipt', { align: 'center' });
             doc.moveDown();
         
-            // Order Information
             doc.fontSize(12).font('Helvetica');
             const orderInfoY = doc.y;
             
-            // Left column
             doc.text('Order Information:', 50, orderInfoY);
             doc.font('Helvetica');
             doc.text(`Order ID: #${orderId}`, 50, orderInfoY + 20);
             doc.text(`Date: ${new Date(order.createdAt).toLocaleDateString()}`, 50, orderInfoY + 40);
             doc.text(`Status: ${order.status}`, 50, orderInfoY + 60);
         
-            // Right column - Shipping Address
             doc.font('Helvetica-Bold');
             doc.text('Shipping Address:', 300, orderInfoY);
             doc.font('Helvetica');
@@ -428,10 +426,8 @@ const orderController = {
             doc.text(`${order.shippingAddress.city}, ${order.shippingAddress.state}`, 300, orderInfoY + 60);
             doc.text(`PIN: ${order.shippingAddress.pinCode}`, 300, orderInfoY + 80);
         
-            // Move to items table
             doc.moveDown(5);
         
-            // Draw table header
             const tableTop = doc.y;
             drawTableLine(tableTop);
             let currentY = createTableRow(
@@ -441,7 +437,6 @@ const orderController = {
             );
             drawTableLine(currentY - 5);
         
-            // Draw table rows
             order.orderItems.forEach((item, index) => {
               currentY = createTableRow([
                 item.productId.name,
@@ -453,7 +448,6 @@ const orderController = {
               drawTableLine(currentY - 5);
             });
         
-            // Calculate totals
             const subtotal = order.orderItems.reduce((sum, item) => 
               sum + (item.productId.offerPrice * item.quantity), 0);
             
@@ -462,15 +456,12 @@ const orderController = {
             else if (subtotal <= 5000) shipping = 150;
             else shipping = 100;
         
-            // Summary section
             doc.moveDown();
             const summaryX = 350;
             const summaryStartY = doc.y;
             
-            // Draw summary box
             doc.rect(summaryX - 10, summaryStartY - 10, 220, 120).stroke();
             
-            // Summary content
             doc.font('Helvetica');
             doc.text('Subtotal:', summaryX, summaryStartY);
             doc.text(`₹${subtotal}`, 450, summaryStartY, { align: 'right' });
@@ -483,7 +474,6 @@ const orderController = {
               doc.text(`-₹${order.discount}`, 450, summaryStartY + 50, { align: 'right' });
             }
         
-            // Total
             doc.font('Helvetica-Bold');
             doc.text('Total:', summaryX, summaryStartY + 75);
             doc.text(
@@ -493,7 +483,6 @@ const orderController = {
               { align: 'right' }
             );
         
-            // Footer
             doc.font('Helvetica')
               .fontSize(10)
               .text('Thank you for shopping with Tactics!', {
@@ -501,7 +490,6 @@ const orderController = {
                 y: doc.page.height - 100
               });
         
-            // Finalize PDF
             doc.end();
         
           } catch (error) {
@@ -512,7 +500,6 @@ const orderController = {
             });
           }
         },
-
         async retryPayment(req, res) {
           try {
             const { orderId } = req.params;
@@ -527,15 +514,13 @@ const orderController = {
               });
             }
         
-            // Use the real amount from the order
-            const amountInPaise = Math.round(12098 * 100); // Convert to paise
+            const amountInPaise = Math.round(order.totalAmount * 100); // Convert to paise
         
             console.log('Amount details:', {
-              originalAmount: 12098,
+              originalAmount: order.totalAmount,
               amountInPaise: amountInPaise
             });
         
-            // Create Razorpay order
             const razorpayOrder = await razorpay.orders.create({
               amount: amountInPaise,
               currency: 'INR',
@@ -543,20 +528,18 @@ const orderController = {
               payment_capture: 1
             });
         
-            // IMPORTANT: Save the amount BEFORE creating payment
-            await Order.findByIdAndUpdate(
+            const updatedOrder = await Order.findByIdAndUpdate(
               orderId,
               {
-                $set: {
-                  razorpayOrderAmount: amountInPaise,
-                  razorpayOrderId: razorpayOrder.id,
-                  originalAmount: 12098 // Save original amount for reference
-                }
+                razorpayOrderId: razorpayOrder.id
               },
-              { new: true } // Get updated document
+              { new: true }
             );
         
-            // Get user details
+            if (!updatedOrder) {
+              throw new Error('Failed to update order with payment details');
+            }
+        
             const user = await User.findById(order.userId);
         
             res.json({
@@ -564,7 +547,7 @@ const orderController = {
               razorpayKeyId: process.env.RAZORPAY_KEY_ID,
               razorpayOrderId: razorpayOrder.id,
               amount: amountInPaise,
-              originalAmount: 12098,
+              originalAmount: order.totalAmount,
               currency: 'INR',
               customerName: user.name,
               customerEmail: user.email,
@@ -580,84 +563,79 @@ const orderController = {
             });
           }
         },
-
-    async verifyPayment (req,res){
-
-      try {
-        const {
-          orderId,
-          razorpay_payment_id,
-          razorpay_order_id,
-          razorpay_signature
-        } = req.body;
-    
-        // Fetch the order
-        const order = await Order.findById(orderId);
-        if (!order) {
-          throw new Error('Order not found');
-        }
-    
-        console.log('Verification amounts:', {
-          savedAmount: order.razorpayOrderAmount,
-          originalAmount: order.originalAmount
-        });
-    
-        // Verify signature
-        const body = razorpay_order_id + '|' + razorpay_payment_id;
-        const expectedSignature = crypto
-          .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-          .update(body.toString())
-          .digest('hex');
-    
-        if (expectedSignature !== razorpay_signature) {
-          throw new Error('Invalid signature');
-        }
-    
-        // Fetch payment details from Razorpay
-        const payment = await razorpay.payments.fetch(razorpay_payment_id);
+        async verifyPayment(req, res) {
+          try {
+            const {
+              orderId,
+              razorpay_payment_id,
+              razorpay_order_id,
+              razorpay_signature
+            } = req.body;
         
-        console.log('Payment verification:', {
-          razorpayAmount: payment.amount,
-          orderAmount: order.razorpayOrderAmount,
-          paymentStatus: payment.status
-        });
-    
-        // Verify the amount (expecting 1209800 paise = ₹12098)
-        const expectedAmount = 1209800;
-        if (payment.amount !== expectedAmount) {
-          throw new Error(`Payment amount mismatch. Expected: ${expectedAmount}, Got: ${payment.amount}`);
-        }
-    
-        // Update order status
-        await Order.findByIdAndUpdate(
-          orderId,
-          {
-            $set: {
-              paymentStatus: 'completed',
-              razorpayPaymentId: razorpay_payment_id,
-              razorpayOrderId: razorpay_order_id,
-              razorpaySignature: razorpay_signature,
-              paidAmount: payment.amount,  // in paise
-              paidAmountINR: payment.amount / 100  // in rupees
+            const order = await Order.findById(orderId).populate('orderItems.productId');
+            if (!order) {
+              throw new Error('Order not found');
             }
+        
+            const amountInPaise = Math.round(order.totalAmount * 100);
+        
+            console.log('Order details:', {
+              totalAmount: order.totalAmount,
+              amountInPaise: amountInPaise
+            });
+        
+            const body = razorpay_order_id + '|' + razorpay_payment_id;
+            const expectedSignature = crypto
+              .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+              .update(body.toString())
+              .digest('hex');
+        
+            if (expectedSignature !== razorpay_signature) {
+              throw new Error('Invalid signature');
+            }
+        
+            const payment = await razorpay.payments.fetch(razorpay_payment_id);
+        
+            console.log('Payment verification details:', {
+              expectedAmount: amountInPaise,
+              paymentAmount: payment.amount,
+              paymentStatus: payment.status
+            });
+        
+            if (payment.amount !== amountInPaise) {
+              throw new Error(
+                `Payment amount mismatch. Expected: ${amountInPaise}, ` +
+                `Got: ${payment.amount}`
+              );
+            }
+        
+            const updatedOrder = await Order.findByIdAndUpdate(
+              orderId,
+              {
+                paymentStatus: 'Completed',
+                razorpayPaymentId: razorpay_payment_id,
+                razorpaySignature: razorpay_signature
+              },
+              { new: true }
+            );
+        
+            if (!updatedOrder) {
+              throw new Error('Failed to update order after payment verification');
+            }
+        
+            res.json({
+              success: true,
+              message: 'Payment verified successfully'
+            });
+        
+          } catch (error) {
+            console.error('Payment verification error:', error);
+            res.status(400).json({
+              success: false,
+              message: error.message || 'Payment verification failed'
+            });
           }
-        );
-    
-        res.json({
-          success: true,
-          message: 'Payment verified successfully'
-        });
-    
-      } catch (error) {
-        console.error('Payment verification error:', error);
-        res.status(400).json({
-          success: false,
-          message: error.message || 'Payment verification failed'
-        });
-      }
-
-
-    },
+        },
       
  
   

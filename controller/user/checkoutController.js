@@ -403,7 +403,7 @@ module.exports = {
                 username: user.name,
                 shippingAddress: {
                     name: user.name,
-                    phone: user.phone,
+                    phone: user.phone||null,
                     house: selectedAddress.house,
                     street: selectedAddress.street,
                     landmark: selectedAddress.landmark || '',
@@ -602,6 +602,7 @@ module.exports = {
 
 
 };
+
 
 const checkStockAvailability = async (items) => {
     const stockErrors = [];

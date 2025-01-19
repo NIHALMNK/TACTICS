@@ -378,7 +378,7 @@
               <button class="btn btn-return">Return Order</button>
               <% } %>
 
-              <% if (order.paymentStatus.toLowerCase() === 'failed') { %>
+              <% if (order.paymentStatus.toLowerCase() === 'failed' && order.paymentMethod === 'razorpay' ) { %>
                 <button class="btn btn-retry">Retry Payment</button>
               <% } %>
 
@@ -603,23 +603,34 @@
       const orderCard = this.closest('.order-card');
       const orderId = orderCard.querySelector('.order-id').textContent.split('#')[1];
 
-      const result = await Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
+      const {
+        value: reason
+      } = await Swal.fire({
+        title: 'Cancel Order',
+        input: 'textarea',
+        inputLabel: 'Reason for Cancel',
+        inputPlaceholder: 'Please provide a reason for returning this order...',
+        inputAttributes: {
+          'aria-label': 'Cancel reason'
+        },
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, cancel it!'
+        inputValidator: (value) => {
+          if (!value) {
+            return 'You need to provide a reason for cancel!'
+          }
+        }
       });
 
-      if (result.isConfirmed) {
+      if (reason) {
         try {
           const response = await fetch(`/order/cancel/${orderId}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({
+              reason
+            })
           });
 
           const data = await response.json();

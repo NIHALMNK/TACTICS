@@ -71,6 +71,10 @@ const orderSchema = new mongoose.Schema({
         type: String,
         default: null
     },
+    cancelReason:{
+        type:String,
+        default:null
+    },
     paymentMethod: {
         type: String,
         enum: ['cod', 'razorpay'],

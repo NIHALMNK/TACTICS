@@ -2,6 +2,7 @@
 
 const Category = require('../../models/categoryModel')
 const Products = require('../../models/productModel')
+const mongoose = require('mongoose');
 
 module.exports = {
 
@@ -335,17 +336,47 @@ async recoverProducts(req, res){
     }
 },
 
-
-async permanentDeleteProducts(req, res){
-    const { id } = req.params;
-    // console.log(id);
-
+async permanentDeleteProducts(req, res) {
     try {
+        const { id } = req.params;
+        
+        if (!id) {
+            return res.status(400).json({
+                success: false,
+                message: 'Product ID is required'
+            });
+        }
+
+       
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid product ID format'
+            });
+        }
+
+        const product = await Products.findById(id);
+        
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: 'Product not found'
+            });
+        }
+
         await Products.findByIdAndDelete(id);
-        return res.json({ success: true });
+
+        return res.status(200).json({
+            success: true,
+            message: 'Product successfully deleted'
+        });
+
     } catch (error) {
         console.error("Error permanently deleting product:", error);
-        res.status(500).send("Internal Server Error");
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error occurred while deleting the product'
+        });
     }
 },
 

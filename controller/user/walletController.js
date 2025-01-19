@@ -5,8 +5,12 @@ module.exports={
     async getWallet (req,res){
 
         try{
+            console.log("enterd to getWallet--->");
+            
 
             const userId=req.session.user.id
+            console.log(userId);
+            
             
             if (!userId) {
                 
