@@ -223,7 +223,6 @@ module.exports = {
             }
 
             const imagePath = req.file.path.split("public")[1];
-            // console.log("Stored Image Path:", imagePath);
 
             const newCategory = new Category({
                 name: categoryName,
@@ -233,7 +232,6 @@ module.exports = {
             });
 
             await newCategory.save();
-            // console.log("New Category Saved:", newCategory);
 
             return res.status(201).json({
                 message: "Category added successfully!",
@@ -316,7 +314,6 @@ module.exports = {
         try {
             const { categoryId, offerPercentage } = req.body;
     
-            // Add validation for offerPercentage
             if (!categoryId || offerPercentage === undefined || 
                 offerPercentage < 0 || offerPercentage > 100) {
                 return res.status(400).json({
@@ -341,13 +338,11 @@ module.exports = {
                 });
             }
     
-            // Use proper variable name casing
             const products = await Products.find({ category: categoryId });
     
             for (const product of products) {
                 const categoryOfferPrice = Math.round(product.price - (product.price * offerPercentage / 100));
                 
-                // Check if product doesn't have an offerPrice or if category offer is better
                 if (!product.offerPrice || product.offerPrice > categoryOfferPrice) {
                     product.prevOfferPrice = product.offerPrice || null;
                     product.offerPrice = categoryOfferPrice;
@@ -397,16 +392,19 @@ module.exports = {
                 });
             }
     
-            // Fix variable naming and logic
             const products = await Products.find({ category: categoryId });
     
             for (const product of products) {
-                // Restore previous offer price if it exists
-                product.offerPrice = product.prevOfferPrice || null;
-                product.prevOfferPrice = null;
+                if (product.prevOfferPrice) {
+                   
+                    product.offerPrice = product.prevOfferPrice;
+                } else {
+                    
+                    product.offerPrice = undefined; 
+                }
+                product.prevOfferPrice = undefined; 
                 await product.save();
             }
-    
             return res.status(200).json({
                 success: true,
                 message: "Offer removed successfully",
