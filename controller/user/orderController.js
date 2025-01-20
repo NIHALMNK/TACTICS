@@ -2,7 +2,7 @@ const Order = require('../../models/orderModel');
 const User = require('../../models/userRegister');
 const Product = require('../../models/productModel');
 const  wallet=require('../../models/walletModel');
-const cart=require('../../models/CartModel')
+const Cart=require('../../models/CartModel')
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const mongoose = require('mongoose');
@@ -49,34 +49,35 @@ const orderController = {
           } else if (totals.subtotal > 5000) {
             shipping = 100;
           }
+   const productDiscount = totals.mrp - totals.subtotal;
+            const couponDiscount = order.couponDiscount || 0;
+            const totalDiscount = productDiscount + couponDiscount;
+            const total = totals.subtotal + shipping - couponDiscount;
   
-          const discount = totals.mrp - totals.subtotal;
-          const total = totals.subtotal + shipping;
-
-          
-  
-          return {
-            orderId: order._id,
-            orderDate: order.createdAt,
-            items: order.orderItems.map(item => ({
-              name: item.productId.name,
-              quantity: item.quantity,
-              size:item.size,
-              price: item.productId.offerPrice,
-              mrp: item.productId.price,
-              total: item.productId.offerPrice * item.quantity,
-              mrpTotal: item.productId.price * item.quantity,
-              discount: (item.productId.price - item.productId.offerPrice) * item.quantity
-            })),
-            mrp: totals.mrp,
-            subtotal: totals.subtotal,
-            shipping: shipping,
-            discount: discount,
-            total: total,
-            status: order.status,
-            shippingAddress: order.shippingAddress,
-            paymentMethod: order.paymentMethod,
-            paymentStatus: order.paymentStatus
+            return {
+              orderId: order._id,
+              orderDate: order.createdAt,
+              items: order.orderItems.map(item => ({
+                  name: item.productId.name,
+                  quantity: item.quantity,
+                  size: item.size,
+                  price: item.productId.offerPrice,
+                  mrp: item.productId.price,
+                  total: item.productId.offerPrice * item.quantity,
+                  mrpTotal: item.productId.price * item.quantity,
+                  discount: (item.productId.price - item.productId.offerPrice) * item.quantity
+              })),
+              mrp: totals.mrp,
+              subtotal: totals.subtotal,
+              shipping: shipping,
+              productDiscount: productDiscount,
+              couponDiscount: couponDiscount,
+              totalDiscount: totalDiscount,
+              total: total,
+              status: order.status,
+              shippingAddress: order.shippingAddress,
+              paymentMethod: order.paymentMethod,
+              paymentStatus: order.paymentStatus
           };
         });
   
@@ -142,7 +143,7 @@ const orderController = {
     
         const discount = totals.mrp - totals.subtotal;
         const total = totals.subtotal + shipping;
-    
+        
         res.json({
           order: {
             id: order._id,
@@ -626,6 +627,26 @@ const orderController = {
                 `Got: ${payment.amount}`
               );
             }
+
+            const cart = await Cart.findOne({ userId: order.userId });
+    
+    if (cart && cart.items.length > 0) {
+      // Get all product IDs and sizes from the order
+      const orderProducts = order.orderItems.map(item => ({
+        productId: item.productId._id.toString(),
+        size: item.size
+      }));
+
+      // Filter out the ordered products from cart
+      cart.items = cart.items.filter(cartItem => {
+        return !orderProducts.some(orderProduct => 
+          orderProduct.productId === cartItem.productId.toString() && 
+          orderProduct.size === cartItem.size
+        );
+      });
+
+      await cart.save();
+    }
         
             const updatedOrder = await Order.findByIdAndUpdate(
               orderId,

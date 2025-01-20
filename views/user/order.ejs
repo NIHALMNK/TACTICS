@@ -552,19 +552,16 @@
         });
       });
 
-      // Handle cancel order buttons
       const cancelButtons = document.querySelectorAll('.btn-cancel');
       cancelButtons.forEach(button => {
         button.addEventListener('click', handleOrderCancellation);
       });
 
-      // Handle return order buttons
       const returnButtons = document.querySelectorAll('.btn-return');
       returnButtons.forEach(button => {
         button.addEventListener('click', handleOrderReturn);
       });
 
-     // Handle PDF receipt buttons
     const pdfButtons = document.querySelectorAll('.btn-pdf');
     pdfButtons.forEach(button => {
       button.addEventListener('click', function() {
@@ -573,14 +570,12 @@
       });
     });
 
-    // Handle retry payment buttons
     const retryButtons = document.querySelectorAll('.btn-retry');
     retryButtons.forEach(button => {
       button.addEventListener('click', handleRetryPayment);
     });
     }
 
-    // Initialize Bootstrap tooltips
     function initializeTooltips() {
       const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
       tooltipTriggerList.map(function(tooltipTriggerEl) {
@@ -588,7 +583,6 @@
       });
     }
 
-    // Initialize Bootstrap modals
     function initializeModals() {
       const orderModals = document.querySelectorAll('.modal');
       orderModals.forEach(modal => {
@@ -598,7 +592,6 @@
       });
     }
 
-    // Handle order cancellation
     async function handleOrderCancellation(event) {
       const orderCard = this.closest('.order-card');
       const orderId = orderCard.querySelector('.order-id').textContent.split('#')[1];
@@ -742,10 +735,8 @@
       }
     }
 
-    // Handle PDF generation
     async function downloadPDF(orderId) {
   try {
-    // Show loading indicator
     Swal.fire({
       title: 'Generating PDF...',
       html: 'Please wait while we generate your receipt',
@@ -755,7 +746,6 @@
       }
     });
 
-    // Make the request to generate PDF
     const response = await fetch(`/order/pdf/${orderId}`, {
       method: 'GET',
       headers: {
@@ -767,25 +757,20 @@
       throw new Error('Failed to generate PDF');
     }
 
-    // Convert response to blob
     const blob = await response.blob();
 
-    // Create download link
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.style.display = 'none';
     a.href = url;
     a.download = `order-${orderId}-receipt.pdf`;
 
-    // Add to document and trigger download
     document.body.appendChild(a);
     a.click();
 
-    // Cleanup
     window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
 
-    // Show success message
     Swal.fire({
       title: 'Success!',
       text: 'Your receipt has been downloaded',
@@ -810,7 +795,6 @@ async function handleRetryPayment(event) {
   const orderId = orderCard.querySelector('.order-id').textContent.split('#')[1];
 
   try {
-    // Show loading indicator
     Swal.fire({
       title: 'Initializing Payment...',
       html: 'Please wait while we prepare your payment',

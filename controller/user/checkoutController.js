@@ -450,11 +450,7 @@ module.exports = {
                 await product.save();
             }
     
-            
-            cart.items = [];
-            await cart.save();
-            delete req.session.appliedCoupon;;
-            
+         
             res.json({
                 success: true,
                 order_id: order.id,
