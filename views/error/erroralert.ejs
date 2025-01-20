@@ -1,131 +1,266 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Page Not Found</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            height: 100vh;
+            background-color: #f8f8f8;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #2d3436;
+            color: #1A1A1A;
+            overflow-x: hidden;
         }
 
-        .error-container {
-            text-align: center;
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
             padding: 2rem;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            width: 90%;
-            animation: fadeIn 0.5s ease-in;
+            position: relative;
+        }
+
+        .content {
+            padding: 4rem;
+            position: relative;
+        }
+
+        .error-tag {
+            font-size: 0.875rem;
+            background: #1A1A1A;
+            color: white;
+            padding: 0.5rem 1rem;
+            display: inline-block;
+            margin-bottom: 2rem;
+            transform: rotate(-2deg);
+            animation: slideInRotate 0.8s ease-out;
         }
 
         .error-code {
-            font-size: 8rem;
-            font-weight: bold;
-            color: #6c5ce7;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 1rem;
+            font-size: 12rem;
+            font-weight: 800;
+            line-height: 0.8;
+            background: linear-gradient(45deg, #1a1a1a, #4a4a4a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: scaleIn 1s ease-out;
             position: relative;
         }
 
         .error-code::after {
-            content: '';
+            content: '404';
             position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background: #6c5ce7;
-            border-radius: 2px;
+            left: 5px;
+            top: 5px;
+            z-index: -1;
+            background: linear-gradient(45deg, #ff3366, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0.3;
         }
 
         .error-message {
             font-size: 1.5rem;
-            color: #2d3436;
-            margin-bottom: 1.5rem;
+            color: #333;
+            margin: 2rem 0;
+            max-width: 400px;
+            animation: fadeIn 1s ease-out 0.5s forwards;
+            opacity: 0;
         }
 
-        .error-description {
-            color: #636e72;
-            margin-bottom: 2rem;
-            line-height: 1.6;
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 3rem;
+            animation: fadeIn 1s ease-out 0.8s forwards;
+            opacity: 0;
         }
 
-        .back-home {
-            display: inline-block;
-            padding: 12px 30px;
-            background: #6c5ce7;
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 500;
+        .btn {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
             transition: all 0.3s ease;
-            border: 2px solid #6c5ce7;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .back-home:hover {
+        .btn-primary {
+            background: #1A1A1A;
+            color: white;
+        }
+
+        .btn-secondary {
             background: transparent;
-            color: #6c5ce7;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+            color: #1A1A1A;
+            border: 2px solid #1A1A1A;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .visual-section {
+            position: relative;
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        .fashion-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            padding: 2rem;
+            animation: fadeScale 1s ease-out;
+        }
+
+        .fashion-item {
+            aspect-ratio: 1;
+            background: #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fashion-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, rgba(0,0,0,0.1), transparent);
+        }
+
+        .fashion-item:nth-child(even) {
+            transform: translateY(2rem);
+        }
+
+        .floating-shapes div {
+            position: absolute;
+            border: 2px solid #1A1A1A;
+            opacity: 0.1;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        .shape1 { width: 50px; height: 50px; top: 20%; right: 10%; border-radius: 50%; }
+        .shape2 { width: 70px; height: 70px; bottom: 20%; left: 10%; transform: rotate(45deg); }
+        .shape3 { width: 40px; height: 40px; top: 50%; right: 20%; border-radius: 50%; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(20px, -20px) rotate(10deg); }
+        }
+
+        @keyframes slideInRotate {
+            from { transform: translateX(-100px) rotate(-10deg); opacity: 0; }
+            to { transform: translateX(0) rotate(-2deg); opacity: 1; }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
             }
-            to {
-                opacity: 1;
+
+            .content {
+                padding: 2rem;
+                text-align: center;
+            }
+
+            .error-code {
+                font-size: 8rem;
+            }
+
+            .buttons {
+                justify-content: center;
+            }
+
+            .visual-section {
+                min-height: 400px;
+            }
+
+            .fashion-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .fashion-item:nth-child(even) {
                 transform: translateY(0);
             }
         }
 
-        @media (max-width: 768px) {
-            .error-code {
-                font-size: 6rem;
-            }
-
-            .error-message {
-                font-size: 1.2rem;
-            }
+        /* Scroll Animation */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
         }
 
-        /* Optional: Add a subtle pattern overlay */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
     </style>
 </head>
 <body>
-    <div class="error-container">
-        <div class="error-code">404</div>
-        <h1 class="error-message">Oops! Page Not Found</h1>
-        <p class="error-description">
-            The page you are looking for might have been removed, had its name changed,
-            or is temporarily unavailable.</p>
+    <div class="container">
+        <div class="content">
+            <div class="error-tag">Page Not Found</div>
+            <h1 class="error-code">404</h1>
+            <p class="error-message">Looks like this page took a fashion break. Let's get you back to the latest trends.</p>
+            <div class="buttons">
+                <button class="btn btn-primary" onclick="window.location.href='/home'">Back to Store</button>
+                <button class="btn btn-secondary" onclick="window.location.href='/shop'">New Arrivals</button>
+            </div>
+        </div>
+        <div class="visual-section">
+            <div class="fashion-grid">
+                <div class="fashion-item"></div>
+                <div class="fashion-item"></div>
+                <div class="fashion-item"></div>
+                <div class="fashion-item"></div>
+            </div>
+            <div class="floating-shapes">
+                <div class="shape1"></div>
+                <div class="shape2"></div>
+                <div class="shape3"></div>
+            </div>
+        </div>
     </div>
-
-    
 </body>
 </html>

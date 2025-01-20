@@ -1,93 +1,357 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Success</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .success-checkmark {
-            animation: scale-up 0.5s ease-in-out;
-        }
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #34568B;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow: hidden;
+    }
 
-        .success-text {
-            animation: fade-in 1s ease-in;
-        }
+    .success-container {
+      text-align: center;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      position: relative;
+    }
 
-        .action-buttons {
-            animation: slide-up 0.7s ease-out;
-        }
+    /* Particle effects */
+    .particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
 
-        @keyframes scale-up {
-            0% { transform: scale(0); }
-            70% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
+    .particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #2ECC71;
+      border-radius: 50%;
+      animation: particleOut 1s ease-out forwards;
+    }
 
-        @keyframes fade-in {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+    @keyframes particleOut {
+      0% {
+        transform: scale(0) translate(0, 0);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1) translate(var(--tx), var(--ty));
+        opacity: 0;
+      }
+    }
 
-        @keyframes slide-up {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+    .success-circle-container {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      animation: containerPop 0.5s cubic-bezier(0.17, 0.67, 0.43, 1.47);
+    }
 
-        .btn-custom {
-            transition: transform 0.3s ease;
-        }
+    .success-circle {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: #2ECC71;
+      border-radius: 50%;
+      box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: circlePulse 2s infinite;
+    }
 
-        .btn-custom:hover {
-            transform: translateY(-3px);
-        }
+    .success-circle::before,
+    .success-circle::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #2ECC71;
+      opacity: 0.4;
+      animation: ripple 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-        @media (max-width: 768px) {
-            .success-container {
-                width: 90% !important;
-                padding: 1.5rem !important;
-            }
-            
-            .success-checkmark {
-                width: 80px !important;
-                height: 80px !important;
-            }
+    .success-circle::after {
+      animation-delay: 0.5s;
+    }
 
-            .btn-custom {
-                width: 100%;
-                margin: 0.5rem 0 !important;
-            }
-        }
-    </style>
+    .checkmark {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      stroke-width: 4;
+      stroke: #fff;
+      stroke-miterlimit: 10;
+      stroke-dasharray: 400;
+      stroke-dashoffset: 400;
+      animation: drawCheck 1s cubic-bezier(0.65, 0, 0.45, 1) 0.3s forwards;
+      transform-origin: center;
+    }
+
+    .success-text {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUpIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.8s forwards;
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      animation: sparkle 1.5s linear infinite;
+      opacity: 0;
+    }
+
+    h1 {
+      color: white;
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.2rem;
+      margin: 1rem 0 0;
+    }
+
+    .order-details {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1.5rem;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      margin: 1rem 0;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUpIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 1s forwards;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .order-details p {
+      margin: 0.5rem 0;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.1rem;
+    }
+
+    .action-buttons {
+      margin-top: 1rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUpIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 1.2s forwards;
+    }
+
+    .btn-custom {
+      display: inline-block;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+      background: #2980b9;
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-custom:hover {
+      background: #3498db;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(41, 128, 185, 0.4);
+    }
+
+    .btn-custom::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300%;
+      height: 300%;
+      background: rgba(255, 255, 255, 0.1);
+      transform: translate(-50%, -50%) scale(0);
+      border-radius: 50%;
+      transition: transform 0.6s;
+    }
+
+    .btn-custom:hover::after {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    @keyframes containerPop {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes circlePulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(1);
+        opacity: 0.4;
+      }
+      100% {
+        transform: scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    @keyframes drawCheck {
+      0% {
+        stroke-dashoffset: 400;
+        transform: scale(0.8);
+      }
+      50% {
+        stroke-dashoffset: 200;
+        transform: scale(1.1);
+      }
+      100% {
+        stroke-dashoffset: 0;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes fadeUpIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes sparkle {
+      0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1) rotate(180deg);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(0) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .success-circle-container {
+        width: 120px;
+        height: 120px;
+      }
+
+      .checkmark {
+        width: 50px;
+        height: 50px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      p {
+        font-size: 1rem;
+      }
+
+      .btn-custom {
+        padding: 0.8rem 1.6rem;
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
-<body class="bg-light">
-    <div class="container min-vh-100 d-flex align-items-center justify-content-center">
-        <div class="success-container bg-white rounded-4 shadow-sm p-5 text-center" style="width: 600px">
-            <div class="success-checkmark mb-4">
-                <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="45" stroke="#28a745" stroke-width="8"/>
-                    <path d="M30 50L45 65L70 35" stroke="#28a745" stroke-width="8" stroke-linecap="round"/>
-                </svg>
-            </div>
-            
-            <div class="success-text">
-                <h2 class="mb-3">Payment Successful!</h2>
-                <p class="text-muted mb-4">Your transaction has been completed successfully. Thank you for your payment.</p>
-                
-                <div class="order-details mb-4">
-                    <p class="mb-1">Order ID: <%= orderId %></p>
-                    <p class="mb-1">Amount Paid: $<%= amount %></p>
-                </div>
-            </div>
-
-            <div class="action-buttons d-flex flex-wrap justify-content-center gap-3">
-                <a href="/home" class="btn btn-primary btn-lg btn-custom px-4">
-                    Back to Home
-                </a>
-            </div>
-        </div>
+<body>
+  <div class="success-container">
+    <div class="particles" id="particles"></div>
+    <div class="success-circle-container">
+      <div class="success-circle">
+        <svg class="checkmark" viewBox="0 0 52 52">
+          <path fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+        </svg>
+      </div>
     </div>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="success-text">
+      <h1>Good Job!</h1>
+      <p>Your task has been completed successfully</p>
+    </div>
+    
+    <div class="order-details">
+      <p>Order ID: <%= orderId %></p>
+      <p>Amount Paid:₹<%= amount %></p>
+    </div>
+
+    <div class="action-buttons">
+      <a href="/home" class="btn-custom">
+        Back to Home
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Create particle effect
+    function createParticles() {
+      const container = document.getElementById('particles');
+      const particleCount = 20;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        // Random position and movement
+        const angle = (Math.random() * 360) * (Math.PI / 180);
+        const velocity = 50 + Math.random() * 100;
+        const tx = Math.cos(angle) * velocity;
+        const ty = Math.sin(angle) * velocity;
+        
+        particle.style.setProperty('--tx', `${tx}px`);
+        particle.style.setProperty('--ty', `${ty}px`);
+        
+        // Random starting position around the circle
+        const startAngle = (Math.random() * 360) * (Math.PI / 180);
+        const radius = 75;
+        const startX = Math.cos(startAngle) * radius;
+        const startY = Math.sin(startAngle) * radius;
+        
+        particle.style.left = `calc(50% + ${startX}px)`;
+        particle.style.top = `calc(50% + ${startY}px)`;
+        
+        container.appendChild(particle);
+        
+        // Remove particle after animation
+        particle.addEventListener('animationend', () => {
+          particle.remove();
+        });
+      }
+    }
+
+    // Initial particle burst
+    setTimeout(createParticles, 300);
+  </script>
 </body>
 </html>
