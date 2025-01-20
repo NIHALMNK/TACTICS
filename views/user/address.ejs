@@ -236,30 +236,94 @@
 
       // Define validateForm function
       function validateForm() {
-       
-        
+  const validations = [
+    {
+      field: 'houseInput',
+      label: 'House',
+      // Allows letters, numbers, spaces, #, -, /, and common punctuation
+      pattern: /^[a-zA-Z0-9\s#\/\-,\.]{2,50}$/,
+      error: 'House number should contain only letters, numbers, spaces, and common symbols (#-/,.) between 2-50 characters'
+    },
+    {
+      field: 'streetInput',
+      label: 'Street',
+      // Allows letters, numbers, spaces, and common street suffixes
+      pattern: /^[a-zA-Z0-9\s\-,\.]{3,50}$/,
+      error: 'Street should contain only letters, numbers, spaces, and basic punctuation between 3-50 characters'
+    },
+    {
+      field: 'landmarkInput',
+      label: 'Landmark',
+      // Allows letters, numbers, spaces, and basic punctuation
+      pattern: /^[a-zA-Z0-9\s\-,\.]{3,100}$/,
+      error: 'Landmark should contain only letters, numbers, spaces, and basic punctuation between 3-100 characters'
+    },
+    {
+      field: 'cityInput',
+      label: 'City',
+      // Allows only letters and spaces
+      pattern: /^[a-zA-Z\s]{2,50}$/,
+      error: 'City should contain only letters and spaces between 2-50 characters'
+    },
+    {
+      field: 'districtInput',
+      label: 'District',
+      // Allows only letters and spaces
+      pattern: /^[a-zA-Z\s]{2,50}$/,
+      error: 'District should contain only letters and spaces between 2-50 characters'
+    },
+    {
+      field: 'stateInput',
+      label: 'State',
+      // Allows only letters and spaces
+      pattern: /^[a-zA-Z\s]{2,50}$/,
+      error: 'State should contain only letters and spaces between 2-50 characters'
+    },
+    {
+      field: 'countryInput',
+      label: 'Country',
+      // Allows only letters and spaces
+      pattern: /^[a-zA-Z\s]{2,50}$/,
+      error: 'Country should contain only letters and spaces between 2-50 characters'
+    },
+    {
+      field: 'pinCodeInput',
+      label: 'PIN Code',
+      // Allows 6 digits (India PIN code format) or international format up to 10 digits
+      pattern: /^[0-9]{6,10}$/,
+      error: 'PIN Code should contain 6-10 digits only'
+    }
+  ];
 
-        const requiredFields = [
-          'houseInput', 'streetInput', 'landmarkInput', 'cityInput',
-          'districtInput', 'stateInput', 'countryInput', 'pinCodeInput'
-        ];
+  for (const validation of validations) {
+    const input = document.getElementById(validation.field);
+    const value = input.value.trim();
 
-        for (let fieldId of requiredFields) {
-          const input = document.getElementById(fieldId);
-          if (!input.value.trim()) {
-            Swal.fire({
-              icon: 'error',
-              title: `Please fill in the<b> ${input.name} </b>field`,
-              text: 'fields are empty'
-            });
-            input.focus();
-            return false;
-          }
-        }
+    // Check if field is empty
+    if (!value) {
+      Swal.fire({
+        icon: 'error',
+        title: `${validation.label} is required`,
+        text: 'Please fill in all required fields'
+      });
+      input.focus();
+      return false;
+    }
 
-        return true;
-      }
+    // Check if value matches the pattern
+    if (!validation.pattern.test(value)) {
+      Swal.fire({
+        icon: 'error',
+        title: `Invalid ${validation.label}`,
+        text: validation.error
+      });
+      input.focus();
+      return false;
+    }
+  }
 
+  return true;
+}
 
 //=================================================>
 

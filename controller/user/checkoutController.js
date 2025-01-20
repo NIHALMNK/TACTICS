@@ -13,6 +13,7 @@ module.exports = {
             console.log("--->>>loadCheckout");
             const userId = req.session.user.id;
 
+
             const userData = await User.findById(userId);
             if (!userData) {
                 return res.status(404).redirect('/login');
@@ -26,9 +27,10 @@ module.exports = {
                 });
 
             if (!cart || !cart.items.length) {
-                return res.redirect('/cart');
+                return res.status(404).redirect('/cart');
             }
 
+           
             const validItems = cart.items.filter(item => item.productId != null);
 
             const totals = validItems.reduce((acc, item) => {

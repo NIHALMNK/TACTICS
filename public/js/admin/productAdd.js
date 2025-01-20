@@ -160,8 +160,13 @@
     hasError = true;
   }
 
+  // Enhanced validation for productName
   if (!productName) {
     showError("productName", "Product name is required.");
+  } else if (productName.length < 3) {
+    showError("productName", "Product name must be at least 3 characters long.");
+  } else if (!/^[a-zA-Z0-9\s]+$/.test(productName)) {
+    showError("productName", "Product name can only contain alphanumeric characters and spaces.");
   }
 
   if (isNaN(productPrice) || productPrice <= 0) {
@@ -169,8 +174,6 @@
   }
 
   if (offerPrice !== null && (isNaN(offerPrice) || offerPrice < 1 || offerPrice >= productPrice )) {
-    // console.log("THIS IS MY OFFER PRICE-->");
-    
     showError("offerPrice", "Offer price must be greater than zero and less than the original price.");
   }
 
@@ -259,3 +262,4 @@
     }
   });
 });
+

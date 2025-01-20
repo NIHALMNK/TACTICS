@@ -1,108 +1,139 @@
 document.getElementById("productForm").addEventListener("submit", async function (event) {
-  event.preventDefault();
-
-  const errorMessages = document.querySelectorAll(".error-message");
-  errorMessages.forEach((msg) => msg.remove());
-
-  const productId = document.getElementById("productId").value;
-  const formData = new FormData();
+    event.preventDefault();
   
-  formData.append("productName", document.getElementById("productName").value);
-  formData.append("productPrice", document.getElementById("productPrice").value);
-  formData.append("productOfferPrice", document.getElementById("offerPrice").value || document.getElementById("productPrice").value);
-  formData.append("productDescription", document.getElementById("productDescription").value);
-  formData.append("productTags", document.getElementById("productTags").value);
-  formData.append("productBrand", document.getElementById("productBrand").value);
-  formData.append("productWarranty", document.getElementById("productWarranty").value);
-  formData.append("productReturnPolicy", document.getElementById("productReturnPolicy").value);
-  formData.append("productCategory", document.getElementById("productCategory").value);
-  formData.append("productType", document.getElementById("productType").value);
-  formData.append("productStockManagement", document.getElementById("productStockManagement").value);
-
-  let hasError = false;
-
-  function showError(inputId, message) {
-      const inputElement = document.getElementById(inputId);
-      if (!inputElement) {
-          console.error(`Element with id "${inputId}" not found.`);
-          return;
-      }
-      const error = document.createElement("p");
-      error.classList.add("text-danger", "error-message");
-      error.textContent = message;
-      inputElement.parentElement.appendChild(error);
-      hasError = true;
-  }
-
-  if (!productId) {
-      console.error("Missing product ID. This field is required for updates.");
-      hasError = true;
-  }
-console.log("-------------------------------------------->");
-
-  console.log(document.getElementById("productCategory").value);
+    const errorMessages = document.querySelectorAll(".error-message");
+    errorMessages.forEach((msg) => msg.remove());
   
-
-  if (!document.getElementById("productName").value) {
-      showError("productName", "Product name is required.");
-  }
-
-  const price = parseFloat(document.getElementById("productPrice").value);
-  if (isNaN(price) || price <= 0) {
-      showError("productPrice", "Please enter a valid price greater than zero.");
-  }
-
-  const offerPrice = parseFloat(document.getElementById("offerPrice").value);
-  if (!isNaN(offerPrice) && offerPrice >= price) {
-      showError("offerPrice", "Offer price must be less than the original price.");
-  }
-
-  if (!document.getElementById("productDescription").value) {
-      showError("productDescription", "Product description is required.");
-  }
-
-
-
-  if (hasError) {
-      Swal.fire("Error", "Please fix the highlighted errors.", "error");
-      return;
-  }
-
-  const fileInputs = document.querySelectorAll('input[type="file"][name="productImages[]"]');
-  fileInputs.forEach((input, index) => {
-      if (input.files[0]) {
-          formData.append('productImages[]', input.files[0]);
-      }
+    const productId = document.getElementById("productId").value;
+    const formData = new FormData();
+  
+    formData.append("productName", document.getElementById("productName").value);
+    formData.append("productPrice", document.getElementById("productPrice").value);
+    formData.append("productOfferPrice", document.getElementById("offerPrice").value || document.getElementById("productPrice").value);
+    formData.append("productDescription", document.getElementById("productDescription").value);
+    formData.append("productTags", document.getElementById("productTags").value);
+    formData.append("productBrand", document.getElementById("productBrand").value);
+    formData.append("productWarranty", document.getElementById("productWarranty").value);
+    formData.append("productReturnPolicy", document.getElementById("productReturnPolicy").value);
+    formData.append("productCategory", document.getElementById("productCategory").value);
+    formData.append("productType", document.getElementById("productType").value);
+    formData.append("productStockManagement", document.getElementById("productStockManagement").value);
+  
+    let hasError = false;
+  
+    function showError(inputId, message) {
+        const inputElement = document.getElementById(inputId);
+        if (!inputElement) {
+            console.error(`Element with id "${inputId}" not found.`);
+            return;
+        }
+        const error = document.createElement("p");
+        error.classList.add("text-danger", "error-message");
+        error.textContent = message;
+        inputElement.parentElement.appendChild(error);
+        hasError = true;
+    }
+  
+    if (!productId) {
+        console.error("Missing product ID. This field is required for updates.");
+        hasError = true;
+    }
+    console.log("-------------------------------------------->");
+  
+    console.log(document.getElementById("productCategory").value);
+  
+    const productName = document.getElementById("productName").value.trim();
+    if (!productName) {
+        showError("productName", "Product name is required.");
+    } else if (productName.length < 3) {
+        showError("productName", "Product name must be at least 3 characters long.");
+    } else if (!/^[a-zA-Z0-9\s]+$/.test(productName)) {
+        showError("productName", "Product name can only contain alphanumeric characters and spaces.");
+    }
+  
+    const price = parseFloat(document.getElementById("productPrice").value);
+    if (isNaN(price) || price <= 0) {
+        showError("productPrice", "Please enter a valid price greater than zero.");
+    }
+  
+    const offerPrice = parseFloat(document.getElementById("offerPrice").value);
+    if (!isNaN(offerPrice) && offerPrice >= price) {
+        showError("offerPrice", "Offer price must be less than the original price.");
+    }
+  
+    if (!document.getElementById("productDescription").value.trim()) {
+        showError("productDescription", "Product description is required.");
+    }
+  
+    if (!document.getElementById("productTags").value.trim()) {
+        showError("productTags", "Product tags are required.");
+    }
+  
+    if (!document.getElementById("productBrand").value.trim()) {
+        showError("productBrand", "Product brand is required.");
+    }
+  
+    if (!document.getElementById("productWarranty").value.trim()) {
+        showError("productWarranty", "Product warranty is required.");
+    }
+  
+    if (!document.getElementById("productReturnPolicy").value.trim()) {
+        showError("productReturnPolicy", "Product return policy is required.");
+    }
+  
+    if (!document.getElementById("productCategory").value.trim()) {
+        showError("productCategory", "Product category is required.");
+    }
+  
+    if (!document.getElementById("productType").value.trim()) {
+        showError("productType", "Product type is required.");
+    }
+  
+    if (!document.getElementById("productStockManagement").value.trim()) {
+        showError("productStockManagement", "Product stock management is required.");
+    }
+  
+    if (hasError) {
+        Swal.fire("Error", "Please fix the highlighted errors.", "error");
+        return;
+    }
+  
+    const fileInputs = document.querySelectorAll('input[type="file"][name="productImages[]"]');
+    fileInputs.forEach((input, index) => {
+        if (input.files[0]) {
+            formData.append('productImages[]', input.files[0]);
+        }
+    });
+  
+    try {
+        const response = await fetch(`/admin/productManagement/update/${productId}`, {
+            method: 'PUT',
+            body: formData
+        });
+  
+        const result = await response.json();
+  
+        if (result.success) {
+            Swal.fire({
+                title: "Success",
+                text: "Product updated successfully",
+                icon: "success"
+            }).then(() => {
+                window.location.href = '/admin/productManagement';
+            });
+        } else {
+            throw new Error(result.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        Swal.fire({
+            title: 'Error!',
+            text: error.message || 'An error occurred while updating the product',
+            icon: 'error'
+        });
+    }
   });
-
-  try {
-      const response = await fetch(`/admin/productManagement/update/${productId}`, {
-          method: 'PUT',
-          body: formData
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-          Swal.fire({
-              title: "Success",
-              text: "Product updated successfully",
-              icon: "success"
-          }).then(() => {
-              window.location.href = '/admin/productManagement';
-          });
-      } else {
-          throw new Error(result.message);
-      }
-  } catch (error) {
-      console.error('Error:', error);
-      Swal.fire({
-          title: 'Error!',
-          text: error.message || 'An error occurred while updating the product',
-          icon: 'error'
-      });
-  }
-});
+  
 
 let cropper = null;
 let currentInput = null;

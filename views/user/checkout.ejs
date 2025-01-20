@@ -356,39 +356,47 @@
           <button type="button" class="btn-close" onclick="cancelButton()" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form id="addressForm">
+          <form id="addressForm" novalidate>
             <input type="hidden" id="addressId" name="id">
             <div class="mb-3">
               <label for="houseInput" class="form-label">House</label>
-              <input type="text" class="form-control" id="houseInput" name="house" required autocomplete="street-address" aria-describedby="houseHelp">
+              <input type="text" class="form-control" id="houseInput" name="house" required autocomplete="street-address">
+              <p id="houseError" class="text-danger small mt-1" style="display: none;"></p>
             </div>
             <div class="mb-3">
               <label for="streetInput" class="form-label">Street</label>
-              <input type="text" class="form-control" id="streetInput" name="street" required autocomplete="street-address" aria-describedby="streetHelp">
+              <input type="text" class="form-control" id="streetInput" name="street" required autocomplete="street-address">
+              <p id="streetError" class="text-danger small mt-1" style="display: none;"></p>
             </div>
             <div class="mb-3">
               <label for="landmarkInput" class="form-label">Landmark</label>
-              <input type="text" class="form-control" id="landmarkInput" name="landmark" required autocomplete="address-line2" aria-describedby="landmarkHelp">
+              <input type="text" class="form-control" id="landmarkInput" name="landmark" required autocomplete="address-line2">
+              <p id="landmarkError" class="text-danger small mt-1" style="display: none;"></p>
             </div>
             <div class="mb-3">
               <label for="cityInput" class="form-label">City</label>
-              <input type="text" class="form-control" id="cityInput" name="city" required autocomplete="address-level2" aria-describedby="cityHelp">
+              <input type="text" class="form-control" id="cityInput" name="city" required autocomplete="address-level2">
+              <p id="cityError" class="text-danger small mt-1" style="display: none;"></p>
             </div>
             <div class="mb-3">
               <label for="districtInput" class="form-label">District</label>
-              <input type="text" class="form-control" id="districtInput" name="district" required autocomplete="address-level2" aria-describedby="districtHelp">
+              <input type="text" class="form-control" id="districtInput" name="district" required autocomplete="address-level2">
+              <p id="districtError" class="text-danger small mt-1" style="display: none;"></p>
             </div>
             <div class="mb-3">
               <label for="stateInput" class="form-label">State</label>
-              <input type="text" class="form-control" id="stateInput" name="state" required autocomplete="address-level1" aria-describedby="stateHelp">
+              <input type="text" class="form-control" id="stateInput" name="state" required autocomplete="address-level1">
+              <p id="stateError" class="text-danger small mt-1" style="display: none;"></p>
             </div>
             <div class="mb-3">
               <label for="countryInput" class="form-label">Country</label>
-              <input type="text" class="form-control" id="countryInput" name="country" required autocomplete="country" aria-describedby="countryHelp">
+              <input type="text" class="form-control" id="countryInput" name="country" required autocomplete="country">
+              <p id="countryError" class="text-danger small mt-1" style="display: none;"></p>
             </div>
             <div class="mb-3">
               <label for="pinCodeInput" class="form-label">PIN Code</label>
-              <input type="text" class="form-control" id="pinCodeInput" name="pinCode" required autocomplete="postal-code" aria-describedby="pinCodeHelp">
+              <input type="text" class="form-control" id="pinCodeInput" name="pinCode" required autocomplete="postal-code">
+              <p id="pinCodeError" class="text-danger small mt-1" style="display: none;"></p>
             </div>
           </form>
         </div>
@@ -469,153 +477,281 @@
   </script>
 
   <script>
-    async function saveAddress() {
-      if (!validateForm()) return;
+   const ADDRESS_PATTERNS = {
+  house: {
+    pattern: /^[\p{L}0-9\s#\/\-,\.'"\(\)]{2,100}$/u,
+    message: 'House/Flat number must be 2-100 characters and can contain letters, numbers, spaces, and special characters (#/-,.\'"())'
+  },
+  street: {
+    pattern: /^[\p{L}0-9\s\-,'\.]{3,100}$/u,
+    message: 'Street must be 3-100 characters and can contain letters, numbers, spaces, and basic punctuation'
+  },
+  landmark: {
+    pattern: /^[\p{L}0-9\s\-,\.'"\(\)&]{3,150}$/u,
+    message: 'Landmark must be 3-150 characters and can contain letters, numbers, spaces, and special characters'
+  },
+  city: {
+    pattern: /^[\p{L}\s\-'\.]{2,50}$/u,
+    message: 'City must be 2-50 characters and can only contain letters, spaces, hyphens, and apostrophes'
+  },
+  district: {
+    pattern: /^[\p{L}\s\-'\.]{2,50}$/u,
+    message: 'District must be 2-50 characters and can only contain letters, spaces, hyphens, and apostrophes'
+  },
+  state: {
+    pattern: /^[\p{L}\s\-'\.]{2,50}$/u,
+    message: 'State must be 2-50 characters and can only contain letters, spaces, hyphens, and apostrophes'
+  },
+  country: {
+    pattern: /^[\p{L}\s\-'\.]{2,50}$/u,
+    message: 'Country must be 2-50 characters and can only contain letters, spaces, hyphens, and apostrophes'
+  },
+  pinCode: {
+    pattern: /^[A-Z0-9\s\-]{4,6}$/i,
+    message: 'PIN/Postal code must be 4-6 characters and can contain letters, numbers, spaces, and hyphens'
+  }
+};
 
-      const formData = new FormData(addressForm);
-      const addressData = Object.fromEntries(formData.entries());
-      const addressId = addressData.id;
+// Initialize event listeners when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  initializeFormValidation();
+  initializeEditButtons();
+});
 
-      const url = addressId ? `/address/${addressId}` : '/address/create';
-      const method = addressId ? 'PUT' : 'POST';
-
-      const payload = {
-        house: addressData.house,
-        street: addressData.street,
-        landmark: addressData.landmark,
-        city: addressData.city,
-        district: addressData.district,
-        state: addressData.state,
-        country: addressData.country,
-        pinCode: addressData.pinCode
-      };
-
-      try {
-        const response = await fetch(url, {
-          method: method,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) throw new Error('Network response was not ok');
-        const data = await response.json();
-
-        await Swal.fire({
-          icon: 'success',
-          title: data.message,
-          text: 'Address saved successfully!'
-        });
-
-        location.reload();
-      } catch (error) {
-        console.error('Error:', error);
-        await Swal.fire({
-          icon: 'error',
-          title: 'Error!',
-          text: 'An error occurred while saving the address',
-        });
-      }
-    }
-
-    function validateForm() {
-      const requiredFields = [
-        'houseInput', 'streetInput', 'landmarkInput', 'cityInput',
-        'districtInput', 'stateInput', 'countryInput', 'pinCodeInput'
-      ];
-
-      for (let fieldId of requiredFields) {
-        const input = document.getElementById(fieldId);
-        if (!input.value.trim()) {
-          Swal.fire({
-            icon: 'error',
-            title: `Please fill in the ${input.name} field`,
-            text: 'All fields are required'
-          });
-          input.focus();
-          return false;
-        }
-      }
-      return true;
-    }
-
-    function prepareModal(mode, addressData = null) {
-      const modalTitle = document.getElementById('modalTitle');
-      const saveButton = document.getElementById('saveButton');
-
-      if (mode === 'create') {
-        modalTitle.textContent = 'Create New Address';
-        saveButton.textContent = 'Create Address';
-        document.getElementById('addressForm').reset();
-      } else if (mode === 'edit' && addressData) {
-        modalTitle.textContent = 'Update Address';
-        saveButton.textContent = 'Update Address';
-        populateForm(typeof addressData === 'string' ? JSON.parse(addressData) : addressData);
-      }
-    }
-
-    function populateForm(addressData) {
-      document.getElementById('addressId').value = addressData._id || '';
-      document.getElementById('houseInput').value = addressData.house || '';
-      document.getElementById('streetInput').value = addressData.street || '';
-      document.getElementById('landmarkInput').value = addressData.landmark || '';
-      document.getElementById('cityInput').value = addressData.city || '';
-      document.getElementById('districtInput').value = addressData.district || '';
-      document.getElementById('stateInput').value = addressData.state || '';
-      document.getElementById('countryInput').value = addressData.country || '';
-      document.getElementById('pinCodeInput').value = addressData.pinCode || '';
-    }
-
-    async function removeAddress(addressId) {
-      const result = await Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you want to remove this address?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, remove it!',
-        cancelButtonText: 'Cancel'
-      });
-
-      if (result.isConfirmed) {
-        try {
-          const response = await fetch(`/address/${addressId}`, {
-            method: 'DELETE'
-          });
-
-          if (!response.ok) throw new Error('Network response was not ok');
-          const data = await response.json();
-
-          await Swal.fire({
-            icon: 'success',
-            title: 'Deleted!',
-            text: data.message
-          });
-
-          location.reload();
-        } catch (error) {
-          console.error('Error:', error);
-          await Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'An error occurred while removing the address.'
-          });
-        }
-      }
-    }
-
-    function cancelButton() {
-      document.getElementById('addressForm').reset();
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      document.querySelectorAll('.btn-edit-address').forEach(button => {
-        button.addEventListener('click', function() {
-          const addressData = this.getAttribute('data-address');
-          prepareModal('edit', addressData);
-        });
-      });
+function initializeFormValidation() {
+  const form = document.getElementById('addressForm');
+  const inputs = form.querySelectorAll('input[required]');
+  
+  inputs.forEach(input => {
+    // Add real-time validation
+    input.addEventListener('input', function() {
+      validateSingleField(this);
     });
+
+    // Validate on blur
+    input.addEventListener('blur', function() {
+      validateSingleField(this);
+    });
+  });
+}
+
+function initializeEditButtons() {
+  document.querySelectorAll('.btn-edit-address').forEach(button => {
+    button.addEventListener('click', function() {
+      const addressData = this.getAttribute('data-address');
+      prepareModal('edit', addressData);
+    });
+  });
+}
+
+function validateSingleField(input) {
+  const fieldName = input.name;
+  const errorElement = document.getElementById(`${fieldName}Error`);
+  const value = input.value.trim();
+  
+  // Reset previous validation state
+  errorElement.style.display = 'none';
+  input.classList.remove('is-invalid', 'is-valid');
+  
+  // Check if empty
+  if (!value) {
+    showError(input, errorElement, `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`);
+    return false;
+  }
+  
+  // Check pattern
+  const validation = validateField(value, fieldName);
+  if (!validation.isValid) {
+    showError(input, errorElement, validation.message);
+    return false;
+  }
+  
+  // Valid input
+  input.classList.add('is-valid');
+  return true;
+}
+
+function showError(input, errorElement, message) {
+  input.classList.add('is-invalid');
+  errorElement.textContent = message;
+  errorElement.style.display = 'block';
+}
+
+function validateField(value, fieldType) {
+  const field = ADDRESS_PATTERNS[fieldType];
+  if (!field) return { isValid: true };
+  return {
+    isValid: field.pattern.test(value.trim()),
+    message: field.message
+  };
+}
+
+function validateForm() {
+  const form = document.getElementById('addressForm');
+  const inputs = form.querySelectorAll('input[required]');
+  let isValid = true;
+
+  // Reset all fields first
+  inputs.forEach(input => {
+    const errorElement = document.getElementById(`${input.name}Error`);
+    errorElement.style.display = 'none';
+    input.classList.remove('is-invalid', 'is-valid');
+  });
+
+  // Validate each field
+  inputs.forEach(input => {
+    if (!validateSingleField(input)) {
+      isValid = false;
+    }
+  });
+
+  if (!isValid) {
+    // Focus the first invalid input
+    const firstInvalid = form.querySelector('.is-invalid');
+    if (firstInvalid) {
+      firstInvalid.focus();
+    }
+  }
+
+  return isValid;
+}
+
+async function saveAddress() {
+  if (!validateForm()) return;
+
+  const formData = new FormData(document.getElementById('addressForm'));
+  const addressData = Object.fromEntries(formData.entries());
+  const addressId = addressData.id;
+
+  const url = addressId ? `/address/${addressId}` : '/address/create';
+  const method = addressId ? 'PUT' : 'POST';
+
+  const payload = {
+    house: addressData.house,
+    street: addressData.street,
+    landmark: addressData.landmark,
+    city: addressData.city,
+    district: addressData.district,
+    state: addressData.state,
+    country: addressData.country,
+    pinCode: addressData.pinCode
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) throw new Error('Network response was not ok');
+    const data = await response.json();
+
+    await Swal.fire({
+      icon: 'success',
+      title: data.message,
+      text: 'Address saved successfully!'
+    });
+
+    location.reload();
+  } catch (error) {
+    console.error('Error:', error);
+    await Swal.fire({
+      icon: 'error',
+      title: 'Error!',
+      text: 'An error occurred while saving the address',
+    });
+  }
+}
+
+function prepareModal(mode, addressData = null) {
+  const modalTitle = document.getElementById('modalTitle');
+  const saveButton = document.getElementById('saveButton');
+
+  
+  cancelButton();
+
+  if (mode === 'create') {
+    modalTitle.textContent = 'Create New Address';
+    saveButton.textContent = 'Create Address';
+  } else if (mode === 'edit' && addressData) {
+    modalTitle.textContent = 'Update Address';
+    saveButton.textContent = 'Update Address';
+    populateForm(typeof addressData === 'string' ? JSON.parse(addressData) : addressData);
+  }
+}
+
+function populateForm(addressData) {
+  document.getElementById('addressId').value = addressData._id || '';
+  document.getElementById('houseInput').value = addressData.house || '';
+  document.getElementById('streetInput').value = addressData.street || '';
+  document.getElementById('landmarkInput').value = addressData.landmark || '';
+  document.getElementById('cityInput').value = addressData.city || '';
+  document.getElementById('districtInput').value = addressData.district || '';
+  document.getElementById('stateInput').value = addressData.state || '';
+  document.getElementById('countryInput').value = addressData.country || '';
+  document.getElementById('pinCodeInput').value = addressData.pinCode || '';
+  
+  // Validate populated fields
+  const form = document.getElementById('addressForm');
+  form.querySelectorAll('input[required]').forEach(input => {
+    validateSingleField(input);
+  });
+}
+
+async function removeAddress(addressId) {
+  const result = await Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to remove this address?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, remove it!',
+    cancelButtonText: 'Cancel'
+  });
+
+  if (result.isConfirmed) {
+    try {
+      const response = await fetch(`/address/${addressId}`, {
+        method: 'DELETE'
+      });
+
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+
+      await Swal.fire({
+        icon: 'success',
+        title: 'Deleted!',
+        text: data.message
+      });
+
+      location.reload();
+    } catch (error) {
+      console.error('Error:', error);
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'An error occurred while removing the address.'
+      });
+    }
+  }
+}
+
+function cancelButton() {
+  const form = document.getElementById('addressForm');
+  form.reset();
+  
+  // Clear all validation states
+  const inputs = form.querySelectorAll('input');
+  inputs.forEach(input => {
+    input.classList.remove('is-invalid', 'is-valid');
+    const errorElement = document.getElementById(`${input.name}Error`);
+    if (errorElement) {
+      errorElement.style.display = 'none';
+    }
+  });
+}
   </script>
 
   <script>
