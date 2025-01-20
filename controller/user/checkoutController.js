@@ -432,9 +432,27 @@ module.exports = {
                 paymentStatus: 'Failed',
                 razorpayOrderId: order.id,
             };
-
+            
             await orderModel.create(orderData);
 
+            // Update product stock
+            for (let item of validItems) {
+                const product = await productModel.findById(item.productId._id);
+                const sizeStock = product.stockManagement.find(stock => stock.size === item.size);
+    
+                if (!sizeStock || sizeStock.quantity < item.quantity) {
+                    throw new Error(`Insufficient stock for ${product.name} (Size: ${item.size})`);
+                }
+    
+                sizeStock.quantity -= item.quantity;
+                await product.save();
+            }
+    
+            
+            cart.items = [];
+            await cart.save();
+            delete req.session.appliedCoupon;;
+            
             res.json({
                 success: true,
                 order_id: order.id,
@@ -461,6 +479,7 @@ module.exports = {
                 addressid
             } = req.body;
     
+
            
             const sign = razorpay_order_id + "|" + razorpay_payment_id;
             const expectedSign = crypto

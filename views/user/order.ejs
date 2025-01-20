@@ -378,7 +378,7 @@
               <button class="btn btn-return">Return Order</button>
               <% } %>
 
-              <% if (order.paymentStatus.toLowerCase() === 'failed' && order.paymentMethod === 'razorpay' ) { %>
+              <% if (order.paymentStatus.toLowerCase() === 'failed' && order.paymentMethod === 'razorpay' && order.status!='Cancelled'  ){ %>
                 <button class="btn btn-retry">Retry Payment</button>
               <% } %>
 

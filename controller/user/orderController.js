@@ -2,6 +2,7 @@ const Order = require('../../models/orderModel');
 const User = require('../../models/userRegister');
 const Product = require('../../models/productModel');
 const  wallet=require('../../models/walletModel');
+const cart=require('../../models/CartModel')
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const mongoose = require('mongoose');
@@ -553,7 +554,10 @@ const orderController = {
             }
         
             const user = await User.findById(order.userId);
-        
+            
+            // cart.items = [];
+            // await cart.save();
+
             res.json({
               success: true,
               razorpayKeyId: process.env.RAZORPAY_KEY_ID,

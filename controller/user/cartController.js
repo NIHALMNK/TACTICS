@@ -175,16 +175,25 @@ module.exports = {
             const cartItemIndex = cart.items.findIndex(item => item.productId.toString() === productId && item.size === size);
 
             if (cartItemIndex >= 0) {
-
-                cart.items[cartItemIndex].quantity += quantity;
+                const newQuantity = cart.items[cartItemIndex].quantity + quantity;
+                
+                if (newQuantity > 10) {
+                    const remainingSpace = 10 - cart.items[cartItemIndex].quantity;
+                    return res.status(400).json({ 
+                        success: false, 
+                        message: `Cannot add ${quantity} more items. You already have ${cart.items[cartItemIndex].quantity} in cart. You can add up to ${remainingSpace} more.`
+                    });
+                }
+                
+                cart.items[cartItemIndex].quantity = newQuantity;
             } else {
-
                 cart.items.push({
                     productId: productId,
                     size: size,
                     quantity: quantity
                 });
             }
+    
 
             await cart.save();
 
