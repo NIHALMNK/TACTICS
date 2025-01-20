@@ -10,6 +10,8 @@ module.exports = {
 
   async loadHome(req, res) {
     try {
+      console.log("--->>>loadHome");
+
       const products = await productModel
         .find({ isDeleted: false })
         .populate("category");
@@ -25,6 +27,8 @@ module.exports = {
 
   async loadShop(req, res) {
     try {
+      console.log("--->>>loadShop");
+
       const categoryName = req.query.category;
       const page = parseInt(req.query.page) || 1;
       const limit = 8;
@@ -83,6 +87,8 @@ module.exports = {
 
   async loadContacts(req, res) {
     try {
+      console.log("--->>>loadContacts");
+
       res.render("user/contact", { user: req.session.user });
     } catch (error) {
       console.error("Error loading contacts:", error);
@@ -94,6 +100,7 @@ module.exports = {
 
   async loadAbout(req, res) {
     try {
+      console.log("--->>>loadAbout");
 
       res.render("user/about", { user: req.session.user });
     } catch (error) {
@@ -106,6 +113,7 @@ module.exports = {
 
   async getProductDetail(req, res) {
     try {
+      console.log("--->>>getProductDetail");
 
       const productId = req.params.id;
 
@@ -149,6 +157,8 @@ module.exports = {
   // Load user profile
   async loadDashboard(req, res) {
     try {
+      console.log("--->>>loadDashboard");
+
       res.render("user/dashboard", { user: req.session.user });
     } catch (error) {
       console.error("Error loading dashboard:", error);
@@ -159,6 +169,8 @@ module.exports = {
   // Load order profile
   async loadOrders(req, res) {
     try {
+      console.log("--->>>loadOrders");
+
       res.render("user/order", { user: req.session.user });
     } catch (error) {
       console.error("Error loading order:", error);
@@ -171,6 +183,8 @@ module.exports = {
   //load Profile
   async loadProfile(req, res) {
     try {
+      console.log("--->>>loadProfile");
+
       const user = await User.findById(req.session.user.id);
       res.render("user/profile", { user});
     } catch (error) {
@@ -181,6 +195,8 @@ module.exports = {
 
   async updateProfile(req, res) {
     try {
+      console.log("--->>>updateProfile");
+
       const { name, phone } = req.body;
       const userId = req.session.user.id;
   
@@ -218,6 +234,8 @@ module.exports = {
   },
   async updatePassword(req, res) {
     try {
+      console.log("--->>>updatePassword");
+
       const { currentPassword, newPassword } = req.body;
       const userId = req.session.user.id;
   
@@ -247,6 +265,8 @@ module.exports = {
   // Load Address Page
   async loadAddress(req, res) {
     try {
+      console.log("--->>>loadAddress");
+
       const userId = req.session.user.id;
 
       const user = await User.findById(userId);
@@ -282,6 +302,8 @@ module.exports = {
   // Create New Address
   async createAddress(req, res) {
     try {
+      console.log("--->>>createAddress");
+
       const userId = req.session.user.id;
 
 
@@ -323,6 +345,8 @@ module.exports = {
   async updateAddress(req, res) {
 
     try {
+      console.log("--->>>updateAddress");
+
       const userId = req.session.user.id;
       const { addressId } = req.params;
       const {
@@ -371,6 +395,8 @@ module.exports = {
 
   async removeAddress(req, res) {
     try {
+      console.log("--->>>removeAddress");
+
       const userId = req.session.user.id;
       const { addressId } = req.params;
 
@@ -399,6 +425,8 @@ module.exports = {
   //load change password
   async loadChangePassword(req, res) {
     try {
+      console.log("--->>>loadChangePassword");
+
       res.render("user/changepassword", { user: req.session.user });
     } catch (error) {
       console.error("Error loading change password:", error);
@@ -406,19 +434,5 @@ module.exports = {
     }
   },
 
-  
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
+//-------------------------->
 };

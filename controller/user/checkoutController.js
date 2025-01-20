@@ -10,6 +10,7 @@ const { table } = require("console");
 module.exports = {
     loadCheckout: async (req, res) => {
         try {
+            console.log("--->>>loadCheckout");
             const userId = req.session.user.id;
 
             const userData = await User.findById(userId);
@@ -70,7 +71,7 @@ module.exports = {
 
             }));
 
-            console.log("address -----------> " + addresses);
+            
 
 
             const itemsWithDefaultImage = validItems.map(item => {
@@ -107,6 +108,7 @@ module.exports = {
 
     async loadPaymentSuccess(req, res) {
         try {
+            console.log("--->>>loadPaymentSuccess");
             const orderId = req.params.orderId;
 
             console.log("orderID-->", orderId);
@@ -147,6 +149,7 @@ module.exports = {
 
     async validateCoupon(req, res) {
         try {
+            console.log("--->>>validateCoupon");
             const { code, totalAmount } = req.body;
             const userId = req.session.user.id;
 
@@ -210,6 +213,7 @@ module.exports = {
 
     async placeOrder(req, res) {
         try {
+            console.log("--->>>placeOrder");
             const { addressid, selectedPayment } = req.body;
             const userId = req.session.user.id;
             const appliedCoupon = req.session.appliedCoupon;
@@ -336,6 +340,7 @@ module.exports = {
 
     async createRazorpayOrder(req, res) {
         try {
+            console.log("--->>>createRazorpayOrder");
             const { addressid } = req.body;
             const userId = req.session.user.id;
 
@@ -448,6 +453,7 @@ module.exports = {
 
     async verifyRazorpayPayment(req, res) {
         try {
+            console.log("--->>>verifyRazorpayPayment");
             const {
                 razorpay_order_id,
                 razorpay_payment_id,

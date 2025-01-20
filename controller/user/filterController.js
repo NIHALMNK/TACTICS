@@ -4,6 +4,8 @@ const categoryModel = require('../../models/categoryModel');
 const filterController = {
     async filterProducts(req, res) {
         try {
+            console.log("--->>>filterProducts");
+
             const {
                 sort,
                 priceRange,

@@ -18,6 +18,8 @@ const orderController = {
   
     loadOrders: async (req, res) => {
       try {
+        console.log("--->>>loadOrders");
+
         const userId = req.session.user.id;
         
         const user = await User.findById(userId);
@@ -92,6 +94,8 @@ const orderController = {
   
     getOrderDetails: async (req, res) => {
       try {
+        console.log("--->>>getOrderDetails");
+
         const orderId = req.params.orderId;
         const userId = req.session.user.id;
         const addressId = req.params.addressId || req.body.addressId; // Ensure addressId is retrieved
@@ -172,6 +176,8 @@ const orderController = {
 
     async  requestReturn (req, res) {
       try {
+        console.log("--->>>requestReturn");
+
         const { reason, orderId } = req.body;
         
         const userId = req.session.user.id;
@@ -244,6 +250,8 @@ const orderController = {
 
     async cancelOrder(req, res) {
       try {
+        console.log("--->>>cancelOrder");
+
         const userId = req.session.user.id;
         const orderId = req.params.orderId;
         const { reason } = req.body;
@@ -359,6 +367,8 @@ const orderController = {
 
     async generatePDF(req, res) {
       try {
+        console.log("--->>>generatePDF");
+
             const orderId = req.params.orderId;
             const userId = req.session.user.id;
         
@@ -502,6 +512,8 @@ const orderController = {
         },
         async retryPayment(req, res) {
           try {
+            console.log("--->>>retryPayment");
+
             const { orderId } = req.params;
             
             const order = await Order.findOne({ _id: orderId })
@@ -565,6 +577,8 @@ const orderController = {
         },
         async verifyPayment(req, res) {
           try {
+            console.log("--->>>verifyPayment");
+
             const {
               orderId,
               razorpay_payment_id,

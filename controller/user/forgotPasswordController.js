@@ -7,6 +7,8 @@ const otpGenerator = require("otp-generator");
 module.exports = {
   loadForgotPassword: async (req, res) => {
     try {
+      console.log("--->>>loadForgotPassword");
+
       res.render("user/forgotPassword", { message: null });
     } catch (error) {
       console.error("Error loading forgot password page:", error);
@@ -16,6 +18,8 @@ module.exports = {
 
   sendResetOTP: async (req, res) => {
     try {
+      console.log("--->>>sendResetOTP");
+
       const { email } = req.body;
       
       const user = await User.findOne({ email });
@@ -57,6 +61,8 @@ module.exports = {
 
   resendOTP: async (req, res) => {
     try {
+      console.log("--->>>resendOTP");
+
       const { email } = req.body;
 
       const existingOTP = await OTP.findOne({ email });
@@ -108,6 +114,8 @@ module.exports = {
 
   verifyResetOTP: async (req, res) => {
     try {
+      console.log("--->>>verifyResetOTP");
+
       const { otp } = req.body;
       const email = req.session.resetEmail;
 
@@ -164,6 +172,8 @@ module.exports = {
 
   resetPassword: async (req, res) => {
     try {
+      console.log("--->>>resetPassword");
+
       const { password } = req.body;
       const email = req.session.resetEmail;
 

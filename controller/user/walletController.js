@@ -5,6 +5,8 @@ module.exports={
     async getWallet (req,res){
 
         try{
+            console.log("--->>>getWallet");
+
             console.log("enterd to getWallet--->");
             
 

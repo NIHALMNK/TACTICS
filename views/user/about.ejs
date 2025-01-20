@@ -1,844 +1,816 @@
-<!-- i was planning to make a about setion for my website(e-commers) -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tactics</title>
-    <link rel="icon" type="image/x-icon" href="/images/produts-tactics/LOGO/3.png">
 
-    <!-- Bootstrap CSS -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <!-- Font Awesome for better icons -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-      rel="stylesheet"
-    />
-    <!-- Custom CSS -->
-    <!-- <link rel="stylesheet" href="/css/user/login.css" /> -->
-    <style>
-      /* About Section Styles */
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tactics</title>
+  <link rel="icon" type="image/x-icon" href="/images/produts-tactics/LOGO/3.png">
 
-      /*---------------------------------------------------------------------------------------------------------------------------------*/
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
 
-      /* Modern CSS Reset */
-      *,
-      *::before,
-      *::after {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-      /* Custom Properties */
-      :root {
-        --primary-color: #333;
-        --accent-color: #ffd700;
-        --text-color: #4a4a4a;
-        --max-width: 1200px;
-        --transition: all 0.3s ease-in-out;
-      }
+    /* Custom Properties */
+    :root {
+      --primary-color: #333;
+      --accent-color: #ffd700;
+      --text-color: #4a4a4a;
+      --max-width: 1200px;
+      --transition: all 0.3s ease-in-out;
+    }
 
-      /* Main Styles */
-      .about-section {
-        padding: 5rem 2rem;
-        max-width: var(--max-width);
-        margin: 0 auto;
-      }
+    /* Main Styles */
+    .about-section {
+      padding: 5rem 2rem;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
 
+    .about-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .about-image {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .about-image img {
+      width: 100%;
+      height: auto;
+      transition: var(--transition);
+      transform: scale(1);
+    }
+
+    .about-image:hover img {
+      transform: scale(1.05);
+    }
+
+    .about-content h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .about-content h2::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -0.5rem;
+      width: 60px;
+      height: 3px;
+      background-color: var(--accent-color);
+    }
+
+    .about-content p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: var(--text-color);
+      margin-bottom: 1rem;
+    }
+
+    .highlight {
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
       .about-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 4rem;
-        align-items: center;
-      }
-
-      .about-image {
-        position: relative;
-        overflow: hidden;
-        border-radius: 10px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      }
-
-      .about-image img {
-        width: 100%;
-        height: auto;
-        transition: var(--transition);
-        transform: scale(1);
-      }
-
-      .about-image:hover img {
-        transform: scale(1.05);
+        grid-template-columns: 1fr;
+        gap: 2rem;
       }
 
       .about-content h2 {
-        font-size: 2.5rem;
-        margin-bottom: 1.5rem;
-        position: relative;
-      }
-
-      .about-content h2::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        bottom: -0.5rem;
-        width: 60px;
-        height: 3px;
-        background-color: var(--accent-color);
+        font-size: 2rem;
       }
 
       .about-content p {
-        font-size: 1.1rem;
-        line-height: 1.6;
-        color: var(--text-color);
-        margin-bottom: 1rem;
+        font-size: 1rem;
+      }
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
       }
 
-      .highlight {
-        font-weight: 600;
-        color: var(--primary-color);
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
+    }
 
-      /* Responsive Design */
-      @media (max-width: 768px) {
-        .about-container {
-          grid-template-columns: 1fr;
-          gap: 2rem;
-        }
+    .animate {
+      animation: fadeIn 0.8s ease-out forwards;
+    }
 
-        .about-content h2 {
-          font-size: 2rem;
-        }
+    /*---------------------------------------------------------------------------------------------------------------------------------*/
 
-        .about-content p {
-          font-size: 1rem;
-        }
-      }
+    /* Spirit Section Styles */
+    .spirit-section {
+      background-color: #f8f9fa;
+      position: relative;
+      overflow: hidden;
+    }
 
-      /* Animation */
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
+    /* Spirit Statement Styles */
+    .spirit-statement h2 {
+      color: #333;
+      font-weight: 600;
+      line-height: 1.4;
+    }
 
-      .animate {
-        animation: fadeIn 0.8s ease-out forwards;
-      }
+    /* Values Container Styles */
+    .values-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin: 3rem 0;
+    }
 
-      /*---------------------------------------------------------------------------------------------------------------------------------*/
-    
-      /* Spirit Section Styles */
-      .spirit-section {
-        background-color: #f8f9fa;
-        position: relative;
-        overflow: hidden;
-      }
+    /* Value Card Styles */
+    .value-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-      /* Spirit Statement Styles */
-      .spirit-statement h2 {
-        color: #333;
-        font-weight: 600;
-        line-height: 1.4;
-      }
+    .value-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+    }
 
-      /* Values Container Styles */
-      .values-container {
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
-        margin: 3rem 0;
-      }
+    .value-icon {
+      background: linear-gradient(45deg, #ffd700, #ffc107);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
 
-      /* Value Card Styles */
+    .value-icon i {
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    .value-text {
+      margin: 0;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #4a4a4a;
+    }
+
+    /* Foundation Story Styles */
+    .foundation-story {
+      padding: 3rem 0;
+    }
+
+    .foundation-text {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+
+    .foundation-mission {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #333;
+      padding: 1.5rem;
+      border-radius: 8px;
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .foundation-mission:hover {
+      transform: scale(1.02);
+    }
+
+    /* Highlight Styles */
+    .highlight {
+      color: #ffd700;
+      font-weight: bold;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
       .value-card {
-        background: white;
-        padding: 2rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-
-      .value-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
       }
 
       .value-icon {
-        background: linear-gradient(45deg, #ffd700, #ffc107);
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
       }
 
       .value-icon i {
-        color: white;
-        font-size: 1.5rem;
+        font-size: 1.2rem;
       }
 
       .value-text {
-        margin: 0;
-        font-size: 1.1rem;
-        line-height: 1.6;
-        color: #4a4a4a;
-      }
-
-      /* Foundation Story Styles */
-      .foundation-story {
-        padding: 3rem 0;
+        font-size: 1rem;
       }
 
       .foundation-text {
-        font-size: 1.2rem;
-        line-height: 1.8;
-        color: #555;
-        margin-bottom: 1rem;
+        font-size: 1.1rem;
       }
 
       .foundation-mission {
-        font-size: 1.4rem;
-        font-weight: 600;
-        color: #333;
-        padding: 1.5rem;
-        border-radius: 8px;
-        background: white;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        transition: transform 0.3s ease;
+        font-size: 1.2rem;
+        padding: 1rem;
       }
+    }
 
-      .foundation-mission:hover {
-        transform: scale(1.02);
-      }
+    /* Animation Styles */
+    [data-aos] {
+      transition-duration: 0.8s;
+      transition-timing-function: ease-out;
+    }
 
-      /* Highlight Styles */
-      .highlight {
-        color: #ffd700;
-        font-weight: bold;
-      }
+    .spirit-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #ffd700, transparent);
+    }
 
-      /* Responsive Styles */
-      @media (max-width: 768px) {
-        .value-card {
-          padding: 1.5rem;
-        }
+    /* Brand Identity Section Styles */
+    .brand-identity {
+      background-color: #ffffff;
+    }
 
-        .value-icon {
-          width: 40px;
-          height: 40px;
-        }
+    .brand-title {
+      font-size: 2.5rem;
+      line-height: 1.2;
+      color: #333;
+    }
 
-        .value-icon i {
-          font-size: 1.2rem;
-        }
+    .capabilities-text {
+      font-size: 1.2rem;
+      color: #666;
+    }
 
-        .value-text {
-          font-size: 1rem;
-        }
+    /* Stats Styles */
+    .stat-card {
+      padding: 1.5rem;
+      position: relative;
+    }
 
-        .foundation-text {
-          font-size: 1.1rem;
-        }
+    .stat-number {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #333;
+      display: inline-block;
+    }
 
-        .foundation-mission {
-          font-size: 1.2rem;
-          padding: 1rem;
-        }
-      }
+    .stat-plus {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #333;
+    }
 
-      /* Animation Styles */
-      [data-aos] {
-        transition-duration: 0.8s;
-        transition-timing-function: ease-out;
-      }
+    .stat-label {
+      font-size: 1.1rem;
+      color: #666;
+      margin-top: 0.5rem;
+    }
 
-      .spirit-section::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #ffd700, transparent);
-      }
+    .stat-subtext {
+      font-size: 0.9rem;
+      color: #888;
+      margin-top: 0.25rem;
+    }
 
-      /* Brand Identity Section Styles */
-      .brand-identity {
-        background-color: #ffffff;
-      }
+    /* Features Section Styles */
+    .features-section {
+      background-color: #ffd700;
+      border-radius: 1rem;
+      padding: 3rem 0;
+    }
 
+    .feature-card {
+      padding: 2rem;
+      background-color: transparent;
+      transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .feature-card h3 {
+      font-size: 1.5rem;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card p {
+      color: #444;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
       .brand-title {
-        font-size: 2.5rem;
-        line-height: 1.2;
-        color: #333;
+        font-size: 2rem;
       }
 
       .capabilities-text {
-        font-size: 1.2rem;
-        color: #666;
-      }
-
-      /* Stats Styles */
-      .stat-card {
-        padding: 1.5rem;
-        position: relative;
+        font-size: 1rem;
       }
 
       .stat-number {
-        font-size: 3rem;
-        font-weight: bold;
-        color: #333;
-        display: inline-block;
+        font-size: 2.5rem;
       }
 
       .stat-plus {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #333;
-      }
-
-      .stat-label {
-        font-size: 1.1rem;
-        color: #666;
-        margin-top: 0.5rem;
-      }
-
-      .stat-subtext {
-        font-size: 0.9rem;
-        color: #888;
-        margin-top: 0.25rem;
-      }
-
-      /* Features Section Styles */
-      .features-section {
-        background-color: #ffd700;
-        border-radius: 1rem;
-        padding: 3rem 0;
+        font-size: 1.2rem;
       }
 
       .feature-card {
-        padding: 2rem;
-        background-color: transparent;
-        transition: transform 0.3s ease;
-      }
-
-      .feature-card:hover {
-        transform: translateY(-5px);
+        padding: 1.5rem;
       }
 
       .feature-card h3 {
-        font-size: 1.5rem;
-        color: #333;
-        margin-bottom: 1rem;
+        font-size: 1.3rem;
       }
 
       .feature-card p {
-        color: #444;
-        font-size: 1.1rem;
-        line-height: 1.6;
-      }
-
-      /* Responsive Adjustments */
-      @media (max-width: 768px) {
-        .brand-title {
-          font-size: 2rem;
-        }
-
-        .capabilities-text {
-          font-size: 1rem;
-        }
-
-        .stat-number {
-          font-size: 2.5rem;
-        }
-
-        .stat-plus {
-          font-size: 1.2rem;
-        }
-
-        .feature-card {
-          padding: 1.5rem;
-        }
-
-        .feature-card h3 {
-          font-size: 1.3rem;
-        }
-
-        .feature-card p {
-          font-size: 1rem;
-        }
-      }
-
-      @media (max-width: 576px) {
-        .brand-title {
-          font-size: 1.8rem;
-        }
-
-        .stats-container {
-          gap: 1rem;
-        }
-
-        .stat-card {
-          padding: 1rem;
-        }
-      }
-
-      /*-----------------------------------------------------*/
-      /* Workshop Section Styles */
-      .workshop-section {
-        background-color: #f8f9fa;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .workshop-container {
-        position: relative;
-      }
-
-      .workshop-image {
-        position: relative;
-        width: 100%;
-        height: 400px;
-        overflow: hidden;
-        border-radius: 1rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      }
-
-      .workshop-main-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.6s ease;
-      }
-
-      .workshop-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-        padding: 2rem;
-        color: white;
-        transform: translateY(100%);
-        transition: transform 0.4s ease;
-      }
-
-      .workshop-image:hover .workshop-overlay {
-        transform: translateY(0);
-      }
-
-      .workshop-image:hover .workshop-main-img {
-        transform: scale(1.05);
-      }
-
-      .workshop-overlay h3 {
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-      }
-
-      .workshop-overlay p {
         font-size: 1rem;
-        margin: 0;
-        opacity: 0.9;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .brand-title {
+        font-size: 1.8rem;
+      }
+
+      .stats-container {
+        gap: 1rem;
+      }
+
+      .stat-card {
+        padding: 1rem;
+      }
+    }
+
+    /*-----------------------------------------------------*/
+    /* Workshop Section Styles */
+    .workshop-section {
+      background-color: #f8f9fa;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .workshop-container {
+      position: relative;
+    }
+
+    .workshop-image {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      overflow: hidden;
+      border-radius: 1rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .workshop-main-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .workshop-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+      padding: 2rem;
+      color: white;
+      transform: translateY(100%);
+      transition: transform 0.4s ease;
+    }
+
+    .workshop-image:hover .workshop-overlay {
+      transform: translateY(0);
+    }
+
+    .workshop-image:hover .workshop-main-img {
+      transform: scale(1.05);
+    }
+
+    .workshop-overlay h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .workshop-overlay p {
+      font-size: 1rem;
+      margin: 0;
+      opacity: 0.9;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .workshop-description {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #666;
+    }
+
+    .title-underline {
+      width: 60px;
+      height: 3px;
+      background-color: #ffd700;
+      margin-top: 1rem;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .workshop-image {
+        height: 300px;
       }
 
       .section-title {
-        font-size: 2rem;
-        color: #333;
-        font-weight: 600;
+        font-size: 1.75rem;
+        margin-top: 1.5rem;
       }
 
       .workshop-description {
-        font-size: 1.1rem;
-        line-height: 1.8;
-        color: #666;
-      }
-
-      .title-underline {
-        width: 60px;
-        height: 3px;
-        background-color: #ffd700;
+        font-size: 1rem;
         margin-top: 1rem;
       }
 
-      /* Responsive Adjustments */
-      @media (max-width: 768px) {
-        .workshop-image {
-          height: 300px;
-        }
-
-        .section-title {
-          font-size: 1.75rem;
-          margin-top: 1.5rem;
-        }
-
-        .workshop-description {
-          font-size: 1rem;
-          margin-top: 1rem;
-        }
-
-        .workshop-overlay {
-          padding: 1.5rem;
-        }
-
-        .workshop-overlay h3 {
-          font-size: 1.25rem;
-        }
+      .workshop-overlay {
+        padding: 1.5rem;
       }
 
-      @media (max-width: 576px) {
-        .workshop-image {
-          height: 250px;
-        }
-
-        .section-title {
-          font-size: 1.5rem;
-        }
-
-        .workshop-overlay {
-          padding: 1rem;
-        }
-
-        .workshop-overlay h3 {
-          font-size: 1.1rem;
-        }
-
-        .workshop-overlay p {
-          font-size: 0.9rem;
-        }
+      .workshop-overlay h3 {
+        font-size: 1.25rem;
       }
-    </style>
-  </head>
-  <body>
-    <!-------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-    <%- include('./layout/NAV.ejs') %>
-    <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-    <section class="about-section">
-      <div class="about-container">
-        <div class="about-image animate">
-          <img
-            src="/images/note/4.png"
-            alt="Notebook with coffee and glasses illustration"
-          />
-        </div>
-        <div class="about-content animate">
-          <h2>Our Story</h2>
-          <p>
-            Our story begins with the name 
-            <span class="highlight">TACTICS</span>.
-          </p>
-          <p>
-            Society often sees TACTICS as bold or too strategic, but what does it really mean? It’s about dressing with purpose, owning your look, and making a statement. Those who choose TACTICS don’t follow trends—they set them. They’re often called daring or unconventional, but it’s these individuals who redefine fashion and leave a lasting impact.
-          </p>
-          <p>
-            TACTICS isn’t just about clothes; it’s about confidence, standing out, and never compromising on who you are. In a world full of ordinary, the ones who wear TACTICS are the ones who lead.
-          </p>
+    }
+
+    @media (max-width: 576px) {
+      .workshop-image {
+        height: 250px;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+      }
+
+      .workshop-overlay {
+        padding: 1rem;
+      }
+
+      .workshop-overlay h3 {
+        font-size: 1.1rem;
+      }
+
+      .workshop-overlay p {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+  <%- include('./layout/NAV.ejs') %>
+  <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+  <section class="about-section">
+    <div class="about-container">
+      <div class="about-image animate">
+        <img src="/images/produts-tactics/LOGO/1.png" alt="Notebook with coffee and glasses illustration" />
+      </div>
+      <div class="about-content animate">
+        <h2>Our Story</h2>
+        <p>
+          Our story begins with the name
+          <span class="highlight">TACTICS</span>.
+        </p>
+        <p>
+          Society often sees TACTICS as bold or too strategic, but what does it really mean? It’s about dressing with purpose, owning your look, and making a statement. Those who choose TACTICS don’t follow trends—they set them. They’re often called daring or unconventional, but it’s these individuals who redefine fashion and leave a lasting impact.
+        </p>
+        <p>
+          TACTICS isn’t just about clothes; it’s about confidence, standing out, and never compromising on who you are. In a world full of ordinary, the ones who wear TACTICS are the ones who lead.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!----------------------------------------->
+  <!-- Spirit Section -->
+  <section class="spirit-section py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <!-- Spirit Statement -->
+          <div class="spirit-statement text-center mb-5" data-aos="fade-up">
+            <h2 class="display-6 mb-4">
+              For us, <span class="highlight">TACTICS</span> is the spirit of
+              looking at things differently.
+            </h2>
+          </div>
+
+          <!-- Values Cards -->
+          <div class="values-container">
+            <!-- Value Card 1 -->
+            <div class="value-card" data-aos="fade-up" data-aos-delay="100">
+              <div class="value-icon">
+                <i class="fas fa-rocket"></i>
+              </div>
+              <p class="value-text">
+                Trying new things even when success is not guaranteed.
+              </p>
+            </div>
+
+            <!-- Value Card 2 -->
+            <div class="value-card" data-aos="fade-up" data-aos-delay="200">
+              <div class="value-icon">
+                <i class="fas fa-handshake"></i>
+              </div>
+              <p class="value-text">Not stepping on others to get ahead.</p>
+            </div>
+
+            <!-- Value Card 3 -->
+            <div class="value-card" data-aos="fade-up" data-aos-delay="300">
+              <div class="value-icon">
+                <i class="fas fa-heart"></i>
+              </div>
+              <p class="value-text">
+                Thinking about the benefit of others just as you'd think about
+                your own.
+              </p>
+            </div>
+          </div>
+
+          <!-- Foundation Story -->
+          <div class="foundation-story text-center mt-5" data-aos="fade-up" data-aos-delay="400">
+            <p class="foundation-text">
+              This was the spirit on which
+              <span class="highlight">TACTICS</span>® was founded in 2012.
+            </p>
+            <p class="foundation-text">
+              With the belief that a business cannot be about financial gain
+              alone.
+            </p>
+            <p class="foundation-mission mt-4">
+              It is about making a positive impact. That's what
+              <span class="highlight">TACTICS</span>® is about.
+            </p>
+          </div>
         </div>
       </div>
-    </section>
-
-    
-    <!----------------------------------------->
-    <!-- Spirit Section -->
-    <section class="spirit-section py-5">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-lg-8">
-            <!-- Spirit Statement -->
-            <div class="spirit-statement text-center mb-5" data-aos="fade-up">
-              <h2 class="display-6 mb-4">
-                For us, <span class="highlight">TACTICS</span> is the spirit of
-                looking at things differently.
+    </div>
+  </section>
+  <!------------------------------------------------------------------------------>
+  <!-- Team/Workshop Image Section -->
+  <section class="workshop-section py-5">
+    <div class="container">
+      <div class="workshop-container" data-aos="fade-up">
+        <div class="workshop-image">
+          <img src="/images/images/blog-05.jpg" alt="Team working on designs" class="workshop-main-img" />
+          <div class="workshop-overlay">
+            <h3>Our Design Process</h3>
+            <p>Crafting each piece with dedication and creativity</p>
+          </div>
+        </div>
+        <div class="workshop-text mt-4">
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <h2 class="section-title">
+                Where Creativity Meets Craftsmanship
               </h2>
+              <div class="title-underline mb-4"></div>
             </div>
-
-            <!-- Values Cards -->
-            <div class="values-container">
-              <!-- Value Card 1 -->
-              <div class="value-card" data-aos="fade-up" data-aos-delay="100">
-                <div class="value-icon">
-                  <i class="fas fa-rocket"></i>
-                </div>
-                <p class="value-text">
-                  Trying new things even when success is not guaranteed.
-                </p>
-              </div>
-
-              <!-- Value Card 2 -->
-              <div class="value-card" data-aos="fade-up" data-aos-delay="200">
-                <div class="value-icon">
-                  <i class="fas fa-handshake"></i>
-                </div>
-                <p class="value-text">Not stepping on others to get ahead.</p>
-              </div>
-
-              <!-- Value Card 3 -->
-              <div class="value-card" data-aos="fade-up" data-aos-delay="300">
-                <div class="value-icon">
-                  <i class="fas fa-heart"></i>
-                </div>
-                <p class="value-text">
-                  Thinking about the benefit of others just as you'd think about
-                  your own.
-                </p>
-              </div>
-            </div>
-
-            <!-- Foundation Story -->
-            <div
-              class="foundation-story text-center mt-5"
-              data-aos="fade-up"
-              data-aos-delay="400"
-            >
-              <p class="foundation-text">
-                This was the spirit on which
-                <span class="highlight">TACTICS</span>® was founded in 2012.
-              </p>
-              <p class="foundation-text">
-                With the belief that a business cannot be about financial gain
-                alone.
-              </p>
-              <p class="foundation-mission mt-4">
-                It is about making a positive impact. That's what
-                <span class="highlight">TACTICS</span>® is about.
+            <div class="col-md-6">
+              <p class="workshop-description">
+                Every design begins with our passionate team bringing unique
+                ideas to life. Our workshop is where innovation happens,
+                turning contemporary Indian fashion into reality.
               </p>
             </div>
           </div>
         </div>
       </div>
-    </section>
-    <!------------------------------------------------------------------------------>
-    <!-- Team/Workshop Image Section -->
-    <section class="workshop-section py-5">
-      <div class="container">
-        <div class="workshop-container" data-aos="fade-up">
-          <div class="workshop-image">
-            <img
-              src="/images/images/blog-05.jpg"
-              alt="Team working on designs"
-              class="workshop-main-img"
-            />
-            <div class="workshop-overlay">
-              <h3>Our Design Process</h3>
-              <p>Crafting each piece with dedication and creativity</p>
+    </div>
+  </section>
+  <!------------------------------------------------------------------------------>
+  <!-- Brand Identity Section -->
+  <section class="brand-identity py-5">
+    <div class="container">
+      <div class="brand-header text-center mb-5" data-aos="fade-up">
+        <h2 class="display-6"><span class="highlight">TACTICS </span>® is</h2>
+        <h1 class="brand-title mt-3">
+          Distinctive fashion
+          <br />
+          <span class="fw-bold">for the contemporary Indian</span>
+        </h1>
+        <p class="capabilities-text mt-4">
+          with <span class="fw-bold">in-house capabilities</span> in design,
+          manufacturing, technology, data science, and marketing
+        </p>
+      </div>
+
+      <!-- Stats Counter Section -->
+      <div class="stats-container row justify-content-center text-center g-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <h3 class="stat-number" data-target="7">0</h3>
+            <h4 class="stat-label">years</h4>
+            <p class="stat-subtext">of journey so far</p>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <h3 class="stat-number" data-target="250">0</h3>
+            <span class="stat-plus">+</span>
+            <h4 class="stat-label">team-members</h4>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <h3 class="stat-number" data-target="1">0</h3>
+            <span class="stat-plus">Crore+</span>
+            <h4 class="stat-label">products sold!</h4>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <h3 class="stat-number" data-target="60">0</h3>
+            <span class="stat-plus">Lakh+</span>
+            <h4 class="stat-label">app downloads</h4>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features Section -->
+      <div class="features-section mt-5 py-5" data-aos="fade-up" data-aos-delay="300">
+        <h2 class="text-center mb-5">
+          What makes us <span class="highlight">TACTICS</span>®
+        </h2>
+        <div class="row justify-content-center g-4">
+          <div class="col-md-4">
+            <div class="feature-card text-center">
+              <h3>Innovative design</h3>
+              <p>Creating designs that are an extension of you.</p>
             </div>
           </div>
-          <div class="workshop-text mt-4">
-            <div class="row align-items-center">
-              <div class="col-md-6">
-                <h2 class="section-title">
-                  Where Creativity Meets Craftsmanship
-                </h2>
-                <div class="title-underline mb-4"></div>
-              </div>
-              <div class="col-md-6">
-                <p class="workshop-description">
-                  Every design begins with our passionate team bringing unique
-                  ideas to life. Our workshop is where innovation happens,
-                  turning contemporary Indian fashion into reality.
-                </p>
-              </div>
+          <div class="col-md-4">
+            <div class="feature-card text-center">
+              <h3>Direct to consumer model</h3>
+              <p>Bringing accessibility and value to everyday fashion.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card text-center">
+              <h3>Homegrown</h3>
+              <p>Imagined in India,<br />Made in India.</p>
             </div>
           </div>
         </div>
       </div>
-    </section>
-    <!------------------------------------------------------------------------------>
-    <!-- Brand Identity Section -->
-    <section class="brand-identity py-5">
-      <div class="container">
-        <div class="brand-header text-center mb-5" data-aos="fade-up">
-          <h2 class="display-6"><span class="highlight">TACTICS </span>® is</h2>
-          <h1 class="brand-title mt-3">
-            Distinctive fashion
-            <br />
-            <span class="fw-bold">for the contemporary Indian</span>
-          </h1>
-          <p class="capabilities-text mt-4">
-            with <span class="fw-bold">in-house capabilities</span> in design,
-            manufacturing, technology, data science, and marketing
-          </p>
-        </div>
+    </div>
+  </section>
 
-        <!-- Stats Counter Section -->
-        <div
-          class="stats-container row justify-content-center text-center g-4"
-          data-aos="fade-up"
-          data-aos-delay="200"
-        >
-          <div class="col-6 col-md-3">
-            <div class="stat-card">
-              <h3 class="stat-number" data-target="7">0</h3>
-              <h4 class="stat-label">years</h4>
-              <p class="stat-subtext">of journey so far</p>
-            </div>
-          </div>
-          <div class="col-6 col-md-3">
-            <div class="stat-card">
-              <h3 class="stat-number" data-target="250">0</h3>
-              <span class="stat-plus">+</span>
-              <h4 class="stat-label">team-members</h4>
-            </div>
-          </div>
-          <div class="col-6 col-md-3">
-            <div class="stat-card">
-              <h3 class="stat-number" data-target="1">0</h3>
-              <span class="stat-plus">Crore+</span>
-              <h4 class="stat-label">products sold!</h4>
-            </div>
-          </div>
-          <div class="col-6 col-md-3">
-            <div class="stat-card">
-              <h3 class="stat-number" data-target="60">0</h3>
-              <span class="stat-plus">Lakh+</span>
-              <h4 class="stat-label">app downloads</h4>
-            </div>
-          </div>
-        </div>
+  <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+  <%- include('./layout/FOOTER.ejs') %>
+  <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    // Add scroll reveal animations
 
-        <!-- Features Section -->
-        <div
-          class="features-section mt-5 py-5"
-          data-aos="fade-up"
-          data-aos-delay="300"
-        >
-          <h2 class="text-center mb-5">
-            What makes us <span class="highlight">TACTICS</span>®
-          </h2>
-          <div class="row justify-content-center g-4">
-            <div class="col-md-4">
-              <div class="feature-card text-center">
-                <h3>Innovative design</h3>
-                <p>Creating designs that are an extension of you.</p>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="feature-card text-center">
-                <h3>Direct to consumer model</h3>
-                <p>Bringing accessibility and value to everyday fashion.</p>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="feature-card text-center">
-                <h3>Homegrown</h3>
-                <p>Imagined in India,<br />Made in India.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    //==========================================================================>
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+      threshold: 0.2
+    };
 
-    <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-    <%- include('./layout/FOOTER.ejs') %>
-    <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-    <!-- Bootstrap Bundle with Popper -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-              // Add scroll reveal animations
-
-      //==========================================================================>
-        // Intersection Observer for scroll animations
-        const observerOptions = {
-            threshold: 0.2
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate');
-                }
-            });
-        }, observerOptions);
-
-        // Observe all elements with animate class
-        document.querySelectorAll('.animate').forEach(element => {
-            observer.observe(element);
-        });
-
-
-        //===========================================>
-
-      // Counter animation
-      function animateCounter(element, target, duration = 2000) {
-        let start = 0;
-        const increment = target / (duration / 16);
-
-        const animate = () => {
-          start += increment;
-          element.textContent = Math.floor(start);
-
-          if (start < target) {
-            requestAnimationFrame(animate);
-          } else {
-            element.textContent = target;
-          }
-        };
-
-        animate();
-      }
-
-      // Initialize counters when they come into view
-      document.addEventListener('DOMContentLoaded', function() {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              const counters = entry.target.querySelectorAll('.stat-number');
-              counters.forEach(counter => {
-                const target = parseInt(counter.getAttribute('data-target'));
-                animateCounter(counter, target);
-              });
-              observer.unobserve(entry.target);
-            }
-          });
-        }, { threshold: 0.5 });
-
-        // Observe the stats container
-        const statsContainer = document.querySelector('.stats-container');
-        if (statsContainer) {
-          observer.observe(statsContainer);
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate');
         }
       });
+    }, observerOptions);
 
-      // Add smooth scroll reveal animations
-      document.addEventListener('DOMContentLoaded', function() {
-        const elements = document.querySelectorAll('[data-aos]');
-        elements.forEach(element => {
-          element.classList.add('aos-init');
+    // Observe all elements with animate class
+    document.querySelectorAll('.animate').forEach(element => {
+      observer.observe(element);
+    });
+
+
+    //===========================================>
+
+    // Counter animation
+    function animateCounter(element, target, duration = 2000) {
+      let start = 0;
+      const increment = target / (duration / 16);
+
+      const animate = () => {
+        start += increment;
+        element.textContent = Math.floor(start);
+
+        if (start < target) {
+          requestAnimationFrame(animate);
+        } else {
+          element.textContent = target;
+        }
+      };
+
+      animate();
+    }
+
+    // Initialize counters when they come into view
+    document.addEventListener('DOMContentLoaded', function() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const counters = entry.target.querySelectorAll('.stat-number');
+            counters.forEach(counter => {
+              const target = parseInt(counter.getAttribute('data-target'));
+              animateCounter(counter, target);
+            });
+            observer.unobserve(entry.target);
+          }
         });
-
-        const observerOptions = {
-          threshold: 0.1,
-          rootMargin: '0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('aos-animate');
-            }
-          });
-        }, observerOptions);
-
-        elements.forEach(element => {
-          observer.observe(element);
-        });
+      }, {
+        threshold: 0.5
       });
-    </script>
-  </body>
+
+      // Observe the stats container
+      const statsContainer = document.querySelector('.stats-container');
+      if (statsContainer) {
+        observer.observe(statsContainer);
+      }
+    });
+
+    // Add smooth scroll reveal animations
+    document.addEventListener('DOMContentLoaded', function() {
+      const elements = document.querySelectorAll('[data-aos]');
+      elements.forEach(element => {
+        element.classList.add('aos-init');
+      });
+
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('aos-animate');
+          }
+        });
+      }, observerOptions);
+
+      elements.forEach(element => {
+        observer.observe(element);
+      });
+    });
+  </script>
+</body>
+
 </html>

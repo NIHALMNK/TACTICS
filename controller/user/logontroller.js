@@ -11,6 +11,8 @@ module.exports = {
 
     async loadRegister(req, res) {
         try {
+          console.log("--->>>loadRegister");
+
           res.render("user/register", { user: req.session.user || null });
         } catch (error) {
           console.error("Error loading register:", error);
@@ -20,6 +22,8 @@ module.exports = {
 
       async loadLogin(req, res) {
         try {
+          console.log("--->>>loadLogin");
+
           res.render("user/login", {
             user: req.session.user || null,
             message: null,
@@ -33,6 +37,8 @@ module.exports = {
 
       async loadOTP(req, res) {
         try {
+          console.log("--->>>loadOTP");
+
           const { email } = req.session.user;
           return res
             .status(200)
@@ -48,6 +54,8 @@ module.exports = {
 
       async checkUser(req, res) {
         try {
+          console.log("--->>>checkUser");
+
           const { name, email, phno, password } = req.body;
     
           
@@ -90,6 +98,8 @@ module.exports = {
         
   async resendOTP(req, res) {
     try {
+      console.log("--->>>resendOTP");
+
       const { email } = req.body;
       console.log("this is the resetOTP : " + email);
 
@@ -132,6 +142,8 @@ module.exports = {
 
   async verifyOTP(req, res) {
     try {
+      console.log("--->>>verifyOTP");
+
       const { email, otp } = req.body;
 
       
@@ -183,6 +195,8 @@ module.exports = {
      
   async checkLogin(req, res) {
     try {
+      console.log("--->>>checkLogin");
+
       const { email, password } = req.body;
 
       const user = await User.findOne({ email });
@@ -223,6 +237,8 @@ module.exports = {
 
     async logout(req, res) {
         try {
+          console.log("--->>>logout");
+
           req.session.destroy();
           res.clearCookie("session_id");
           res.redirect("/home");

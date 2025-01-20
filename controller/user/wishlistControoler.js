@@ -6,8 +6,8 @@ module.exports={
 
     async addToWishlist(req,res){
         try{
-            console.log("working...............");
-
+            console.log("--->>>addToWishlist");
+            
             const userID = req.session.user?.id;
             const {selectedSize,productId}=req.body;
 
@@ -75,6 +75,7 @@ module.exports={
 
     async LoadWishlist(req,res){
         try {
+            console.log("--->>>LoadWishlist");
             const userId = req.session.user.id;
             if(!userId){
                 return res.redirect('/login');
@@ -89,8 +90,8 @@ module.exports={
     
             if(!wishlist){
                 return res.render("user/wishlist", {
-                    status: false,
-                    wishlist: null,
+                    status: wishlist?.products?.length > 0,
+                    wishlist: wishlist || { products: [] }
                 });
             }
     
@@ -114,6 +115,7 @@ module.exports={
 
     async removeFromWishlist(req, res) {
         try {
+            console.log("--->>>removeFromWishlist");
             const { id } = req.params;
             const userId = req.session.user?.id;
     
