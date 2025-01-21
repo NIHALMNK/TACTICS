@@ -32,7 +32,8 @@ router.get('/logout', logController.logout);
 //==================================================================>
 
 // Protected route
-router.get('/home',userController.loadHome);
+router.get(/^\/(home)?$/,userController.loadHome);
+
 
 //shop routes
 router.get('/shop', userController.loadShop);

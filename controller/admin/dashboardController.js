@@ -67,7 +67,7 @@ async function generateSalesData(query) {
 
 async function getTopSellingProducts(limit = 10) {
     return await Orders.aggregate([
-        { $match: { status: { $ne: 'Cancelled' } } },
+        { $match: { status: { $ne: ['Cancelled', 'Requested', 'Requested'] } } },
         { $unwind: '$orderItems' },
         {
             $group: {
@@ -103,7 +103,7 @@ async function getTopSellingProducts(limit = 10) {
 
 async function getTopSellingCategories(limit = 10) {
     return await Orders.aggregate([
-        { $match: { status: { $ne: 'Cancelled' } } },
+        { $match: { status: { $ne: ['Cancelled', 'Requested', 'Requested']}} },
         { $unwind: '$orderItems' },
         {
             $lookup: {
@@ -122,7 +122,7 @@ async function getTopSellingCategories(limit = 10) {
             }
         },
         {
-            $lookup: {  
+            $lookup: {   
                 from: 'categories',
                 localField: '_id',
                 foreignField: '_id',

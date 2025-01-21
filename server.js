@@ -27,11 +27,12 @@ require('./config/passport')
 
 
 
+
 app.use(nocache()); 
 app.use(cors());   
 
 app.use(session({
-    secret: 'mysecretkey', 
+    secret: process.env.mysecretkey, 
     resave: false,         
     saveUninitialized: true, 
     cookie: {
