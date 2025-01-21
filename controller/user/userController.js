@@ -133,11 +133,10 @@ module.exports = {
 
       const productAll = await productModel.find({ isDeleted: false });
       const relatedProducts = await productModel.find({
-        brand: { $in: product.brand },
-        _id: { $ne: product._id },
+        category: product.category._id, 
+        _id: { $ne: product._id }, 
         isDeleted: false,
-
-      });
+      }).limit(4); 
 
       return res.status(200).render("user/productdetail", {
         product,
