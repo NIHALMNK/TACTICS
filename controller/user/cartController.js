@@ -22,7 +22,7 @@ module.exports = {
                 });
 
             if (!cart || !Array.isArray(cart.items) || cart.items.length === 0) {
-                return res.render("user/cart", {
+                return res.render("user/Cart", {
                     cart: { items: [] },
                     subtotal: 0,
                     shipping: 0,
@@ -85,7 +85,7 @@ module.exports = {
                 return item;
             });
 
-            res.render('user/cart', {
+            res.render('user/Cart', {
                 cart: { items: itemsWithDefaultImage },
                 subtotal: totals.subtotal,
                 shipping,
