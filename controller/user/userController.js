@@ -185,7 +185,7 @@ module.exports = {
       console.log("--->>>loadProfile");
 
       const user = await User.findById(req.session.user.id);
-      res.render("user/profile", { user});
+      res.render("user/Profile", { user});
     } catch (error) {
       console.error("Error loading profile:", error.message);
       res.status(500).send("Server Error");
