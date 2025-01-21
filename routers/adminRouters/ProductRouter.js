@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-
+const adminAuth=require('../../middleware/adminauth.js')
 
 const productController = require("../../controller/admin/productCondroller.js");
 const upload = require("../../utils/productMulter.js");
 
 
-
+router.use("/productManagement", adminAuth);
 //====product==================================================>
 
  // Product Management Routes

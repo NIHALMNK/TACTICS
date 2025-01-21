@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 const orderController=require('../../controller/admin/orderManegementControll')
+const adminAuth=require('../../middleware/adminauth.js')
 
+router.use("/orders", adminAuth);
 
 // Order management routes
 router.get('/orders', orderController.loadOrder)

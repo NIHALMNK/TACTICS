@@ -1,7 +1,5 @@
 const express = require("express");
 const router = express.Router();
-////////////////////////////////////////////////////////////////////=>\
-// Importing the controller
 
 const adminController = require("../../controller/admin/adminController.js");
 

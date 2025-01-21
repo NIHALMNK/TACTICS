@@ -3,6 +3,10 @@ const router = express.Router();
 
 
 const userController = require('../../controller/admin/userAdminController.js')
+const adminAuth=require('../../middleware/adminauth.js')
+router.use("/userManagement", adminAuth);
+router.use("/api", adminAuth);
+
 
 
 

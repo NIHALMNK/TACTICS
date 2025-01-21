@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const dashboardController = require('../../controller/admin/dashboardController');
+const adminAuth=require('../../middleware/adminauth.js')
+
+router.use("/dashboard", adminAuth);
+router.use("/sales-report", adminAuth);
 
 // Dashboard routes
 router.get('/dashboard', dashboardController.loadDashboard);

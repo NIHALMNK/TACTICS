@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const couponController=require('../../controller/admin/couponController')
+const adminAuth=require('../../middleware/adminauth.js')
+router.use("/couponManagement", adminAuth);
 
 
 router.get('/couponManagement',couponController.loadcoupon)

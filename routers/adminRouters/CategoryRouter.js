@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
-
+const adminAuth=require('../../middleware/adminauth.js')
 //---------------------------------->
 
+router.use("/category", adminAuth);
 
 const categoryController = require("../../controller/admin/categoryController.js");
 const upload_2 = require("../../utils/categoryMulter.js");
