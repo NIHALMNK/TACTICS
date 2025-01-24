@@ -478,11 +478,13 @@
               <th>ACTION</th>
             </tr>
           </thead>
+          
           <tbody>
             <% orders.forEach((order, index) => { %>
+             
             <tr>
               <td><%= index + 1 %></td>
-              <td><%= order._id %></td>
+              <td><%= order.orderId %></td>
               <% if (order.userId.name) { %>
               <td><%= order.userId.name %></td>
 
@@ -685,7 +687,7 @@
 
 
         // Populate modal fields
-        document.getElementById('orderNo').value = order._id;
+        document.getElementById('orderNo').value = order.orderId ;
         document.getElementById('userName').value = order.userId.name;
 
         if (order.shippingAddress) {

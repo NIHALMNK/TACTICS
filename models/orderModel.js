@@ -1,11 +1,11 @@
-const mongoose = require('mongoose')
-
+const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
     orderId: {
         type: String,
         unique: true,
-        required: true
+        required: true,
+        index: true // Ensure orderId is indexed
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -47,6 +47,19 @@ const orderSchema = new mongoose.Schema({
             },
             price: {
                 type: Number,
+            },
+            status: {
+                type: String,
+                enum: ['Pending', 'Cancelled', 'Returned','Requested','Completed'],
+                default: 'Pending'
+            },
+            cancelReason: {
+                type: String,
+                default: null
+            },
+            refundReason: {
+                type: String,
+                default: null
             }
         }
     ],
@@ -64,7 +77,7 @@ const orderSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Pending', 'Cancelled', 'Shipping', 'Completed', 'Returned', 'Requested', 'Requested'],
+        enum: ['Pending', 'Cancelled', 'Shipping', 'Completed', 'Returned', 'Requested'],
         default: 'Pending'
     },
     refundReason: {
@@ -98,7 +111,6 @@ const orderSchema = new mongoose.Schema({
         ref: 'Coupon',
         default: null
     },
-
     createdAt: {
         type: Date,
         default: Date.now
@@ -107,19 +119,16 @@ const orderSchema = new mongoose.Schema({
         type: Date,
         index: { expireAfterSeconds: 0 }
     }
-})
-
+});
 
 function generateOrderId() {
     return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-
 orderSchema.pre('validate', async function (next) {
     if (!this.orderId) {
         let isUnique = false;
         let newOrderId;
-
 
         while (!isUnique) {
             newOrderId = generateOrderId();
@@ -135,4 +144,4 @@ orderSchema.pre('validate', async function (next) {
     next();
 });
 
-module.exports = mongoose.model("Orders", orderSchema)
+module.exports = mongoose.model("Orders", orderSchema);

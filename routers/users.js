@@ -74,11 +74,7 @@ router.get('/dashboard', userController.loadDashboard);
 
 //orders routes
 router.get('/order', orderController.loadOrders);
-
 router.get('/order/:orderId', orderController.getOrderDetails);
-
-
-// Request return
 router.post('/order/return/:orderId', orderController.requestReturn);
 router.post('/order/cancel/:orderId', orderController.cancelOrder);
 router.get('/order/pdf/:orderId', orderController.generatePDF);

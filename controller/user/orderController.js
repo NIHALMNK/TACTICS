@@ -8,6 +8,8 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 const Razorpay = require('razorpay'); 
 const crypto = require('crypto');
+const { log } = require('console');
+const path = require('path')
 
 
 const razorpay = new Razorpay({
@@ -17,121 +19,28 @@ const razorpay = new Razorpay({
 
 const orderController = {
   
-    loadOrders: async (req, res) => {
-      try {
-        console.log("--->>>loadOrders");
+  async loadOrders (req, res){
+    try {
+      console.log("--->>>loadOrders");
+  
+      const userId = req.session.user.id;
+      const user = await User.findById(userId);
+      
 
-        const userId = req.session.user.id;
-        
-        const user = await User.findById(userId);
-        
-        const orders = await Order.find({ userId })
-          .populate('orderItems.productId')
-          .sort({ createdAt: -1 });
+      const orders = await Order.find({ userId })
+        .populate('orderItems.productId')
+        .sort({ createdAt: -1 });
   
-        const formattedOrders = orders.map(order => {
-          
-  
-          const totals = order.orderItems.reduce((acc, item) => {
-            const mrpTotal = item.productId.price * item.quantity;
-            const offerTotal = item.productId.offerPrice * item.quantity;
-            
-            acc.mrp += mrpTotal;
-            acc.subtotal += offerTotal;
-            return acc;
-          }, { mrp: 0, subtotal: 0 });
-  
-          let shipping = 0;
-          if (totals.subtotal > 0 && totals.subtotal <= 1000) {
-            shipping = 200;
-          } else if (totals.subtotal > 1000 && totals.subtotal <= 5000) {
-            shipping = 150;
-          } else if (totals.subtotal > 5000) {
-            shipping = 100;
-          }
-   const productDiscount = totals.mrp - totals.subtotal;
-            const couponDiscount = order.couponDiscount || 0;
-            const totalDiscount = productDiscount + couponDiscount;
-            const total = totals.subtotal + shipping - couponDiscount;
-  
-            return {
-              orderId: order._id,
-              orderDate: order.createdAt,
-              items: order.orderItems.map(item => ({
-                  name: item.productId.name,
-                  quantity: item.quantity,
-                  size: item.size,
-                  price: item.productId.offerPrice,
-                  mrp: item.productId.price,
-                  total: item.productId.offerPrice * item.quantity,
-                  mrpTotal: item.productId.price * item.quantity,
-                  discount: (item.productId.price - item.productId.offerPrice) * item.quantity
-              })),
-              mrp: totals.mrp,
-              subtotal: totals.subtotal,
-              shipping: shipping,
-              productDiscount: productDiscount,
-              couponDiscount: couponDiscount,
-              totalDiscount: totalDiscount,
-              total: total,
-              status: order.status,
-              shippingAddress: order.shippingAddress,
-              paymentMethod: order.paymentMethod,
-              paymentStatus: order.paymentStatus
-          };
-        });
-  
-        res.render('user/order', { 
-          orders: formattedOrders,
-          user: req.session.user.id
-        });
-      } catch (error) {
-        console.error('Error loading orders:', error);
-        res.status(500).render('error', { 
-          message: 'Failed to load orders',
-          error: process.env.NODE_ENV === 'development' ? error : {}
-        });
-      }
-    },
-  
-    getOrderDetails: async (req, res) => {
-      try {
-        console.log("--->>>getOrderDetails");
-
-        const orderId = req.params.orderId;
-        const userId = req.session.user.id;
-        const addressId = req.params.addressId || req.body.addressId; // Ensure addressId is retrieved
-    
-        const order = await Order.findOne(orderId)
-          .populate('orderItems.productId');
-    
-        if (!order) {
-          
-          
-          return res.status(404).json({ message: 'Order not found' });
-        }
-    
-        const user = await User.findById(userId);
-    
-        if (!user || !user.address) {
-          return res.status(404).json({ success: false, message: 'User or address not found' });
-        }
-    
-        const selectedAddress = user.address.find(addr => addr._id && addr._id.toString() === addressId);
-    
-        if (!selectedAddress) {
-          return res.status(404).json({ success: false, message: 'Selected address not found' });
-        }
-    
+      const formattedOrders = orders.map(order => {
         const totals = order.orderItems.reduce((acc, item) => {
           const mrpTotal = item.productId.price * item.quantity;
           const offerTotal = item.productId.offerPrice * item.quantity;
-    
+          
           acc.mrp += mrpTotal;
           acc.subtotal += offerTotal;
           return acc;
         }, { mrp: 0, subtotal: 0 });
-    
+  
         let shipping = 0;
         if (totals.subtotal > 0 && totals.subtotal <= 1000) {
           shipping = 200;
@@ -140,51 +49,146 @@ const orderController = {
         } else if (totals.subtotal > 5000) {
           shipping = 100;
         }
-    
-        const discount = totals.mrp - totals.subtotal;
-        const total = totals.subtotal + shipping;
-        
-        res.json({
-          order: {
-            id: order._id,
-            date: order.createdAt,
-            status: order.status,
-            items: order.orderItems.map(item => ({
-              name: item.productId.name,
-              quantity: item.quantity,
-              size: item.size,
-              price: item.productId.offerPrice,
-              mrp: item.productId.price,
-              total: item.productId.offerPrice * item.quantity,
-              mrpTotal: item.productId.price * item.quantity,
-              discount: (item.productId.price - item.productId.offerPrice) * item.quantity
-            })),
-            mrp: totals.mrp,
-            subtotal: totals.subtotal,
-            shipping: shipping,
-            discount: discount,
-            total: total,
-            address: selectedAddress,
-            paymentStatus: order.paymentStatus,
-            paymentMethod: order.paymentMethod
-          }
-        });
-      } catch (error) {
-        console.error('Error getting order details:', error);
-        res.status(500).json({ message: 'Failed to get order details' });
-      }
+  
+        const productDiscount = totals.mrp - totals.subtotal;
+        const couponDiscount = order.couponDiscount || 0;
+        const totalDiscount = productDiscount + couponDiscount;
+        const total = totals.subtotal + shipping - couponDiscount;
+  
+        return {
+          id:order._id,
+          orderId:order.orderId,
+          orderDate: order.createdAt,
+          items: order.orderItems.map(item => ({
+            name: item.productId.name,
+            quantity: item.quantity,
+            size: item.size,
+            price: item.productId.offerPrice,
+            mrp: item.productId.price,
+            total: item.productId.offerPrice * item.quantity,
+            mrpTotal: item.productId.price * item.quantity,
+            discount: (item.productId.price - item.productId.offerPrice) * item.quantity
+          })),
+          mrp: totals.mrp,
+          subtotal: totals.subtotal,
+          shipping: shipping,
+          productDiscount: productDiscount,
+          couponDiscount: couponDiscount,
+          totalDiscount: totalDiscount,
+          total: total,
+          status: order.status,
+          shippingAddress: order.shippingAddress,
+          paymentMethod: order.paymentMethod,
+          paymentStatus: order.paymentStatus
+        };
+      });
+  
+      res.render('user/order', { 
+        orders: formattedOrders,
+        user: req.session.user.id
+      });
+    } catch (error) {
+      console.error('Error loading orders:', error);
+      res.status(500).render('error', { 
+        message: 'Failed to load orders',
+        error: process.env.NODE_ENV === 'development' ? error : {}
+      });
+    }
     },
   
+  async getOrderDetails (req, res) {
+    try {
+      console.log("--->>>getOrderDetails");
+  
+      const orderId = req.params.orderId;
+      const userId = req.session.user.id;
+      const addressId = req.params.addressId || req.body.addressId;
+  
+      console.log("Order ID:", orderId); // Log orderId to verify
+  
+      const order = await Order.findOne({ orderId }).populate('orderItems.productId');
+  
+      if (!order) {
+        return res.status(404).json({ message: 'Order not found' });
+      }
+  
+      const user = await User.findById(userId);
+  
+      if (!user || !user.address) {
+        return res.status(404).json({ success: false, message: 'User or address not found' });
+      }
+  
+      const selectedAddress = user.address.find(addr => addr._id && addr._id.toString() === addressId);
+  
+      if (!selectedAddress) {
+        return res.status(404).json({ success: false, message: 'Selected address not found' });
+      }
+  
+      const totals = order.orderItems.reduce((acc, item) => {
+        const mrpTotal = item.productId.price * item.quantity;
+        const offerTotal = item.productId.offerPrice * item.quantity;
+  
+        acc.mrp += mrpTotal;
+        acc.subtotal += offerTotal;
+        return acc;
+      }, { mrp: 0, subtotal: 0 });
+  
+      let shipping = 0;
+      if (totals.subtotal > 0 && totals.subtotal <= 1000) {
+        shipping = 200;
+      } else if (totals.subtotal > 1000 && totals.subtotal <= 5000) {
+        shipping = 150;
+      } else if (totals.subtotal > 5000) {
+        shipping = 100;
+      }
+  
+      const discount = totals.mrp - totals.subtotal;
+      const total = totals.subtotal + shipping;
+  
+      res.json({
+        order: {
+          _id: order._id,
+          orderId: order.orderId, 
+          date: order.createdAt,
+          status: order.status,
+          items: order.orderItems.map(item => ({
+            name: item.productId.name,
+            quantity: item.quantity,
+            size: item.size,
+            price: item.productId.offerPrice,
+            mrp: item.productId.price,
+            total: item.productId.offerPrice * item.quantity,
+            mrpTotal: item.productId.price * item.quantity,
+            discount: (item.productId.price - item.productId.offerPrice) * item.quantity
+          })),
+          mrp: totals.mrp,
+          subtotal: totals.subtotal,
+          shipping: shipping,
+          discount: discount,
+          total: total,
+          address: selectedAddress,
+          paymentStatus: order.paymentStatus,
+          paymentMethod: order.paymentMethod
+        }
+      });
+    } catch (error) {
+      console.error('Error getting order details:', error);
+      res.status(500).json({ message: 'Failed to get order details' });
+    }
+    },
 
-    async  requestReturn (req, res) {
+  async  requestReturn (req, res) {
       try {
         console.log("--->>>requestReturn");
 
         const { reason, orderId } = req.body;
         
+
+        console.log(orderId);
+        
         const userId = req.session.user.id;
   
-        const order = await Order.findById(orderId);
+        const order = await Order.findOne({orderId});
   
         if (!order) {
           
@@ -250,7 +254,7 @@ const orderController = {
       }
     },
 
-    async cancelOrder(req, res) {
+  async cancelOrder(req, res) {
       try {
         console.log("--->>>cancelOrder");
 
@@ -258,9 +262,11 @@ const orderController = {
         const orderId = req.params.orderId;
         const { reason } = req.body;
         
+
+        
         console.log(reason);
         
-        const order = await Order.findById(orderId).populate('orderItems.productId');
+        const order = await Order.findOne({orderId:orderId}).populate('orderItems.productId');
     
         if (!order) {
           return res.status(404).json({
@@ -268,7 +274,11 @@ const orderController = {
             message: 'Order not found',
           });
         }
-    
+        console.log(userId);
+        console.log(order);
+        console.log("--->"+order.userId);
+        
+        
         
                 if (order.userId.toString() !== userId) {
                   return res.status(403).json({
@@ -276,7 +286,7 @@ const orderController = {
                     message: 'Unauthorized to cancel this order'
                   });
                 }
-          
+                
                 if (order.status !== 'Pending') {
                   return res.status(400).json({
                     success: false,
@@ -369,156 +379,202 @@ const orderController = {
 
     async generatePDF(req, res) {
       try {
-        console.log("--->>>generatePDF");
-
-            const orderId = req.params.orderId;
-            const userId = req.session.user.id;
+        const orderId = req.params.orderId;
+        const userId = req.session.user.id;
+    
+        const order = await Order.findOne({ orderId, userId }).populate('orderItems.productId');
+    
+        if (!order) {
+          return res.status(404).json({ success: false, message: 'Order not found' });
+        }
+    
+        const doc = new PDFDocument({ 
+          margin: 50,
+          size: 'A4',
+          bufferPages: true
+        });
+    
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename=order-${orderId}-receipt.pdf`);
+        doc.pipe(res);
+    
+        // Color Palette
+        const colors = {
+          primary: '#2C3E50',
+          secondary: '#3498DB',
+          background: '#F4F6F7',
+          text: '#2C3E50'
+        };
+    
+        // Currency Formatter
+        const formatCurrency = (amount) => {
+          return new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }).format(amount);
+        };
+    
+        // Dynamic Logo Path with Fallback
+        const logoPaths = [
+          path.join(__dirname, '..', 'public', 'images', 'logos', 'black-logo.png'),
+          path.join(__dirname, '..', 'public', 'images', 'logos', 'black-logo.jpg'),
+          path.join(__dirname, '..', 'public', 'images', 'tactics-logo.png')
+        ];
+    
+        const logoPath = logoPaths.find(fs.existsSync);
         
-            const order = await Order.findOne({ _id: orderId, userId })
-              .populate('orderItems.productId');
+        if (logoPath) {
+          doc.image(logoPath, 50, 40, { width: 80, align: 'left' });
+        }
         
-            if (!order) {
-              return res.status(404).json({ success: false, message: 'Order not found' });
-            }
+        doc.fillColor(colors.primary)
+          .fontSize(24)
+          .font('Helvetica-Bold')
+          .text('TACTICS', 150, 50, { align: 'left', characterSpacing: 0.5 })
+          .fontSize(12)
+          .fillColor(colors.secondary)
+          .text('Official Order Receipt', 150, 80, { align: 'left', characterSpacing: 0 });
+    
+        // Decorative Line
+        doc.strokeColor(colors.secondary)
+          .lineWidth(1.5)
+          .moveTo(50, 110)
+          .lineTo(550, 110)
+          .stroke();
+    
+        // Order Information
+        doc.fillColor(colors.text)
+          .fontSize(10)
+          .font('Helvetica')
+          .text(`Order ID: #${orderId}`, 50, 130)
+          .text(`Date: ${new Date(order.createdAt).toLocaleDateString()}`, 50, 145)
+          .text(`Status: ${order.status}`, 50, 160);
+    
+        // Shipping Address
+        doc.font('Helvetica-Bold')
+          .text('Shipping Address', 350, 130, { align: 'left' })
+          .font('Helvetica')
+          .text(`${order.shippingAddress.house}`, 350, 150)
+          .text(`${order.shippingAddress.street}`, 350, 165)
+          .text(`${order.shippingAddress.city}, ${order.shippingAddress.state}`, 350, 180)
+          .text(`PIN: ${order.shippingAddress.pinCode}`, 350, 195);
+    
+        // Table Setup
+        const tableTop = 230;
+        const tableOptions = {
+          headerBackground: colors.secondary,
+          headerColor: 'white',
+          alternateRowBackground: colors.background
+        };
+    
+        // Table Header
+        doc.fillColor(tableOptions.headerBackground)
+          .rect(50, tableTop, 500, 30)
+          .fill();
         
-            const doc = new PDFDocument({ margin: 50 });
+        doc.fillColor(tableOptions.headerColor)
+          .font('Helvetica-Bold')
+          .fontSize(12);
         
-            res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', `attachment; filename=order-${orderId}-receipt.pdf`);
-            doc.pipe(res);
+        const headers = ['Item', 'Size', 'Qty', 'Price', 'Total'];
+        const positions = [60, 250, 330, 410, 490];
         
-            const drawTableLine = (y) => {
-              doc.moveTo(50, y).lineTo(550, y).stroke();
-            };
-        
-            const createTableRow = (items, y, isHeader = false) => {
-              const columns = {
-                item: { x: 50, width: 180 },
-                size: { x: 230, width: 60 },
-                qty: { x: 290, width: 60 },
-                price: { x: 350, width: 100 },
-                total: { x: 450, width: 100 }
-              };
-        
-              if (isHeader) {
-                doc.font('Helvetica-Bold');
-              } else {
-                doc.font('Helvetica');
-              }
-        
-              Object.keys(columns).forEach((col, index) => {
-                const text = items[index] || '';
-                doc.text(text, columns[col].x, y, {
-                  width: columns[col].width,
-                  align: ['item'].includes(col) ? 'left' : 'center'
-                });
-              });
-        
-              return y + 25;
-            };
-        
-            doc.fontSize(24).font('Helvetica-Bold').text('TACTICS', { align: 'center' });
-            doc.fontSize(16).text('Order Receipt', { align: 'center' });
-            doc.moveDown();
-        
-            doc.fontSize(12).font('Helvetica');
-            const orderInfoY = doc.y;
-            
-            doc.text('Order Information:', 50, orderInfoY);
-            doc.font('Helvetica');
-            doc.text(`Order ID: #${orderId}`, 50, orderInfoY + 20);
-            doc.text(`Date: ${new Date(order.createdAt).toLocaleDateString()}`, 50, orderInfoY + 40);
-            doc.text(`Status: ${order.status}`, 50, orderInfoY + 60);
-        
-            doc.font('Helvetica-Bold');
-            doc.text('Shipping Address:', 300, orderInfoY);
-            doc.font('Helvetica');
-            doc.text(`${order.shippingAddress.house}`, 300, orderInfoY + 20);
-            doc.text(`${order.shippingAddress.street}`, 300, orderInfoY + 40);
-            doc.text(`${order.shippingAddress.city}, ${order.shippingAddress.state}`, 300, orderInfoY + 60);
-            doc.text(`PIN: ${order.shippingAddress.pinCode}`, 300, orderInfoY + 80);
-        
-            doc.moveDown(5);
-        
-            const tableTop = doc.y;
-            drawTableLine(tableTop);
-            let currentY = createTableRow(
-              ['Item', 'Size', 'Qty', 'Price', 'Total'],
-              tableTop + 5,
-              true
-            );
-            drawTableLine(currentY - 5);
-        
-            order.orderItems.forEach((item, index) => {
-              currentY = createTableRow([
-                item.productId.name,
-                item.size,
-                item.quantity.toString(),
-                `₹${item.productId.offerPrice}`,
-                `₹${item.productId.offerPrice * item.quantity}`
-              ], currentY);
-              drawTableLine(currentY - 5);
-            });
-        
-            const subtotal = order.orderItems.reduce((sum, item) => 
-              sum + (item.productId.offerPrice * item.quantity), 0);
-            
-            let shipping = 0;
-            if (subtotal <= 1000) shipping = 200;
-            else if (subtotal <= 5000) shipping = 150;
-            else shipping = 100;
-        
-            doc.moveDown();
-            const summaryX = 350;
-            const summaryStartY = doc.y;
-            
-            doc.rect(summaryX - 10, summaryStartY - 10, 220, 120).stroke();
-            
-            doc.font('Helvetica');
-            doc.text('Subtotal:', summaryX, summaryStartY);
-            doc.text(`₹${subtotal}`, 450, summaryStartY, { align: 'right' });
-            
-            doc.text('Shipping:', summaryX, summaryStartY + 25);
-            doc.text(`₹${shipping}`, 450, summaryStartY + 25, { align: 'right' });
-            
-            if (order.discount) {
-              doc.text('Discount:', summaryX, summaryStartY + 50);
-              doc.text(`-₹${order.discount}`, 450, summaryStartY + 50, { align: 'right' });
-            }
-        
-            doc.font('Helvetica-Bold');
-            doc.text('Total:', summaryX, summaryStartY + 75);
-            doc.text(
-              `₹${subtotal + shipping - (order.discount || 0)}`,
-              450,
-              summaryStartY + 75,
-              { align: 'right' }
-            );
-        
-            doc.font('Helvetica')
-              .fontSize(10)
-              .text('Thank you for shopping with Tactics!', {
-                align: 'center',
-                y: doc.page.height - 100
-              });
-        
-            doc.end();
-        
-          } catch (error) {
-            console.error('Error generating PDF:', error);
-            res.status(500).json({ 
-              success: false, 
-              message: 'Failed to generate PDF receipt' 
-            });
+        headers.forEach((header, index) => {
+          doc.text(header, positions[index], tableTop + 8, { 
+            align: index === 0 ? 'left' : 'center' 
+          });
+        });
+    
+        // Table Rows
+        let rowY = tableTop + 40;
+        order.orderItems.forEach((item, index) => {
+          if (index % 2 !== 0) {
+            doc.fillColor(tableOptions.alternateRowBackground)
+              .rect(50, rowY - 5, 500, 25)
+              .fill();
           }
-        },
-        async retryPayment(req, res) {
+    
+          doc.fillColor(colors.text)
+            .font('Helvetica')
+            .text(item.productId.name, 60, rowY, { width: 180 })
+            .text(item.size, 250, rowY, { align: 'center', width: 70 })
+            .text(item.quantity.toString(), 330, rowY, { align: 'center', width: 70 })
+            .text(formatCurrency(item.productId.offerPrice), 410, rowY, { align: 'center', width: 70 })
+            .text(formatCurrency(item.productId.offerPrice * item.quantity), 490, rowY, { align: 'center', width: 70 });
+          
+          rowY += 25;
+        });
+    
+        // Totals Calculation
+        const calculateTotals = () => {
+          return order.orderItems.reduce((acc, item) => {
+            const mrpTotal = item.productId.price * item.quantity;
+            const offerTotal = item.productId.offerPrice * item.quantity;
+    
+            acc.mrp += mrpTotal;
+            acc.subtotal += offerTotal;
+            return acc;
+          }, { mrp: 0, subtotal: 0 });
+        };
+    
+        const totals = calculateTotals();
+        const shipping = totals.subtotal <= 1000 ? 200 : 
+                         totals.subtotal <= 5000 ? 150 : 100;
+        const discount = totals.mrp - totals.subtotal;
+        const total = totals.subtotal + shipping;
+    
+        // Summary Box
+        doc.strokeColor(colors.secondary)
+          .lineWidth(1)
+          .rect(350, rowY + 20, 200, 120)
+          .stroke();
+    
+        const summaryEntries = [
+          { label: 'Subtotal:', value: formatCurrency(totals.subtotal) },
+          { label: 'Shipping:', value: formatCurrency(shipping) },
+          ...(discount > 0 ? [{ label: 'Discount:', value: `-${formatCurrency(discount)}` }] : []),
+          { label: 'Total:', value: formatCurrency(total), bold: true }
+        ];
+    
+        summaryEntries.forEach((entry, index) => {
+          doc.fillColor(colors.text)
+            .font(entry.bold ? 'Helvetica-Bold' : 'Helvetica')
+            .fontSize(12)
+            .text(entry.label, 360, rowY + 35 + (index * 20), { continued: true, align: 'left' })
+            .text(entry.value, { align: 'right', characterSpacing: 0 });
+        });
+    
+        // Footer
+        doc.fillColor(colors.secondary)
+          .fontSize(10)
+          .text('Thank you for shopping with Tactics!', {
+            align: 'center',
+            y: doc.page.height - 50,
+            characterSpacing: 0
+          });
+    
+        doc.end();
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+        res.status(500).json({
+          success: false,
+          message: 'Failed to generate PDF receipt',
+          errorDetails: error.message
+        });
+      }
+    },    
+
+  async retryPayment(req, res) {
           try {
             console.log("--->>>retryPayment");
 
             const { orderId } = req.params;
             
-            const order = await Order.findOne({ _id: orderId })
+            console.log(orderId);
+            
+            const order = await Order.findOne({ orderId: orderId })
               .populate('orderItems.productId');
             
             if (!order) {
@@ -528,7 +584,7 @@ const orderController = {
               });
             }
         
-            const amountInPaise = Math.round(order.totalAmount * 100); // Convert to paise
+            const amountInPaise = Math.round(order.totalAmount * 100);
         
             console.log('Amount details:', {
               originalAmount: order.totalAmount,
@@ -542,8 +598,8 @@ const orderController = {
               payment_capture: 1
             });
         
-            const updatedOrder = await Order.findByIdAndUpdate(
-              orderId,
+            const updatedOrder = await Order.findOneAndUpdate(
+             { orderId},
               {
                 razorpayOrderId: razorpayOrder.id
               },
@@ -556,8 +612,7 @@ const orderController = {
         
             const user = await User.findById(order.userId);
             
-            // cart.items = [];
-            // await cart.save();
+
 
             res.json({
               success: true,
@@ -580,7 +635,8 @@ const orderController = {
             });
           }
         },
-        async verifyPayment(req, res) {
+
+  async verifyPayment(req, res) {
           try {
             console.log("--->>>verifyPayment");
 
@@ -591,7 +647,7 @@ const orderController = {
               razorpay_signature
             } = req.body;
         
-            const order = await Order.findById(orderId).populate('orderItems.productId');
+          const order = await Order.findOne({orderId}).populate('orderItems.productId');
             if (!order) {
               throw new Error('Order not found');
             }
@@ -648,8 +704,8 @@ const orderController = {
       await cart.save();
     }
         
-            const updatedOrder = await Order.findByIdAndUpdate(
-              orderId,
+            const updatedOrder = await Order.findOneAndUpdate(
+              {orderId},
               {
                 paymentStatus: 'Completed',
                 razorpayPaymentId: razorpay_payment_id,
@@ -677,7 +733,6 @@ const orderController = {
         },
       
  
-  
 };
 
 function formatAddress(addressObj) {
