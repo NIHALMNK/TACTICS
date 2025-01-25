@@ -111,18 +111,21 @@ module.exports = {
     async loadPaymentSuccess(req, res) {
         try {
             console.log("--->>>loadPaymentSuccess");
-            const orderId = req.params.orderId;
+            const Id = req.params.orderId;
 
-            console.log("orderID-->", orderId);
+            console.log("orderID-->", Id);
 
-            if (!orderId) {
+            if (!Id) {
                 return res.status(400).render('error', {
                     message: 'Invalid Order ID'
                 });
             }
 
-            const order = await orderModel.findById(orderId)
+            const order = await orderModel.findById(Id)
                 .populate('userId');
+
+               
+                
 
             if (!order) {
                 return res.status(404).render('error', {
@@ -131,7 +134,7 @@ module.exports = {
             }
 
             res.render('user/success', {
-                orderId: order._id,
+                orderId: order.orderId,
                 amount: order.totalAmount,
                 paymentStatus: order.paymentStatus,
                 orderDate: order.orderDate

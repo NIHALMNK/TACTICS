@@ -306,6 +306,55 @@
     .bg-light {
       background-color: #f8f9fa !important;
     }
+
+
+    .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.pagination .btn {
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #007bff;
+    transition: all 0.3s ease;
+}
+
+.pagination .btn-primary {
+    background-color: #007bff;
+    color: white;
+    pointer-events: none;
+}
+
+.pagination .btn-outline-secondary {
+    background-color: white;
+    color: #6c757d;
+}
+
+.pagination .btn:hover {
+    background-color: #f8f9fa;
+}
+
+.pagination .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 576px) {
+    .pagination {
+        flex-wrap: wrap;
+    }
+    
+    .pagination .btn {
+        margin: 5px;
+    }
+}
   </style>
 </head>
 
@@ -514,7 +563,24 @@
         </div>
       </div>
 
-
+      <!-- In your orders section, after the order list -->
+<% if (totalPages > 1) { %>
+  <div class="pagination">
+      <% if (hasPrevPage) { %>
+          <a href="?page=<%= currentPage - 1 %>" class="btn btn-secondary">Previous</a>
+      <% } %>
+      
+      <% for(let i = 1; i <= totalPages; i++) { %>
+          <a href="?page=<%= i %>" class="btn <%= currentPage === i ? 'btn-primary' : 'btn-outline-secondary' %>">
+              <%= i %>
+          </a>
+      <% } %>
+      
+      <% if (hasNextPage) { %>
+          <a href="?page=<%= currentPage + 1 %>" class="btn btn-secondary">Next</a>
+      <% } %>
+  </div>
+  <% } %>
 
 
       <!---------------->

@@ -19,82 +19,93 @@ const razorpay = new Razorpay({
 
 const orderController = {
   
-  async loadOrders (req, res){
+  async loadOrders(req, res) {
     try {
-      console.log("--->>>loadOrders");
-  
-      const userId = req.session.user.id;
-      const user = await User.findById(userId);
-      
+        const userId = req.session.user.id;
+        const page = parseInt(req.query.page) || 1; // Current page, default to 1
+        const limit = 5; // 5 orders per page
+        const skip = (page - 1) * limit;
 
-      const orders = await Order.find({ userId })
-        .populate('orderItems.productId')
-        .sort({ createdAt: -1 });
-  
-      const formattedOrders = orders.map(order => {
-        const totals = order.orderItems.reduce((acc, item) => {
-          const mrpTotal = item.productId.price * item.quantity;
-          const offerTotal = item.productId.offerPrice * item.quantity;
-          
-          acc.mrp += mrpTotal;
-          acc.subtotal += offerTotal;
-          return acc;
-        }, { mrp: 0, subtotal: 0 });
-  
-        let shipping = 0;
-        if (totals.subtotal > 0 && totals.subtotal <= 1000) {
-          shipping = 200;
-        } else if (totals.subtotal > 1000 && totals.subtotal <= 5000) {
-          shipping = 150;
-        } else if (totals.subtotal > 5000) {
-          shipping = 100;
-        }
-  
-        const productDiscount = totals.mrp - totals.subtotal;
-        const couponDiscount = order.couponDiscount || 0;
-        const totalDiscount = productDiscount + couponDiscount;
-        const total = totals.subtotal + shipping - couponDiscount;
-  
-        return {
-          id:order._id,
-          orderId:order.orderId,
-          orderDate: order.createdAt,
-          items: order.orderItems.map(item => ({
-            name: item.productId.name,
-            quantity: item.quantity,
-            size: item.size,
-            price: item.productId.offerPrice,
-            mrp: item.productId.price,
-            total: item.productId.offerPrice * item.quantity,
-            mrpTotal: item.productId.price * item.quantity,
-            discount: (item.productId.price - item.productId.offerPrice) * item.quantity
-          })),
-          mrp: totals.mrp,
-          subtotal: totals.subtotal,
-          shipping: shipping,
-          productDiscount: productDiscount,
-          couponDiscount: couponDiscount,
-          totalDiscount: totalDiscount,
-          total: total,
-          status: order.status,
-          shippingAddress: order.shippingAddress,
-          paymentMethod: order.paymentMethod,
-          paymentStatus: order.paymentStatus
-        };
-      });
-  
-      res.render('user/order', { 
-        orders: formattedOrders,
-        user: req.session.user.id
-      });
+        // Find total number of orders for pagination
+        const totalOrders = await Order.countDocuments({ userId });
+        const totalPages = Math.ceil(totalOrders / limit);
+
+        // Fetch paginated orders
+        const orders = await Order.find({ userId })
+            .populate('orderItems.productId')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        const formattedOrders = orders.map(order => {
+            const totals = order.orderItems.reduce((acc, item) => {
+                const mrpTotal = item.productId.price * item.quantity;
+                const offerTotal = item.productId.offerPrice * item.quantity;
+                
+                acc.mrp += mrpTotal;
+                acc.subtotal += offerTotal;
+                return acc;
+            }, { mrp: 0, subtotal: 0 });
+
+            let shipping = 0;
+            if (totals.subtotal > 0 && totals.subtotal <= 1000) {
+                shipping = 200;
+            } else if (totals.subtotal > 1000 && totals.subtotal <= 5000) {
+                shipping = 150;
+            } else if (totals.subtotal > 5000) {
+                shipping = 100;
+            }
+
+            const productDiscount = totals.mrp - totals.subtotal;
+            const couponDiscount = order.couponDiscount || 0;
+            const totalDiscount = productDiscount + couponDiscount;
+            const total = totals.subtotal + shipping - couponDiscount;
+
+            return {
+                id: order._id,
+                orderId: order.orderId,
+                orderDate: order.createdAt,
+                items: order.orderItems.map(item => ({
+                    name: item.productId.name,
+                    quantity: item.quantity,
+                    size: item.size,
+                    price: item.productId.offerPrice,
+                    mrp: item.productId.price,
+                    total: item.productId.offerPrice * item.quantity,
+                    mrpTotal: item.productId.price * item.quantity,
+                    discount: (item.productId.price - item.productId.offerPrice) * item.quantity
+                })),
+                mrp: totals.mrp,
+                subtotal: totals.subtotal,
+                shipping: shipping,
+                productDiscount: productDiscount,
+                couponDiscount: couponDiscount,
+                totalDiscount: totalDiscount,
+                total: total,
+                status: order.status,
+                shippingAddress: order.shippingAddress,
+                paymentMethod: order.paymentMethod,
+                paymentStatus: order.paymentStatus
+            };
+        });
+
+        // Update the render to include pagination information
+        res.render('user/order', { 
+            orders: formattedOrders,
+            user: req.session.user.id,
+            currentPage: page,
+            totalPages: totalPages,
+            hasNextPage: page < totalPages,
+            hasPrevPage: page > 1
+        });
     } catch (error) {
-      console.error('Error loading orders:', error);
-      res.status(500).render('error', { 
-        message: 'Failed to load orders',
-        error: process.env.NODE_ENV === 'development' ? error : {}
-      });
+        console.error('Error loading orders:', error);
+        res.status(500).render('error', { 
+            message: 'Failed to load orders',
+            error: process.env.NODE_ENV === 'development' ? error : {}
+        });
     }
-    },
+},
   
   async getOrderDetails (req, res) {
     try {
