@@ -1,176 +1,344 @@
- /* Base Responsive Styles */
- body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f4f4;
-}
+   
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+    }
 
-/* Navbar Styles */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1050;
-  background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: 80px;
-}
+    /* Navbar Styles */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1050;
+      background: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      height: 80px;
+    }
 
-/* Profile Session Container */
-.profile-session-container {
-  padding-top: 80px; /* Accommodate fixed navbar */
-  min-height: 100vh;
-  background-color: #f8f9fa;
-}
+    /* Profile Session Container */
+    .profile-session-container {
+      padding-top: 80px;
+      /* Accommodate fixed navbar */
+      min-height: 100vh;
+      background-color: #f8f9fa;
+    }
 
-.dashboard {
-  display: flex;
-  gap: 1.5rem;
-  width: 100%;
-}
+    .dashboard {
+      display: flex;
+      gap: 1.5rem;
+      width: 100%;
+    }
 
-/* Sidebar Styles */
-.sidebar {
-  background-color: white;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  height: fit-content;
-}
+    /* Sidebar Styles */
+    .sidebar {
+      background-color: white;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      height: fit-content;
+    }
 
-.nav-button {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.5rem;
-  border: none;
-  border-radius: 0.5rem;
-  background: white;
-  cursor: pointer;
-  transition: all 0.2s;
-}
+    .nav-button {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
 
-.nav-button svg {
-  margin-right: 0.75rem;
-  width: 1.25rem;
-  height: 1.25rem;
-}
+    .nav-button svg {
+      margin-right: 0.75rem;
+      width: 1.25rem;
+      height: 1.25rem;
+    }
 
-.nav-button:hover {
-  background-color: #f3f4f6;
-}
+    .nav-button:hover {
+      background-color: #f3f4f6;
+    }
 
-.nav-button.active {
-  background-color: #0d9488;
-  color: white;
-}
+    .nav-button.active {
+      background-color: #0d9488;
+      color: white;
+    }
 
-/* Main Content Styles */
-.main-content {
-  background: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  flex-grow: 1;
-}
+    /* Main Content Styles */
+    .main-content {
+      background: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      flex-grow: 1;
+    }
 
-/* Responsive Breakpoints */
-/* Mobile Devices */
-@media (max-width: 768px) {
-  .dashboard {
-    flex-direction: column;
-  }
+    /* Responsive Breakpoints */
+    /* Mobile Devices */
+    @media (max-width: 768px) {
+      .dashboard {
+        flex-direction: column;
+      }
 
-  .sidebar {
-    width: 100%;
-    margin-bottom: 1rem;
-  }
+      .sidebar {
+        width: 100%;
+        margin-bottom: 1rem;
+      }
 
-}
+    }
 
-/* Laptop and Above */
-@media (min-width: 769px) {
-  .dashboard {
+    /* Laptop and Above */
+    @media (min-width: 769px) {
+      .dashboard {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .sidebar {
+        width: 250px;
+        /* Fixed width for sidebar */
+        flex-shrink: 0;
+      }
+
+
+    }
+
+    /* Laptop L (1440px) */
+    @media (min-width: 1440px) {
+      .sidebar {
+        width: 300px;
+      }
+
+
+    }
+
+    /* 4K and Above */
+    @media (min-width: 2560px) {
+      .container {
+        max-width: 2000px;
+      }
+
+      .sidebar {
+        width: 350px;
+      }
+
+      .nav-button {
+        padding: 1rem 1.25rem;
+        font-size: 1.1rem;
+      }
+    }
+
+    /* Additional 8K Breakpoint */
+    @media (min-width: 7680px) {
+      .sidebar {
+        width: 400px;
+      }
+
+    }
+
+    /* Add these styles to your existing CSS */
+
+    .order-card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .order-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .order-id {
+      color: #4285f4;
+      font-size: 1.1rem;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .order-status {
+      font-size: 0.9rem;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    .status-pending {
+      background-color: #feefc3;
+      color: #994c00;
+    }
+
+    .status-completed {
+      background-color: #e6f4ea;
+      color: #137333;
+    }
+
+    .order-amount {
+      font-size: 1.1rem;
+      color: #202124;
+      font-weight: 500;
+      margin: 10px 0;
+    }
+
+    .order-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .btn-view {
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .btn-cancel {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .btn-return {
+      background-color: #198754;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    .btn-retry {
+      background-color: #a07001;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .btn-pdf {
+      background-color: transparent;
+      color: #4285f4;
+      border: 1px solid #4285f4;
+      padding: 8px 20px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .order-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .order-actions {
+        flex-wrap: wrap;
+      }
+
+      .btn-view,
+      .btn-cancel,
+      .btn-return,
+      .btn-retry,
+      .btn-pdf {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+    .modal-dialog {
+      max-width: 700px;
+    }
+
+    .modal-content {
+      border-radius: 12px;
+    }
+
+    .modal-header {
+      padding: 1.5rem;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .badge {
+      padding: 0.5rem 1rem;
+      font-weight: 500;
+    }
+
+    .card {
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: none;
+    }
+
+    .bg-light {
+      background-color: #f8f9fa !important;
+    }
+
+
+    .pagination {
     display: flex;
-    flex-direction: row;
-  }
-
-  .sidebar {
-    width: 250px; /* Fixed width for sidebar */
-    flex-shrink: 0;
-  }
-
- 
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
 }
 
-/* Laptop L (1440px) */
-@media (min-width: 1440px) {
-  .sidebar {
-    width: 300px;
-  }
-
- 
+.pagination .btn {
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #007bff;
+    transition: all 0.3s ease;
 }
 
-/* 4K and Above */
-@media (min-width: 2560px) {
-  .container {
-    max-width: 2000px;
-  }
-
-  .sidebar {
-    width: 350px;
-  }
-
-  .nav-button {
-    padding: 1rem 1.25rem;
-    font-size: 1.1rem;
-  }
+.pagination .btn-primary {
+    background-color: #007bff;
+    color: white;
+    pointer-events: none;
 }
 
-/* Additional 8K Breakpoint */
-@media (min-width: 7680px) {
-  .sidebar {
-    width: 400px;
-  }
-
-}
-/*========================================*/
-.section-title {
-  padding: 10px;
-  text-align: center;
+.pagination .btn-outline-secondary {
+    background-color: white;
+    color: #6c757d;
 }
 
-@media (max-width: 320px) {
-  .table-responsive {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .table thead th, .table td {
-    padding: 5px;
-    font-size: 12px;
-  }
+.pagination .btn:hover {
+    background-color: #f8f9fa;
 }
 
-@media (min-width: 375px) and (max-width: 424px) {
-  .table-responsive {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .table thead th, .table td {
-    padding: 8px;
-    font-size: 14px;
-  }
+.pagination .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
-@media (min-width: 425px) {
-  .table thead th, .table td {
-    padding: 10px;
-    font-size: 16px;
-  }
+@media (max-width: 576px) {
+    .pagination {
+        flex-wrap: wrap;
+    }
+    
+    .pagination .btn {
+        margin: 5px;
+    }
 }
