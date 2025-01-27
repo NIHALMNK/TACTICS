@@ -478,10 +478,10 @@
               <th>ACTION</th>
             </tr>
           </thead>
-          
+
           <tbody>
             <% orders.forEach((order, index) => { %>
-             
+
             <tr>
               <td><%= index + 1 %></td>
               <td><%= order.orderId %></td>
@@ -591,7 +591,10 @@
                 <div class="mb-3">
                   <label class="form-label">Order Items</label>
                   <div id="orderItemsContainer"></div>
+
+                  <div class="cancelResone"></div>
                 </div>
+
 
 
 
@@ -687,7 +690,7 @@
 
 
         // Populate modal fields
-        document.getElementById('orderNo').value = order.orderId ;
+        document.getElementById('orderNo').value = order.orderId;
         document.getElementById('userName').value = order.userId.name;
 
         if (order.shippingAddress) {
@@ -738,23 +741,49 @@
         }
         document.getElementById('totalAmount').value = `₹${order.totalAmount.toFixed(2)}`;
 
-        // Generate order items HTML
+
         const orderItemsContainer = document.getElementById('orderItemsContainer');
+
         orderItemsContainer.innerHTML = order.orderItems.map(item => `
-                    <div class="order-item">
-                        <div class="d-flex align-items-center">
-                            <img src="${item.productId.images[0]}" alt="${item.productId.name}" class="me-3">
-                            <div>
-                                <h6 class="mb-1">${item.productId.name}</h6>
-                                <div>Quantity: ${item.quantity}</div>
-                                <div>size: ${item.size}</div>
-                                <div>Price: ₹${item.price.toFixed(2)}</div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-                  
-        // Show/hide return request section based on status
+    <div class="order-item mb-4">
+        <div class="d-flex align-items-center">
+            <img src="${item.productId.images[0]}" alt="${item.productId.name}" class="me-3">
+            <div>
+                <h6 class="mb-1">${item.productId.name}</h6>
+                <div>Quantity: ${item.quantity}</div>
+                <div>size: ${item.size}</div>
+                <div>Price: ₹${item.price.toFixed(2)}</div>
+                <div>Status: ${item.status}</div>
+            </div>
+        </div>
+        
+        ${item.cancelReason ? `
+            <div class="return-request-section mt-3" id="CancelRequestSection-${item.productId._id}">
+                <div class="mb-3">
+                    <label for="cancelReason-${item.productId._id}" class="form-label">Cancel Reason</label>
+                    <textarea class="form-control" id="cancelReason-${item.productId._id}" rows="3" readonly>${item.cancelReason}</textarea>
+                </div>
+            </div>
+        ` : ''}
+        
+        ${item.refundReason ? `
+            <div class="return-request-section mt-3" id="returnRequestSection-${item._id}">
+                <div class="mb-3">
+                    <label for="reason-${item._id}" class="form-label">Return Reason</label>
+                    <textarea class="form-control" id="reason-${item._id}" rows="3" readonly>${item.refundReason}</textarea>
+                </div>
+      ${item.status === 'Requested' ? `
+    <div class="d-flex justify-content-between mb-3">
+        <button type="button" class="btn btn-danger" onclick="handleIndividualReturn('reject', '${item._id}')">Reject Return</button>
+        <button type="button" class="btn btn-success" onclick="handleIndividualReturn('approve', '${item._id}')">Accept Return</button>
+    </div>
+` : ''}
+            </div>
+        ` : ''}
+    </div>
+`).join('');
+
+        
 
         const returnRequestSection = document.getElementById('returnRequestSection');
         if (order.status === 'Requested') {
@@ -787,7 +816,7 @@
       }
     }
 
-  
+
 
     // Handle status updates
     document.getElementById('updateStatusBtn').addEventListener('click', async () => {
@@ -864,6 +893,39 @@
         alert('Failed to process return request');
       }
     }
+
+    async function handleIndividualReturn(action, orderItemId) {
+  const orderId = document.getElementById('orderNo').value;
+  const reason = document.getElementById(`reason-${orderItemId}`).value;
+
+  try {
+    const response = await fetch('/admin/orders/handleIndividualReturn', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        orderId,
+        orderItemId, 
+        action,
+        refundReason: reason
+      })
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to process return request');
+    }
+
+    // Show success message before reloading
+    alert(data.message);
+    window.location.reload();
+  } catch (error) {
+    console.error('Error handling return request:', error);
+    alert(error.message || 'Failed to process return request');
+  }
+}
   </script>
 </body>
 

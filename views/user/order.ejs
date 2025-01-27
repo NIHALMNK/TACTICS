@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tactics</title>
-    <link rel="icon" type="image/x-icon" href="/images/produts-tactics/LOGO/3.png">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tactics</title>
+  <link rel="icon" type="image/x-icon" href="/images/produts-tactics/LOGO/3.png">
 
 
   <!-- Bootstrap CSS -->
@@ -13,7 +14,7 @@
 
 
   <link rel="stylesheet" href="/css/user/order.css">
-  
+
 </head>
 
 <body>
@@ -86,15 +87,15 @@
               <% } %>
 
               <% if (order.paymentStatus.toLowerCase() === 'failed' && order.paymentMethod === 'razorpay' && order.status!='Cancelled'  ){ %>
-                <button class="btn btn-retry">Retry Payment</button>
+              <button class="btn btn-retry">Retry Payment</button>
               <% } %>
 
-              <button class="btn btn-pdf" onclick="downloadPDF(('<%= order.orderId %>'))" >Get PDF Receipt</button>
+              <button class="btn btn-pdf" onclick="downloadPDF(('<%= order.orderId %>'))">Get PDF Receipt</button>
             </div>
           </div>
-<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+          <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
           <!-- Order Details Modal -->
-          <div class="modal fade" id="orderModal<%= order.orderId %>" tabindex="-1">
+          <div class="modal fade" id="orderModal<%= order.orderId %>" tabindex="-1" data-order-id="<%= order.orderId %>">
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
                 <div class="modal-header border-bottom-0">
@@ -109,8 +110,7 @@
                       <div class="d-flex justify-content-between align-items-start">
                         <div>
                           <p class="text-muted mb-1">Order ID:</p>
-                         
-                          <p class="fw-bold fs-5">#<%= order.orderId %></p> 
+                          <p class="fw-bold fs-5">#<%= order.orderId %></p>
                         </div>
                         <div>
                           <p class="text-muted mb-1">Status:</p>
@@ -137,7 +137,8 @@
                     <div class="mb-4">
                       <h6 class="fw-bold mb-3">Items:</h6>
                       <% order.items.forEach(item => { %>
-                      <div class="card mb-3">
+
+                      <div class="card mb-3" data-item-id="<%= item._id %>">
                         <div class="card-body">
                           <div class="row align-items-center">
                             <div class="col-md-8">
@@ -151,13 +152,37 @@
                             </div>
                             <div class="col-md-4 text-end">
                               <p class="fw-bold mb-0">Rs. <%= item.price %></p>
+                              
+
+
+                              
+                              
+                              <% if (order.status === 'Completed' && item.status !== "Returned"  && item.status !== "Cancelled"  ) { %>
+                                <button class="btn btn-warning mt-2 return-item-btn">
+                                Return
+                              </button>
+                              <div class="return-reason-container mt-2" style="display:none;">
+                                <textarea class="form-control return-reason" rows="3" placeholder="Reason for return"></textarea>
+                                <button class="btn btn-primary mt-2 submit-return-btn">Submit Return</button>
+                              </div>
+
+                              <% } else if (item.status !== "Cancelled" && item.status !== 'Returned') { %>
+                                
+
+                              <button class="btn btn-danger mt-2 cancel-item-btn">
+                                Cancel
+                              </button>
+                              <div class="cancel-reason-container mt-2" style="display:none;">
+                                <textarea class="form-control cancel-reason" rows="3" placeholder="Reason for cancellation"></textarea>
+                                <button class="btn btn-primary mt-2 submit-cancel-btn">Submit Cancel</button>
+                              </div>
+                              <% } %>
                             </div>
                           </div>
                         </div>
                       </div>
                       <% }); %>
                     </div>
-
                     <!---Add address-->
                     <!-- Shipping Address Section -->
                     <div class="mb-4">
@@ -222,23 +247,23 @@
       </div>
 
       <!-- In your orders section, after the order list -->
-<% if (totalPages > 1) { %>
-  <div class="pagination">
-      <% if (hasPrevPage) { %>
-          <a href="?page=<%= currentPage - 1 %>" class="btn btn-secondary">Previous</a>
+      <% if (totalPages > 1) { %>
+      <div class="pagination">
+        <% if (hasPrevPage) { %>
+        <a href="?page=<%= currentPage - 1 %>" class="btn btn-secondary">Previous</a>
+        <% } %>
+
+        <% for(let i = 1; i <= totalPages; i++) { %>
+        <a href="?page=<%= i %>" class="btn <%= currentPage === i ? 'btn-primary' : 'btn-outline-secondary' %>">
+          <%= i %>
+        </a>
+        <% } %>
+
+        <% if (hasNextPage) { %>
+        <a href="?page=<%= currentPage + 1 %>" class="btn btn-secondary">Next</a>
+        <% } %>
+      </div>
       <% } %>
-      
-      <% for(let i = 1; i <= totalPages; i++) { %>
-          <a href="?page=<%= i %>" class="btn <%= currentPage === i ? 'btn-primary' : 'btn-outline-secondary' %>">
-              <%= i %>
-          </a>
-      <% } %>
-      
-      <% if (hasNextPage) { %>
-          <a href="?page=<%= currentPage + 1 %>" class="btn btn-secondary">Next</a>
-      <% } %>
-  </div>
-  <% } %>
 
 
       <!---------------->
@@ -261,7 +286,6 @@
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
   <script>
-   
     document.addEventListener('DOMContentLoaded', function() {
       initializeOrderButtons();
       initializeTooltips();
@@ -286,18 +310,18 @@
         button.addEventListener('click', handleOrderReturn);
       });
 
-    const pdfButtons = document.querySelectorAll('.btn-pdf');
-    pdfButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const orderId = this.closest('.order-card').querySelector('.order-id').textContent.split('#')[1];
-        downloadPDF(orderId);
+      const pdfButtons = document.querySelectorAll('.btn-pdf');
+      pdfButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const orderId = this.closest('.order-card').querySelector('.order-id').textContent.split('#')[1];
+          downloadPDF(orderId);
+        });
       });
-    });
 
-    const retryButtons = document.querySelectorAll('.btn-retry');
-    retryButtons.forEach(button => {
-      button.addEventListener('click', handleRetryPayment);
-    });
+      const retryButtons = document.querySelectorAll('.btn-retry');
+      retryButtons.forEach(button => {
+        button.addEventListener('click', handleRetryPayment);
+      });
     }
 
     function initializeTooltips() {
@@ -439,7 +463,7 @@
             });
             window.location.reload();
           } else {
-            
+
             await Swal.fire({
               title: 'wait!',
               text: 'Your return request has been submitted.',
@@ -460,181 +484,289 @@
     }
 
     async function downloadPDF(orderId) {
-  try {
-    Swal.fire({
-      title: 'Generating PDF...',
-      html: 'Please wait while we generate your receipt',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    });
-
-    const response = await fetch(`/order/pdf/${orderId}`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/pdf'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to generate PDF');
-    }
-
-    const blob = await response.blob();
-
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = url;
-    a.download = `order-${orderId}-receipt.pdf`;
-
-    document.body.appendChild(a);
-    a.click();
-
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(a);
-
-    Swal.fire({
-      title: 'Success!',
-      text: 'Your receipt has been downloaded',
-      icon: 'success',
-      timer: 2000,
-      showConfirmButton: false
-    });
-
-  } catch (error) {
-    console.error('Error downloading PDF:', error);
-    Swal.fire({
-      title: 'Error!',
-      text: 'Failed to download receipt. Please try again.',
-      icon: 'error'
-    });
-  }
-}
-
-// Handle retry payment
-async function handleRetryPayment(event) {
-  const orderCard = this.closest('.order-card');
-  const orderId = orderCard.querySelector('.order-id').textContent.split('#')[1];
-
-  try {
-    Swal.fire({
-      title: 'Initializing Payment...',
-      html: 'Please wait while we prepare your payment',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    });
-
-    // First, get the order details and Razorpay order ID
-    const response = await fetch(`/order/retry-payment/${orderId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    const data = await response.json();
-
-    if (!data.success) {
-      throw new Error(data.message || 'Failed to initialize payment');
-    }
-
-    // Close the loading indicator
-    Swal.close();
-
-    // Initialize Razorpay payment
-    const options = {
-      key: data.razorpayKeyId, // Get this from your server response
-      amount: data.amount,
-      currency: data.currency,
-      name: 'Your Store Name',
-      description: `Order Payment Retry - #${orderId}`,
-      order_id: data.razorpayOrderId,
-      handler: async function (response) {
-        // Show processing message
+      try {
         Swal.fire({
-          title: 'Processing Payment...',
-          html: 'Please wait while we confirm your payment',
+          title: 'Generating PDF...',
+          html: 'Please wait while we generate your receipt',
           allowOutsideClick: false,
           didOpen: () => {
             Swal.showLoading();
           }
         });
 
-        try {
-          // Verify payment with your server
-          const verifyResponse = await fetch('/order/verify-payment', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              orderId: orderId,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature
-            })
-          });
-
-          const verifyData = await verifyResponse.json();
-
-          if (verifyData.success) {
-            await Swal.fire({
-              title: 'Payment Successful!',
-              text: 'Your payment has been processed successfully',
-              icon: 'success',
-              timer: 2000,
-              showConfirmButton: false
-            });
-            window.location.reload();
-          } else {
-            throw new Error(verifyData.message || 'Payment verification failed');
+        const response = await fetch(`/order/pdf/${orderId}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/pdf'
           }
-        } catch (error) {
-          console.error('Payment verification error:', error);
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to generate PDF');
+        }
+
+        const blob = await response.blob();
+
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `order-${orderId}-receipt.pdf`;
+
+        document.body.appendChild(a);
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        Swal.fire({
+          title: 'Success!',
+          text: 'Your receipt has been downloaded',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false
+        });
+
+      } catch (error) {
+        console.error('Error downloading PDF:', error);
+        Swal.fire({
+          title: 'Error!',
+          text: 'Failed to download receipt. Please try again.',
+          icon: 'error'
+        });
+      }
+    }
+
+    // Handle retry payment
+    async function handleRetryPayment(event) {
+      const orderCard = this.closest('.order-card');
+      const orderId = orderCard.querySelector('.order-id').textContent.split('#')[1];
+
+      try {
+        Swal.fire({
+          title: 'Initializing Payment...',
+          html: 'Please wait while we prepare your payment',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
+        // First, get the order details and Razorpay order ID
+        const response = await fetch(`/order/retry-payment/${orderId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.message || 'Failed to initialize payment');
+        }
+
+        // Close the loading indicator
+        Swal.close();
+
+        // Initialize Razorpay payment
+        const options = {
+          key: data.razorpayKeyId, // Get this from your server response
+          amount: data.amount,
+          currency: data.currency,
+          name: 'Your Store Name',
+          description: `Order Payment Retry - #${orderId}`,
+          order_id: data.razorpayOrderId,
+          handler: async function(response) {
+            // Show processing message
+            Swal.fire({
+              title: 'Processing Payment...',
+              html: 'Please wait while we confirm your payment',
+              allowOutsideClick: false,
+              didOpen: () => {
+                Swal.showLoading();
+              }
+            });
+
+            try {
+              // Verify payment with your server
+              const verifyResponse = await fetch('/order/verify-payment', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  orderId: orderId,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_signature: response.razorpay_signature
+                })
+              });
+
+              const verifyData = await verifyResponse.json();
+
+              if (verifyData.success) {
+                await Swal.fire({
+                  title: 'Payment Successful!',
+                  text: 'Your payment has been processed successfully',
+                  icon: 'success',
+                  timer: 2000,
+                  showConfirmButton: false
+                });
+                window.location.reload();
+              } else {
+                throw new Error(verifyData.message || 'Payment verification failed');
+              }
+            } catch (error) {
+              console.error('Payment verification error:', error);
+              await Swal.fire({
+                title: 'Verification Failed',
+                text: error.message || 'Failed to verify payment. Please contact support.',
+                icon: 'error'
+              });
+            }
+          },
+          prefill: {
+            name: data.customerName,
+            email: data.customerEmail,
+            contact: data.customerPhone
+          },
+          theme: {
+            color: '#3085d6'
+          }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+
+        // Handle payment failure
+        rzp.on('payment.failed', async function(response) {
           await Swal.fire({
-            title: 'Verification Failed',
-            text: error.message || 'Failed to verify payment. Please contact support.',
+            title: 'Payment Failed',
+            text: response.error.description,
             icon: 'error'
           });
-        }
-      },
-      prefill: {
-        name: data.customerName,
-        email: data.customerEmail,
-        contact: data.customerPhone
-      },
-      theme: {
-        color: '#3085d6'
+        });
+
+      } catch (error) {
+        console.error('Error retrying payment:', error);
+        await Swal.fire({
+          title: 'Error!',
+          text: error.message || 'Something went wrong!',
+          icon: 'error'
+        });
       }
-    };
+    }
+  </script>
 
-    const rzp = new Razorpay(options);
-    rzp.open();
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Toggle reason input for return and cancel
+      document.querySelectorAll('.return-item-btn, .cancel-item-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const reasonContainer = this.nextElementSibling;
+          reasonContainer.style.display = reasonContainer.style.display === 'none' ? 'block' : 'none';
+        });
 
-    // Handle payment failure
-    rzp.on('payment.failed', async function (response) {
-      await Swal.fire({
-        title: 'Payment Failed',
-        text: response.error.description,
-        icon: 'error'
+        // Add submit event listeners for return and cancel
+        const submitReturnBtn = button.closest('.card-body').querySelector('.submit-return-btn');
+        const submitCancelBtn = button.closest('.card-body').querySelector('.submit-cancel-btn');
+
+        if (submitReturnBtn) {
+          submitReturnBtn.addEventListener('click', handleReturn);
+        }
+
+        if (submitCancelBtn) {
+          submitCancelBtn.addEventListener('click', handleCancel);
+        }
       });
     });
 
-  } catch (error) {
-    console.error('Error retrying payment:', error);
-    await Swal.fire({
-      title: 'Error!',
-      text: error.message || 'Something went wrong!',
-      icon: 'error'
-    });
-  }
-}
-   
+    async function handleReturn(event) {
+      const itemCard = event.target.closest('.card');
+      const orderItemId = itemCard.dataset.itemId; 
+      const orderId = itemCard.closest('.modal').dataset.orderId; 
+      const returnReason = itemCard.querySelector('.return-reason').value.trim();
+
+      if (!returnReason) {
+        alert('Please provide a reason for return');
+        return;
+      }
+
+      try {
+        const response = await fetch('/return-item', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            orderItemId,
+            orderId,
+            reason: returnReason
+          })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          alert('Item return request submitted successfully');
+          location.reload();
+        } else {
+          alert(result.message || 'Failed to submit return request');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while processing your return');
+      }
+    }
+
+    async function handleCancel(event) {
+      const itemCard = event.target.closest('.card');
+      const orderItemId = itemCard.dataset.itemId;
+      const orderId = itemCard.closest('.modal').dataset.orderId;
+      const cancelReason = itemCard.querySelector('.cancel-reason').value.trim();
+
+      console.log("orderId-->" + orderId);
+      console.log("orderItemId-->" + orderItemId);
+
+
+
+
+      if (!cancelReason) {
+        alert('Please provide a reason for cancellation');
+        return;
+      }
+
+      try {
+        const response = await fetch('/cancel-item', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            orderItemId,
+            orderId,
+            reason: cancelReason
+          })
+        });
+
+
+
+        const result = await response.json();
+        console.log(result);
+
+        if (result.success) {
+          alert('Item cancellation request submitted successfully');
+          location.reload();
+        } else {
+          alert(result.message || 'Failed to submit cancellation request');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while processing your cancellation');
+      }
+    }
   </script>
+
 </body>
 
 </html>

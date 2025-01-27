@@ -24,12 +24,9 @@ router.get('/register/otp',logController.loadOTP);
 // Login routes
 router.get('/login',logController.loadLogin);
 router.post('/checklogin',logController.checkLogin);
-
-// Logout route
 router.get('/logout', logController.logout);
 
 
-//==================================================================>
 
 // Protected route
 router.get(/^\/(home)?$/,userController.loadHome);
@@ -38,38 +35,21 @@ router.get(/^\/(home)?$/,userController.loadHome);
 //shop routes
 router.get('/shop', userController.loadShop);
 router.get('/shop/products', userController.loadShop);
-
-//==================================================================================================
 router.get('/filter', filterController.filterProducts);
-//==================================================================================================
 
 
 // contacts routes
-
 router.get('/contact', userController.loadContacts);
 
 // about routes
-
 router.get('/about', userController.loadAbout);
 
 //loadProductDetails
-
 router.get('/product-detail/:id', userController.getProductDetail);
-
-//=========================================================================>
-
-//account user section
 
 //dashboard routes
 
 router.get('/dashboard', userController.loadDashboard);
-
-
-
-
-
-
-
 
 
 //orders routes
@@ -80,10 +60,9 @@ router.post('/order/cancel/:orderId', orderController.cancelOrder);
 router.get('/order/pdf/:orderId', orderController.generatePDF);
 router.post('/order/retry-payment/:orderId', orderController.retryPayment);
 router.post('/order/verify-payment',orderController.verifyPayment);
-
-
-
-// profile routes
+router.post('/cancel-item',orderController.cancelSpecificItem)
+router.post('/return-item',orderController.returnSpecificItem)
+// profile routescls
 
 router.get('/profile', userController.loadProfile);
 router.put('/profile/update', userController.updateProfile);
@@ -113,19 +92,15 @@ router.get('/checkout',checkoutController.loadCheckout);
 router.post('/checkout/placeorder',checkoutController.placeOrder);
 router.get('/order/success/:orderId', checkoutController.loadPaymentSuccess);
 router.get('/order/success',checkoutController .loadPaymentSuccess);
-
 router.post('/checkout/create-razorpay-order', checkoutController.createRazorpayOrder);
 router.post('/checkout/verify-payment', checkoutController.verifyRazorpayPayment);
-
 router.post('/checkout/validateCoupon',checkoutController.validateCoupon)
 
 
 //wishlist
 router.post('/addWishlist',wishlistController.addToWishlist)
 router.get('/wishlist',wishlistController.LoadWishlist)
-
 router.delete('/wishlist/delete/:id',wishlistController.removeFromWishlist)
-// router.post('/wishlist/cart/:id',wishlistController.addToCart)
 
 
 

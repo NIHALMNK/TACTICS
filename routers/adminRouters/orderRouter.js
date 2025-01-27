@@ -13,7 +13,7 @@ router.put('/orders/status', orderController.updateOrderStatus)
 router.put('/orders/payment-status', orderController.updatePaymentStatus)
 router.put('/orders/return-request', orderController.handleReturnRequest)
 router.get('/orders/search', orderController.searchOrders)
-
+router.put('/orders/handleIndividualReturn', orderController.handleIndividualReturn);
 
 
 module.exports = router;
