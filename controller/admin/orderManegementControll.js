@@ -79,6 +79,7 @@ module.exports = {
 
     async updateOrderStatus(req, res) {
         try {
+
             const { orderId, status } = req.body;
             const validStatuses = ['Pending', 'Cancelled', 'Shipping', 'Completed', 'Returned', 'Requested', 'Rejected'];
 
@@ -89,8 +90,8 @@ module.exports = {
                 });
             }
 
-            const updatedOrder = await order.findByIdAndUpdate(
-                orderId,
+            const updatedOrder = await order.findOneAndUpdate(
+                {orderId},
                 { 
                     status,
                     ...(status === 'Completed' && { paymentStatus: 'Completed' })
@@ -120,11 +121,15 @@ module.exports = {
     },
 
     async updatePaymentStatus(req, res) {
+        console.log("--->>>updatePaymentStatus");
+        
         try {
             const { orderId, paymentStatus } = req.body;
-            console.log(paymentStatus);
+            // console.log(paymentStatus);
+            // console.log(orderId);
             
-            const validPaymentStatuses = ['Pending', 'Completed', 'Failed'];
+            
+            const validPaymentStatuses = ['Pending', 'Completed', 'Failed','Refunded'];
 
             if (!validPaymentStatuses.includes(paymentStatus)) {
                 return res.status(400).json({
@@ -133,7 +138,9 @@ module.exports = {
                 });
             }
 
-            const orderToUpdate = await order.findById(orderId);
+            const orderToUpdate = await order.findOne({orderId});
+            
+            // console.log(orderToUpdate);
             
             if (!orderToUpdate) {
                 return res.status(404).json({
@@ -288,7 +295,7 @@ module.exports = {
                     let walletData = await wallet.findOne({ userId: orderToUpdate.userId });
                     
                     if (!walletData) {
-                        walletData = new Wallet({
+                        walletData = new wallet({
                             userId: orderToUpdate.userId,
                             balance: refundAmount,
                             transactionHistory: [{
