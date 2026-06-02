@@ -1,34 +1,34 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 
-
-let transporter = nodemailer.createTransport({
- 
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,  
+const transporter = nodemailer.createTransport({
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false, // true only for port 465
   auth: {
-    user: process.env.USER_EMAIL,
-    pass: process.env.USER_PASSWORD,
-  }, tls: {
-    rejectUnauthorized: false
-}
+    user: process.env.BREVO_SMTP_USER,
+    pass: process.env.BREVO_SMTP_PASS,
+  },
 });
 
-const sendEmail = async (email,otp)=> {
-  let mailOptions = {
-    from: process.env.USER_EMAIL,
+const sendEmail = async (email, otp) => {
+  const mailOptions = {
+    from: process.env.BREVO_SMTP_USER,
     to: email,
-    subject: 'OTP Verification',
-    text: `Your One-Time Password (OTP) is: ${otp}`
+    subject: "OTP Verification",
+    text: `Your One-Time Password (OTP) is: ${otp}`,
   };
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log('OTP Sented: ' + email);
-    
-  } catch (error) {
-    console.log( "error senting otp : " + error.message );
-  }
-}
 
+  try {
+    const info = await transporter.sendMail(mailOptions);
+
+    console.log("OTP Sent:", email);
+    console.log("Message ID:", info.messageId);
+
+    return true;
+  } catch (error) {
+    console.error("Error sending OTP:", error.message);
+    return false;
+  }
+};
 
 module.exports = sendEmail;
